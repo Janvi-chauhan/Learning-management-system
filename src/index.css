@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+@keyframes placement-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-placement-marquee {
+  animation: placement-marquee 35s linear infinite;
+} */
+
+/* ===== JOB READY COURSES (LEFT → RIGHT) ===== */
+
+@keyframes marquee-left-to-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-ltr {
+  animation: marquee-left-to-right 35s linear infinite;
+}
+
+/* ===== LATEST PLACEMENTS (RIGHT → LEFT) ===== */
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-rtl {
+  animation: marquee-rtl 35s linear infinite;
+}
+
+/* scrollbar hide */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ===== TESTIMONIALS (LEFT → RIGHT) ===== */
+@keyframes testimonial-marquee {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-testimonial-marquee {
+  animation: testimonial-marquee 45s linear infinite;
+}
