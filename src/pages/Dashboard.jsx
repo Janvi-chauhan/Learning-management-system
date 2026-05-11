@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import Sidebar from '../components/admin/Sidebar';
+
 
 const Dashboard = () => {
   return (
-    <div className='w-screen h-screen flex justify-center items-center'>Dashboard</div>
-  )
-}
+    <div className="flex min-h-screen  bg-[#F7F9FC]">
+      <div className="hidden lg:block">
+        <Sidebar />
+      </div>
 
-export default Dashboard
+ 
+    </div>
+  );
+};
+
+export default Dashboard;

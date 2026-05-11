@@ -7,7 +7,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-gradient-to-b from-white to-gray-100 border-b shadow-md z-50">
+    <header className="sticky top-0 left-0 w-full bg-gradient-to-b from-white to-gray-100 border-b shadow-md z-50">
       
       {/* ✅ CENTERED CONTAINER (KEY FIX) */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 h-[90px] flex items-center justify-between">
