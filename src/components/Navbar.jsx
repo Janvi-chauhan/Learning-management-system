@@ -86,7 +86,23 @@ export default function Navbar() {
             >
               Quick Links
             </NavLink>
+             
           </li>
+          <li>
+                  <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red-600"
+                  : "hover:text-red-600 transition"
+              }
+            >
+              Profile
+            </NavLink>
+
+
+          </li>
+    
 
         </ul>
 
