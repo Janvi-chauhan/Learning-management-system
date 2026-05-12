@@ -1,3 +1,5 @@
+// src/components/admin/ActivityPanel.jsx
+
 import {
   UserPlus,
   FileText,
@@ -7,10 +9,10 @@ import {
   Clock,
 } from "lucide-react";
 
+// Static admin-only recent activities
 const activities = [
   {
     id: 1,
-    type: "student",
     title: "New student registered",
     description: "Aarav Patil enrolled in MERN Stack Development.",
     time: "2 mins ago",
@@ -19,7 +21,6 @@ const activities = [
   },
   {
     id: 2,
-    type: "assignment",
     title: "Assignment submitted",
     description: "Sneha Shah submitted React Dashboard Task.",
     time: "15 mins ago",
@@ -28,7 +29,6 @@ const activities = [
   },
   {
     id: 3,
-    type: "payment",
     title: "Payment received",
     description: "₹5,000 fee received from Rahul Sharma.",
     time: "1 hour ago",
@@ -37,7 +37,6 @@ const activities = [
   },
   {
     id: 4,
-    type: "course",
     title: "Course updated",
     description: "Python course content was updated.",
     time: "3 hours ago",
@@ -46,7 +45,6 @@ const activities = [
   },
   {
     id: 5,
-    type: "attendance",
     title: "Attendance marked",
     description: "Today's attendance has been completed.",
     time: "Today",
@@ -65,13 +63,17 @@ const colorClasses = {
 export default function ActivityPanel() {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 h-fit">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-800">Recent Activities</h2>
+        <h2 className="text-xl font-bold text-gray-800">
+          Recent Activities
+        </h2>
         <button className="text-sm font-semibold text-red-600 hover:text-red-700">
           View All
         </button>
       </div>
 
+      {/* Activities List */}
       <div className="space-y-4">
         {activities.map((activity) => {
           const Icon = activity.icon;
@@ -81,6 +83,7 @@ export default function ActivityPanel() {
               key={activity.id}
               className="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 transition"
             >
+              {/* Icon */}
               <div
                 className={`w-11 h-11 rounded-xl flex items-center justify-center ${
                   colorClasses[activity.color]
@@ -89,10 +92,12 @@ export default function ActivityPanel() {
                 <Icon size={20} />
               </div>
 
+              {/* Content */}
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-gray-800">
                   {activity.title}
                 </h3>
+
                 <p className="text-sm text-gray-500 mt-1 leading-relaxed">
                   {activity.description}
                 </p>

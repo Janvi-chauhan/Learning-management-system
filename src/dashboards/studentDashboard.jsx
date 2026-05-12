@@ -1,9 +1,10 @@
-import React from "react";
-import Sidebar from "../components/admin/Sidebar";
-import DashboardCards from "../components/admin/DashboardCards";
-import ActivityPanel from "../components/admin/ActivityPanel";
 
-const Dashboard = () => {
+import React from "react";
+import Sidebar from "../components/dashboards/student/Sidebar";
+import DashboardCards from "../components/dashboards/student/DashboardCards";
+import ActivityPanel from "../components/dashboards/student/ActivityPanel";
+
+const StudentDashboard = () => {
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
       <Sidebar />
@@ -12,10 +13,10 @@ const Dashboard = () => {
         <main className="p-4 sm:p-6 lg:p-8 pt-10 lg:pt-6">
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Dashboard
+              Teacher  Dashboard
             </h1>
             <p className="text-gray-500 mt-2">
-              Welcome back!.
+              Welcome back, Teacher .
             </p>
           </div>
 
@@ -43,4 +44,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default StudentDashboard;

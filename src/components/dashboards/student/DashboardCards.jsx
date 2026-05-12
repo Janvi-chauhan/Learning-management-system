@@ -1,26 +1,45 @@
+// src/components/dashboard/StudentDashboardCards.jsx
+
 import {
-  Users,
-  GraduationCap,
   BookOpen,
-  IndianRupee,
+  ClipboardList,
+  CalendarCheck,
+  Trophy,
 } from "lucide-react";
-import { getUserRole } from "../../utils/roleUtils";
-import { roleData } from "../../data/dashboardData";
+
+// Student-only dashboard statistics
+const stats = [
+  {
+    title: "Enrolled Courses",
+    value: "8",
+    change: "+2 this semester",
+    color: "red",
+  },
+  {
+    title: "Assignments Done",
+    value: "24",
+    change: "3 pending",
+    color: "yellow",
+  },
+  {
+    title: "Attendance",
+    value: "89%",
+    change: "+1.5% this month",
+    color: "orange",
+  },
+  {
+    title: "Rank",
+    value: "#12",
+    change: "Top 10%",
+    color: "green",
+  },
+];
 
 const iconMap = {
-  "Total Students": Users,
-  "Total Teachers": GraduationCap,
-  Courses: BookOpen,
-  Revenue: IndianRupee,
-
-  "My Students": Users,
-  "My Courses": BookOpen,
-  Assignments: GraduationCap,
-  Attendance: GraduationCap,
-
   "Enrolled Courses": BookOpen,
-  "Assignments Done": GraduationCap,
-  Rank: Users,
+  "Assignments Done": ClipboardList,
+  Attendance: CalendarCheck,
+  Rank: Trophy,
 };
 
 const colorMap = {
@@ -46,14 +65,11 @@ const colorMap = {
   },
 };
 
-export default function DashboardCards() {
-  const role = getUserRole();
-  const stats = roleData[role]?.stats || [];
-
+export default function StudentDashboardCards() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
       {stats.map((item) => {
-        const Icon = iconMap[item.title] || Users;
+        const Icon = iconMap[item.title] || BookOpen;
         const colors = colorMap[item.color] || colorMap.red;
 
         return (
