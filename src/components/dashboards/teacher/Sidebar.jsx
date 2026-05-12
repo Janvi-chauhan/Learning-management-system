@@ -114,10 +114,8 @@ export default function TeacherSidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-72 min-h-screen bg-gradient-to-b from-[#7A0000] via-[#B30000] to-[#E53935] text-white flex-col justify-between shadow-2xl">
         <div>
-          {/* Logo */}
           <div className="px-6 py-8 border-b border-white/10">
             <h1 className="text-3xl font-extrabold tracking-wide">
               <span className="text-[#FFD700]">PROGRAMMING</span>
@@ -127,7 +125,6 @@ export default function TeacherSidebar() {
             </p>
           </div>
 
-          {/* Main Menu */}
           <div className="px-6 mt-6">
             <p className="text-[11px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
               Main Menu
@@ -140,7 +137,6 @@ export default function TeacherSidebar() {
             </nav>
           </div>
 
-          {/* Pages */}
           <div className="px-6 mt-10">
             <p className="text-[11px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
               Pages
@@ -154,7 +150,6 @@ export default function TeacherSidebar() {
           </div>
         </div>
 
-        {/* Logout */}
         <div className="px-6 py-6 border-t border-white/10">
           <DesktopNavItem
             item={{
@@ -166,7 +161,6 @@ export default function TeacherSidebar() {
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] px-2 py-2 pb-safe">
         <div className="grid grid-cols-5 gap-1">
           {config.mobileBottom.map((item) => (

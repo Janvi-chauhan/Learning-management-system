@@ -15,12 +15,12 @@ import { NavLink } from "react-router-dom";
 
 const adminMenu = {
   desktopMain: [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { name: "Students", icon: Users, path: "/dashboard/students" },
-    { name: "Teachers", icon: GraduationCap, path: "/dashboard/teachers" },
-    { name: "Courses", icon: BookOpen, path: "/dashboard/courses" },
-    { name: "Payments", icon: CreditCard, path: "/dashboard/payments" },
-    { name: "Reports", icon: BarChart3, path: "/dashboard/reports" },
+    { name: "Dashboard", icon: LayoutDashboard, path: "/adminDashboard" },
+    { name: "Students", icon: Users, path: "/adminDashboard/students" },
+    { name: "Teachers", icon: GraduationCap, path: "/adminDashboard/teachers" },
+    { name: "Courses", icon: BookOpen, path: "/adminDashboard/courses" },
+    { name: "Payments", icon: CreditCard, path: "/adminDashboard/payments" },
+    { name: "Reports", icon: BarChart3, path: "/adminDashboard/reports" },
   ],
 
   desktopPages: [

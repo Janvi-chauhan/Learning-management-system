@@ -10,6 +10,8 @@ import ResultsPage from "./pages/ResultsPage";
 import Dashboard from "./dashboards/adminDashboard";
 import TeacherDashboard from "./dashboards/teacherDashboard";
 import StudentDashboard from "./dashboards/studentDashboard";
+import ManageTeachers from "./pages/admin/TeacherManager";
+import ManageStudents from "./pages/admin/StudentManager";
 
 export default function App() {
   return (
@@ -23,6 +25,10 @@ export default function App() {
         <Route path="/adminDashboard" element={<Dashboard/>} />
         <Route path="/teacherDashboard" element={<TeacherDashboard/>}/>
         <Route path="/studentDashboard" element={<StudentDashboard/>}/>
+        <Route path="/adminDashboard/teachers" element={<ManageTeachers/>}/>
+        <Route path="/adminDashboard/students" element={<ManageStudents/>}/>
+
+
 
       </Routes>
 

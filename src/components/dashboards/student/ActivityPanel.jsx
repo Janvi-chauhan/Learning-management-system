@@ -1,4 +1,3 @@
-// src/components/dashboard/StudentActivityPanel.jsx
 
 import {
   FileText,
@@ -9,7 +8,6 @@ import {
   CreditCard,
 } from "lucide-react";
 
-// Student-only recent activities
 const activities = [
   {
     id: 1,
@@ -63,7 +61,6 @@ const colorClasses = {
 export default function StudentActivityPanel() {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 h-fit">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-gray-800">
           Recent Activities
@@ -74,7 +71,6 @@ export default function StudentActivityPanel() {
         </button>
       </div>
 
-      {/* Activities List */}
       <div className="space-y-4">
         {activities.map((activity) => {
           const Icon = activity.icon;
@@ -84,7 +80,6 @@ export default function StudentActivityPanel() {
               key={activity.id}
               className="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 transition"
             >
-              {/* Icon */}
               <div
                 className={`w-11 h-11 rounded-xl flex items-center justify-center ${
                   colorClasses[activity.color]
@@ -93,7 +88,6 @@ export default function StudentActivityPanel() {
                 <Icon size={20} />
               </div>
 
-              {/* Content */}
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-gray-800">
                   {activity.title}
