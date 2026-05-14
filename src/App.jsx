@@ -10,10 +10,10 @@ import ResultsPage from "./pages/ResultsPage";
 import Dashboard from "./dashboards/adminDashboard";
 import TeacherDashboard from "./dashboards/teacherDashboard";
 import StudentDashboard from "./dashboards/studentDashboard";
-import ManageTeachers from "./pages/admin/TeacherManager";
-import ManageStudents from "./pages/admin/StudentManager";
-import ManagePayments from "./pages/admin/PaymentsManager";
-import ManageCourses from "./pages/admin/CourseManager";
+import ManageTeachers from "./components/dashboards/admin/TeacherManager";
+import ManageStudents from "./components/dashboards/admin/StudentManager";
+import ManagePayments from "./components/dashboards/admin/PaymentsManager";
+import ManageCourses from "./components/dashboards/admin/CourseManager";
 
 export default function App() {
   return (
