@@ -28,11 +28,7 @@ export default function App() {
         <Route path="/adminDashboard" element={<Dashboard/>} />
         <Route path="/teacherDashboard" element={<TeacherDashboard/>}/>
         <Route path="/studentDashboard" element={<StudentDashboard/>}/>
-        <Route path="/adminDashboard/teachers" element={<ManageTeachers/>}/>
-        <Route path="/adminDashboard/students" element={<ManageStudents/>}/>
-        <Route path="/adminDashboard/payments" element={<ManagePayments/>}/>
-        <Route path="/adminDashboard/courses" element={<ManageCourses/>}/>
-        <Route path="/adminDashboard/reports" element={<ManageReports/>}/>
+       
         
         
 
