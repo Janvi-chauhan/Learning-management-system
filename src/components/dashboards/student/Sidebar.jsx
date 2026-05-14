@@ -110,7 +110,7 @@ export default function StudentSidebar({
               <span className="text-[#FFD700]">PROGRAMMING</span>
             </h1>
             <p className="text-xs tracking-[0.35em] text-yellow-100 mt-1 font-medium">
-              CLASSES
+              CLASSES 
             </p>
           </div>
 

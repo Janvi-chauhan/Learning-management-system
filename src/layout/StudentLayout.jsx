@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Sidebar from "../components/dashboards/student/Sidebar";
 
 import DashboardHome from "../components/dashboards/student/DashboardHome";
+import Assignments from "../components/dashboards/student/Assignments";
 
 
 const componentMap = {
   dashboard: DashboardHome,
+  assignments: Assignments
  
 };
 
