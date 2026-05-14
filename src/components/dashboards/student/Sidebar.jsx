@@ -1,4 +1,3 @@
-
 import {
   LayoutDashboard,
   BookOpen,
@@ -11,101 +10,95 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
 
 const studentMenu = {
   desktopMain: [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { name: "Courses", icon: BookOpen, path: "/dashboard/courses" },
-    {
-      name: "Assignments",
-      icon: ClipboardList,
-      path: "/dashboard/assignments",
-    },
-    {
-      name: "Projects",
-      icon: FolderKanban,
-      path: "/dashboard/projects",
-    },
-    { name: "Fees", icon: CreditCard, path: "/dashboard/payments" },
-    { name: "Profile", icon: User, path: "/dashboard/profile" },
+    { name: "Dashboard", icon: LayoutDashboard, key: "dashboard" },
+    { name: "Courses", icon: BookOpen, key: "courses" },
+    { name: "Assignments", icon: ClipboardList, key: "assignments" },
+    { name: "Projects", icon: FolderKanban, key: "projects" },
+    { name: "Fees", icon: CreditCard, key: "payments" },
+    { name: "Profile", icon: User, key: "profile" },
   ],
 
   desktopPages: [
-    { name: "Messages", icon: MessageSquare, path: "/dashboard/messages" },
-    { name: "Notifications", icon: Bell, path: "/dashboard/notifications" },
-    { name: "Settings", icon: Settings, path: "/dashboard/settings" },
+    { name: "Messages", icon: MessageSquare, key: "messages" },
+    { name: "Notifications", icon: Bell, key: "notifications" },
+    { name: "Settings", icon: Settings, key: "settings" },
   ],
 
   mobileBottom: [
-    { name: "Home", icon: LayoutDashboard, path: "/dashboard" },
-    { name: "Courses", icon: BookOpen, path: "/dashboard/courses" },
-    {
-      name: "Tasks",
-      icon: ClipboardList,
-      path: "/dashboard/assignments",
-    },
-    { name: "Fees", icon: CreditCard, path: "/dashboard/payments" },
-    { name: "Profile", icon: User, path: "/dashboard/profile" },
+    { name: "Home", icon: LayoutDashboard, key: "dashboard" },
+    { name: "Courses", icon: BookOpen, key: "courses" },
+    { name: "Tasks", icon: ClipboardList, key: "assignments" },
+    { name: "Fees", icon: CreditCard, key: "payments" },
+    { name: "Profile", icon: User, key: "profile" },
   ],
 };
 
-function DesktopNavItem({ item }) {
+function DesktopNavItem({
+  item,
+  activeSection,
+  setActiveSection,
+}) {
   const Icon = item.icon;
+  const isActive = activeSection === item.key;
 
   return (
-    <NavLink
-      to={item.path}
-      end
-      className={({ isActive }) =>
-        `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-          isActive
-            ? "bg-gradient-to-r from-[#FFD700] to-[#FFC107] text-[#7A0000] shadow-lg font-semibold"
-            : "text-white hover:bg-white/10 hover:text-[#FFD700]"
-        }`
-      }
+    <button
+      type="button"
+      onClick={() => setActiveSection(item.key)}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+        isActive
+          ? "bg-gradient-to-r from-[#FFD700] to-[#FFC107] text-[#7A0000] shadow-lg font-semibold"
+          : "text-white hover:bg-white/10 hover:text-[#FFD700]"
+      }`}
     >
       <Icon size={20} />
       <span className="text-sm font-medium">{item.name}</span>
-    </NavLink>
+    </button>
   );
 }
 
-function BottomNavItem({ item }) {
+function BottomNavItem({
+  item,
+  activeSection,
+  setActiveSection,
+}) {
   const Icon = item.icon;
+  const isActive = activeSection === item.key;
 
   return (
-    <NavLink
-      to={item.path}
-      end
-      className="flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200"
+    <button
+      type="button"
+      onClick={() => setActiveSection(item.key)}
+      className="flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 w-full"
     >
-      {({ isActive }) => (
-        <>
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-              isActive
-                ? "bg-gradient-to-r from-red-600 to-yellow-500 text-white shadow-md"
-                : "bg-gray-100 text-gray-500"
-            }`}
-          >
-            <Icon size={18} />
-          </div>
+      <div
+        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+          isActive
+            ? "bg-gradient-to-r from-red-600 to-yellow-500 text-white shadow-md"
+            : "bg-gray-100 text-gray-500"
+        }`}
+      >
+        <Icon size={18} />
+      </div>
 
-          <span
-            className={`text-[10px] font-semibold mt-1 truncate max-w-[60px] ${
-              isActive ? "text-red-600" : "text-gray-500"
-            }`}
-          >
-            {item.name}
-          </span>
-        </>
-      )}
-    </NavLink>
+      <span
+        className={`text-[10px] font-semibold mt-1 truncate max-w-[60px] ${
+          isActive ? "text-red-600" : "text-gray-500"
+        }`}
+      >
+        {item.name}
+      </span>
+    </button>
   );
 }
 
-export default function StudentSidebar() {
+export default function StudentSidebar({
+  activeSection,
+  setActiveSection,
+}) {
   const config = studentMenu;
 
   return (
@@ -128,7 +121,12 @@ export default function StudentSidebar() {
 
             <nav className="space-y-2">
               {config.desktopMain.map((item) => (
-                <DesktopNavItem key={item.name} item={item} />
+                <DesktopNavItem
+                  key={item.key}
+                  item={item}
+                  activeSection={activeSection}
+                  setActiveSection={setActiveSection}
+                />
               ))}
             </nav>
           </div>
@@ -140,7 +138,12 @@ export default function StudentSidebar() {
 
             <nav className="space-y-2">
               {config.desktopPages.map((item) => (
-                <DesktopNavItem key={item.name} item={item} />
+                <DesktopNavItem
+                  key={item.key}
+                  item={item}
+                  activeSection={activeSection}
+                  setActiveSection={setActiveSection}
+                />
               ))}
             </nav>
           </div>
@@ -151,8 +154,10 @@ export default function StudentSidebar() {
             item={{
               name: "Logout",
               icon: LogOut,
-              path: "/logout",
+              key: "logout",
             }}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
           />
         </div>
       </aside>
@@ -160,7 +165,12 @@ export default function StudentSidebar() {
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] px-2 py-2 pb-safe">
         <div className="grid grid-cols-5 gap-1">
           {config.mobileBottom.map((item) => (
-            <BottomNavItem key={item.name} item={item} />
+            <BottomNavItem
+              key={item.key}
+              item={item}
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+            />
           ))}
         </div>
       </nav>
