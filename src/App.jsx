@@ -10,10 +10,11 @@ import ResultsPage from "./pages/ResultsPage";
 import Dashboard from "./dashboards/adminDashboard";
 import TeacherDashboard from "./dashboards/teacherDashboard";
 import StudentDashboard from "./dashboards/studentDashboard";
-import ManageTeachers from "./pages/admin/TeacherManager";
-import ManageStudents from "./pages/admin/StudentManager";
-import ManagePayments from "./pages/admin/PaymentsManager";
-import ManageCourses from "./pages/admin/CourseManager";
+import ManageTeachers from "./components/dashboards/admin/TeacherManager";
+import ManageStudents from "./components/dashboards/admin/StudentManager";
+import ManagePayments from "./components/dashboards/admin/PaymentsManager";
+import ManageCourses from "./components/dashboards/admin/CourseManager";
+import ManageReports from "./components/dashboards/admin/ReportsManager";
 
 export default function App() {
   return (
@@ -27,10 +28,9 @@ export default function App() {
         <Route path="/adminDashboard" element={<Dashboard/>} />
         <Route path="/teacherDashboard" element={<TeacherDashboard/>}/>
         <Route path="/studentDashboard" element={<StudentDashboard/>}/>
-        <Route path="/adminDashboard/teachers" element={<ManageTeachers/>}/>
-        <Route path="/adminDashboard/students" element={<ManageStudents/>}/>
-        <Route path="/adminDashboard/payments" element={<ManagePayments/>}/>
-        <Route path="/adminDashboard/courses" element={<ManageCourses/>}/>
+       
+        
+        
 
 
 

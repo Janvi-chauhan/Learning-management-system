@@ -47,27 +47,27 @@ export default function Hero() {
       <div className="hidden lg:block relative h-[calc(100vh-90px)]">
 
         {/* RIGHT FIXED BANNER AREA */}
-        <div className="absolute top-0 right-0 h-full w-[640px]">
-          <img
-            src={vector}
-            alt="vector"
-            className="w-full h-full object-cover"
-          />
+<div className="absolute top-0 right-0 h-full w-[45vw] min-w-[520px] max-w-[760px]">
+  {/* Background Vector */}
+  <img
+    src={vector}
+    alt="vector"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
 
-          {/* PERSON IMAGE LOCKED */}
-          <img
-            src={sir}
-            alt="Instructor"
-            className="
-              absolute bottom-0 left-1/2
-              -translate-x-1/2
-              h-[88%] w-auto
-              object-contain
-              drop-shadow-2xl
-              pointer-events-none
-            "
-          />
-        </div>
+  {/* Instructor Image */}
+  <img
+    src={sir}
+    alt="Instructor"
+    className="
+      absolute bottom-0 right-0
+      h-[90%] w-auto
+      object-contain
+      drop-shadow-2xl
+      pointer-events-none
+    "
+  />
+</div>
 
         {/* LEFT CONTENT SAFE ZONE */}
         <div className="relative z-10 h-full">
