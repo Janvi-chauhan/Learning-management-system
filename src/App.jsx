@@ -14,6 +14,7 @@ import ManageTeachers from "./components/dashboards/admin/TeacherManager";
 import ManageStudents from "./components/dashboards/admin/StudentManager";
 import ManagePayments from "./components/dashboards/admin/PaymentsManager";
 import ManageCourses from "./components/dashboards/admin/CourseManager";
+import ManageReports from "./components/dashboards/admin/ReportsManager";
 
 export default function App() {
   return (
@@ -31,6 +32,9 @@ export default function App() {
         <Route path="/adminDashboard/students" element={<ManageStudents/>}/>
         <Route path="/adminDashboard/payments" element={<ManagePayments/>}/>
         <Route path="/adminDashboard/courses" element={<ManageCourses/>}/>
+        <Route path="/adminDashboard/reports" element={<ManageReports/>}/>
+        
+        
 
 
 
