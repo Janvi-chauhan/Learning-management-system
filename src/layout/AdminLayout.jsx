@@ -1,8 +1,6 @@
-// src/layouts/AdminLayout.jsx
 import React, { useState } from "react";
 import Sidebar from "../components/dashboards/admin/Sidebar";
 
-// Admin pages/components
 import DashboardHome from "../components/dashboards/admin/DashboardHome";
 import StudentManager from "../components/dashboards/admin/StudentManager";
 import TeacherManager from "../components/dashboards/admin/TeacherManager";

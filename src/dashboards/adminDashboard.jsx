@@ -1,4 +1,3 @@
-// src/pages/AdminDashboard.jsx
 import React from "react";
 import AdminLayout from "../layout/AdminLayout";
 
