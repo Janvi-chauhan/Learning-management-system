@@ -10,11 +10,7 @@ import ResultsPage from "./pages/ResultsPage";
 import Dashboard from "./dashboards/adminDashboard";
 import TeacherDashboard from "./dashboards/teacherDashboard";
 import StudentDashboard from "./dashboards/studentDashboard";
-import ManageTeachers from "./components/dashboards/admin/TeacherManager";
-import ManageStudents from "./components/dashboards/admin/StudentManager";
-import ManagePayments from "./components/dashboards/admin/PaymentsManager";
-import ManageCourses from "./components/dashboards/admin/CourseManager";
-import ManageReports from "./components/dashboards/admin/ReportsManager";
+
 
 export default function App() {
   return (

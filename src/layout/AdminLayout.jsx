@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/dashboards/admin/Sidebar";
 
 import DashboardHome from "../components/dashboards/admin/DashboardHome";
-import StudentManager from "../components/dashboards/admin/StudentManager";
+import StudentManager from "../components/dashboards/admin/student/StudentManager";
 import TeacherManager from "../components/dashboards/admin/TeacherManager";
 import CourseManager from "../components/dashboards/admin/CourseManager";
 import PaymentsManager from "../components/dashboards/admin/PaymentsManager";

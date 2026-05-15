@@ -3,11 +3,17 @@ import Sidebar from "../components/dashboards/student/Sidebar";
 
 import DashboardHome from "../components/dashboards/student/DashboardHome";
 import Assignments from "../components/dashboards/student/Assignments";
+import Courses from "../components/dashboards/student/Courses";
+import Projects from "../components/dashboards/student/Projects";
+import StudentProfile from "../components/dashboards/student/studentProfile";
 
 
 const componentMap = {
   dashboard: DashboardHome,
-  assignments: Assignments
+  assignments: Assignments,
+  courses:Courses,
+  projects:Projects,
+  profile:StudentProfile,
  
 };
 
