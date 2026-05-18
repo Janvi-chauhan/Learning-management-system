@@ -4,13 +4,15 @@ import React, { useState } from "react";
 import TeacherSidebar from "../components/dashboards/teacher/Sidebar";
 import DashboardHome from "../components/dashboards/teacher/DashboardHome";
 import Students from "../components/dashboards/teacher/Student";
+import Courses from "../components/dashboards/teacher/Courses";
 
 
 
 // Map sidebar keys to components
 const componentMap = {
 dashboard:DashboardHome,
-students:Students
+students:Students,
+courses:Courses
 };
 
 export default function TeacherLayout() {
