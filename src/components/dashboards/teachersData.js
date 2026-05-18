@@ -20,9 +20,13 @@ const teachersData = [
     // Performance Data
     coursesAssigned: 4,
     totalCourses: 5,
-    studentsHandled: 85,
+    studentsHandled: 1,
     attendance: 96,
+
+    // Students assigned to this teacher
+    studentIds: [2], // Priya Verma
   },
+
   {
     id: 2,
     name: "Priya Verma",
@@ -43,9 +47,13 @@ const teachersData = [
     // Performance Data
     coursesAssigned: 5,
     totalCourses: 5,
-    studentsHandled: 120,
+    studentsHandled: 1,
     attendance: 94,
+
+    // Students assigned to this teacher
+    studentIds: [1], // Aarav Sharma
   },
+
   {
     id: 3,
     name: "Amit Deshmukh",
@@ -64,9 +72,13 @@ const teachersData = [
     // Performance Data
     coursesAssigned: 3,
     totalCourses: 5,
-    studentsHandled: 60,
+    studentsHandled: 1,
     attendance: 91,
+
+    // Students assigned to this teacher
+    studentIds: [3], // Rohan Mehta
   },
+
   {
     id: 4,
     name: "Sneha Patil",
@@ -85,9 +97,13 @@ const teachersData = [
     // Performance Data
     coursesAssigned: 2,
     totalCourses: 5,
-    studentsHandled: 45,
+    studentsHandled: 0,
     attendance: 82,
+
+    // Students assigned to this teacher
+    studentIds: [],
   },
+
   {
     id: 5,
     name: "Rohan Kulkarni",
@@ -107,8 +123,11 @@ const teachersData = [
     // Performance Data
     coursesAssigned: 4,
     totalCourses: 5,
-    studentsHandled: 95,
+    studentsHandled: 0,
     attendance: 97,
+
+    // Students assigned to this teacher
+    studentIds: [],
   },
 ];
 
