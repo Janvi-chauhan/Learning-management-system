@@ -6,6 +6,7 @@ import Assignments from "../components/dashboards/student/Assignments";
 import Courses from "../components/dashboards/student/Courses";
 import Projects from "../components/dashboards/student/Projects";
 import StudentProfile from "../components/dashboards/student/studentProfile";
+import Fees from "../components/dashboards/student/Fees";
 
 
 const componentMap = {
@@ -14,6 +15,8 @@ const componentMap = {
   courses:Courses,
   projects:Projects,
   profile:StudentProfile,
+  payments:Fees
+
  
 };
 
