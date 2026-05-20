@@ -5,14 +5,19 @@ import TeacherSidebar from "../components/dashboards/teacher/Sidebar";
 import DashboardHome from "../components/dashboards/teacher/DashboardHome";
 import Students from "../components/dashboards/teacher/Student";
 import Courses from "../components/dashboards/teacher/Courses";
+import Assignments from "../components/dashboards/teacher/Assignments";
+import Profile from "../components/dashboards/teacher/profile";
+import Attendance from "../components/dashboards/teacher/Attendance";
 
 
 
-// Map sidebar keys to components
 const componentMap = {
 dashboard:DashboardHome,
 students:Students,
-courses:Courses
+courses:Courses,
+assignments:Assignments,
+attendance:Attendance,
+profile:Profile
 };
 
 export default function TeacherLayout() {

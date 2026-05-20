@@ -7,8 +7,11 @@ import {
   Lock,
   Camera,
 } from "lucide-react";
+import { PiPassword } from "react-icons/pi";
+import { s } from "framer-motion/client";
 
 export default function Profile() {
+  const[show,setshow]=useState(false);
   const [teacher, setTeacher] = useState({
     name: "Rahul Sharma",
     email: "rahul@gmail.com",
@@ -99,6 +102,13 @@ export default function Profile() {
               />
               {teacher.experience} Experience
             </div>
+             <button onClick={() => setshow(!show)} className="flex items-center gap-3 w-full cursor-pointer bg-gray-50 p-3 rounded-xl">
+             <PiPassword
+             size={18}
+             className="text-red-600"
+             />
+              Change Password
+            </button>
           </div>
         </div>
 
@@ -173,10 +183,11 @@ export default function Profile() {
           </div>
 
           {/* Change Password */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-5">
-              Change Password
-            </h2>
+          {show && (
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-5">
+                Change Password
+              </h2>
 
             <div className="space-y-4">
               {[
@@ -218,7 +229,7 @@ export default function Profile() {
             <button className="mt-5 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold transition">
               Update Password
             </button>
-          </div>
+          </div>)}
         </div>
       </div>
     </div>
