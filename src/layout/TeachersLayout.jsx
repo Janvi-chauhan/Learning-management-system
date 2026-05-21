@@ -6,12 +6,12 @@ import DashboardHome from "../components/dashboards/teacher/DashboardHome";
 import Students from "../components/dashboards/teacher/Student";
 import Courses from "../components/dashboards/teacher/Courses";
 import Assignments from "../components/dashboards/teacher/Assignments";
+
 import Attendance from "../components/dashboards/teacher/Attendance";
 import Profile from "../components/dashboards/teacher/profile";
 
 
 
-// Map sidebar keys to components
 const componentMap = {
 dashboard:DashboardHome,
 students:Students,
