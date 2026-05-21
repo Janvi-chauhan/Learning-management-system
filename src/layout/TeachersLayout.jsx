@@ -5,6 +5,9 @@ import TeacherSidebar from "../components/dashboards/teacher/Sidebar";
 import DashboardHome from "../components/dashboards/teacher/DashboardHome";
 import Students from "../components/dashboards/teacher/Student";
 import Courses from "../components/dashboards/teacher/Courses";
+import Assignments from "../components/dashboards/teacher/Assignments";
+import Attendance from "../components/dashboards/teacher/Attendance";
+import Profile from "../components/dashboards/teacher/profile";
 
 
 
@@ -12,7 +15,10 @@ import Courses from "../components/dashboards/teacher/Courses";
 const componentMap = {
 dashboard:DashboardHome,
 students:Students,
-courses:Courses
+courses:Courses,
+assignments:Assignments,
+attendance:Attendance,
+profile:Profile
 };
 
 export default function TeacherLayout() {

@@ -49,8 +49,10 @@ function DesktopNavItem({ item, activeSection, setActiveSection }) {
           : "text-white hover:bg-white/10 hover:text-[#FFD700]"
       }`}
     >
-      <Icon size={20} />
-      <span className="text-sm font-medium">{item.name}</span>
+      <Icon size={25} />
+      <span className="text-lg font-semibold">
+  {item.name}
+</span>
     </button>
   );
 }
@@ -71,11 +73,11 @@ function BottomNavItem({ item, activeSection, setActiveSection }) {
             : "bg-gray-100 text-gray-500"
         }`}
       >
-        <Icon size={18} />
+        <Icon size={22} />
       </div>
 
       <span
-        className={`text-[10px] font-semibold mt-1 truncate max-w-[60px] ${
+        className={`text-[15px] font-semibold mt-1 truncate max-w-[60px] ${
           isActive ? "text-red-600" : "text-gray-500"
         }`}
       >
@@ -99,13 +101,13 @@ export default function Sidebar({
             <h1 className="text-3xl font-extrabold tracking-wide">
               <span className="text-[#FFD700]">PROGRAMMING</span>
             </h1>
-            <p className="text-xs tracking-[0.35em] text-yellow-100 mt-1 font-medium">
+            <p className="text-lg tracking-[0.35em] text-yellow-100 mt-1 font-bold">
               CLASSES
             </p>
           </div>
 
-          <div className="px-6 mt-6">
-            <p className="text-[11px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
+          <div className="px-6 mt-6 ">
+            <p className="text-[18px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
               Main Menu
             </p>
 
@@ -122,7 +124,7 @@ export default function Sidebar({
           </div>
 
           <div className="px-6 mt-10">
-            <p className="text-[11px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
+            <p className="text-[18px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
               Pages
             </p>
 

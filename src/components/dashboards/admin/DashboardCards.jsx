@@ -73,7 +73,7 @@ export default function DashboardCards() {
         return (
           <div
             key={item.title}
-            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition duration-300"
+            className="bg-white rounded-4xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition duration-300"
           >
             <div className="flex items-start justify-between">
               <div>

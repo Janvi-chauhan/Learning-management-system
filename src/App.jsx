@@ -15,7 +15,9 @@ import StudentDashboard from "./dashboards/studentDashboard";
 export default function App() {
   return (
     <>
-      <Navbar />
+      {window.location.pathname !== "/adminDashboard" && (
+  <Navbar />
+)}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/courses" element={<CoursesPage />} />
