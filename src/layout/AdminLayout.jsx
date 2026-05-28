@@ -3,11 +3,11 @@ import Sidebar from "../components/dashboards/admin/Sidebar";
 
 import DashboardHome from "../components/dashboards/admin/DashboardHome";
 import StudentManager from "../components/dashboards/admin/student/StudentManager";
-import CourseManager from "../components/dashboards/admin/CourseManager";
 import PaymentsManager from "../components/dashboards/admin/PaymentsManager";
 import Charts from "../components/dashboards/admin/Charts";
 import ManageTeacher from "../components/dashboards/admin/teacher/teacherManager";
 import Placement from "../components/dashboards/admin/Placements";
+import CourseManager from "../components/dashboards/admin/CourseManager";
 
 const componentMap = {
   dashboard: DashboardHome,

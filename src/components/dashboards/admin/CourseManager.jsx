@@ -1,4 +1,3 @@
-```jsx
 import { useState } from "react";
 
 import {
@@ -7,16 +6,20 @@ import {
   Trash2,
   Eye,
   BookOpen,
+  X,
 } from "lucide-react";
 
-import CourseEditModal from "./courseManager/CourseEditModal";
-import CourseViewModal from "./courseManager/CourseViewModal";
+import CourseBasics from "./courses/CourseBasics";
+import CourseContent from "./courses/CourseContent";
+import CourseMentor from "./courses/CourseMentor";
+import CoursePublish from "./courses/CoursePublish";
 
 // ======================================================
 // INITIAL FORM
 // ======================================================
 
 const initialForm = {
+  // BASIC
   title: "",
   slug: "",
   category: "",
@@ -27,6 +30,7 @@ const initialForm = {
   previewVideo: "",
   brochure: "",
 
+  // CONTENT
   learnings: [""],
 
   roadmap: [
@@ -38,6 +42,7 @@ const initialForm = {
 
   curriculum: [""],
 
+  // MENTOR
   mentorName: "",
   mentorExperience: "",
   mentorImage: "",
@@ -49,6 +54,7 @@ const initialForm = {
     },
   ],
 
+  // PUBLISH
   status: "Active",
   featured: false,
   latest: true,
@@ -83,7 +89,8 @@ const sampleCourses = [
 
     title: "MERN Stack",
 
-    category: "Web Development",
+    category:
+      "Web Development",
 
     duration: "8 Months",
 
@@ -160,7 +167,7 @@ export default function CourseManager() {
   ];
 
   // ======================================================
-  // SUBMIT
+  // CREATE / UPDATE
   // ======================================================
 
   const handleSubmit = () => {
@@ -179,7 +186,9 @@ export default function CourseManager() {
 
       setCourses(updatedCourses);
 
-      alert("Course Updated");
+      alert(
+        "Course Updated"
+      );
 
     } else {
 
@@ -301,8 +310,6 @@ export default function CourseManager() {
 
           </div>
 
-          {/* BUTTON */}
-
           <button
             onClick={() => {
 
@@ -339,21 +346,101 @@ export default function CourseManager() {
         </div>
 
         {/* ======================================================
-        CREATE / EDIT COMPONENT
+        CREATOR
         ====================================================== */}
 
-        <CourseEditModal
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          tabs={tabs}
-          formData={formData}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-          showCreator={showCreator}
-        />
+        {showCreator && (
+
+          <div className="bg-white border rounded-3xl shadow-sm p-5 md:p-8 mb-10">
+
+            {/* TABS */}
+
+            <div className="flex flex-wrap gap-3 mb-8">
+
+              {tabs.map((tab) => (
+
+                <button
+                  key={tab.id}
+                  onClick={() =>
+                    setActiveTab(
+                      tab.id
+                    )
+                  }
+                  className={`px-5 py-3 rounded-2xl font-semibold transition ${
+                    activeTab ===
+                    tab.id
+                      ? "bg-red-600 text-white shadow-lg"
+                      : "bg-gray-50 border hover:border-red-300"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+
+            </div>
+
+            {/* CONTENT */}
+
+            {activeTab ===
+              "basics" && (
+
+              <CourseBasics
+                formData={
+                  formData
+                }
+                setFormData={
+                  setFormData
+                }
+              />
+            )}
+
+            {activeTab ===
+              "content" && (
+
+              <CourseContent
+                formData={
+                  formData
+                }
+                setFormData={
+                  setFormData
+                }
+              />
+            )}
+
+            {activeTab ===
+              "mentor" && (
+
+              <CourseMentor
+                formData={
+                  formData
+                }
+                setFormData={
+                  setFormData
+                }
+              />
+            )}
+
+            {activeTab ===
+              "publish" && (
+
+              <CoursePublish
+                formData={
+                  formData
+                }
+                setFormData={
+                  setFormData
+                }
+                handleSubmit={
+                  handleSubmit
+                }
+              />
+            )}
+
+          </div>
+        )}
 
         {/* ======================================================
-        TABLE
+        DESKTOP TABLE
         ====================================================== */}
 
         <div className="hidden md:block bg-white border rounded-3xl shadow-sm overflow-hidden">
@@ -410,7 +497,7 @@ export default function CourseManager() {
 
                       {/* COURSE */}
 
-                      <td className="px-4 xl:px-6 py-4">
+                      <td className="px-4 xl:px-6 py-4 text-sm">
 
                         <div className="flex items-center gap-3">
 
@@ -450,37 +537,49 @@ export default function CourseManager() {
                       {/* CATEGORY */}
 
                       <td className="px-4 xl:px-6 py-4 text-sm">
-                        {course.category}
+                        <div className="truncate max-w-[120px] xl:max-w-[180px]">
+                          {
+                            course.category
+                          }
+                        </div>
                       </td>
 
                       {/* DURATION */}
 
                       <td className="px-4 xl:px-6 py-4 text-sm whitespace-nowrap">
-                        {course.duration}
+                        {
+                          course.duration
+                        }
                       </td>
 
                       {/* LEVEL */}
 
                       <td className="px-4 xl:px-6 py-4 text-sm">
 
-                        <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">
-                          {course.level}
+                        <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap">
+                          {
+                            course.level
+                          }
                         </span>
 
                       </td>
 
                       {/* STUDENTS */}
 
-                      <td className="px-4 xl:px-6 py-4 text-sm">
-                        {course.students}
+                      <td className="px-4 xl:px-6 py-4 text-sm whitespace-nowrap">
+                        {
+                          course.students
+                        }
                       </td>
 
                       {/* STATUS */}
 
                       <td className="px-4 xl:px-6 py-4 text-sm">
 
-                        <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-medium">
-                          {course.status}
+                        <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap">
+                          {
+                            course.status
+                          }
                         </span>
 
                       </td>
@@ -495,7 +594,9 @@ export default function CourseManager() {
 
                           <button
                             onClick={() =>
-                              handleView(course)
+                              handleView(
+                                course
+                              )
                             }
                             className="
                               w-9 h-9
@@ -506,14 +607,18 @@ export default function CourseManager() {
                               transition
                             "
                           >
-                            <Eye size={17} />
+                            <Eye
+                              size={17}
+                            />
                           </button>
 
                           {/* EDIT */}
 
                           <button
                             onClick={() =>
-                              handleEdit(course)
+                              handleEdit(
+                                course
+                              )
                             }
                             className="
                               w-9 h-9
@@ -525,7 +630,9 @@ export default function CourseManager() {
                               transition
                             "
                           >
-                            <Pencil size={17} />
+                            <Pencil
+                              size={17}
+                            />
                           </button>
 
                           {/* DELETE */}
@@ -546,7 +653,9 @@ export default function CourseManager() {
                               transition
                             "
                           >
-                            <Trash2 size={17} />
+                            <Trash2
+                              size={17}
+                            />
                           </button>
 
                         </div>
@@ -584,8 +693,12 @@ export default function CourseManager() {
                 <div className="h-[220px] overflow-hidden">
 
                   <img
-                    src={course.thumbnail}
-                    alt={course.title}
+                    src={
+                      course.thumbnail
+                    }
+                    alt={
+                      course.title
+                    }
                     className="w-full h-full object-cover"
                   />
 
@@ -600,11 +713,15 @@ export default function CourseManager() {
                     <div className="min-w-0">
 
                       <h2 className="text-2xl font-black truncate">
-                        {course.title}
+                        {
+                          course.title
+                        }
                       </h2>
 
                       <p className="text-gray-500 mt-1 text-sm">
-                        {course.category}
+                        {
+                          course.category
+                        }
                       </p>
 
                     </div>
@@ -627,7 +744,9 @@ export default function CourseManager() {
                       </span>
 
                       <span className="font-semibold">
-                        {course.duration}
+                        {
+                          course.duration
+                        }
                       </span>
 
                     </div>
@@ -639,7 +758,9 @@ export default function CourseManager() {
                       </span>
 
                       <span className="font-semibold text-red-600">
-                        {course.level}
+                        {
+                          course.level
+                        }
                       </span>
 
                     </div>
@@ -651,7 +772,9 @@ export default function CourseManager() {
                       </span>
 
                       <span className="font-semibold">
-                        {course.students}
+                        {
+                          course.students
+                        }
                       </span>
 
                     </div>
@@ -664,7 +787,9 @@ export default function CourseManager() {
 
                     <button
                       onClick={() =>
-                        handleView(course)
+                        handleView(
+                          course
+                        )
                       }
                       className="bg-gray-100 hover:bg-gray-200 py-3 rounded-2xl font-semibold transition text-sm"
                     >
@@ -673,7 +798,9 @@ export default function CourseManager() {
 
                     <button
                       onClick={() =>
-                        handleEdit(course)
+                        handleEdit(
+                          course
+                        )
                       }
                       className="bg-red-600 hover:bg-red-700 text-white py-3 rounded-2xl font-semibold transition text-sm"
                     >
@@ -702,21 +829,107 @@ export default function CourseManager() {
         </div>
 
         {/* ======================================================
-        VIEW MODAL COMPONENT
+        VIEW MODAL
         ====================================================== */}
 
-        <CourseViewModal
-          selectedCourse={
-            selectedCourse
-          }
-          setShowViewModal={
-            setShowViewModal
-          }
-        />
+        {showViewModal &&
+          selectedCourse && (
+
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+
+            <div className="bg-white rounded-3xl overflow-hidden w-full max-w-2xl shadow-2xl">
+
+              {/* IMAGE */}
+
+              <div className="h-[260px] overflow-hidden relative">
+
+                <img
+                  src={
+                    selectedCourse.thumbnail
+                  }
+                  alt={
+                    selectedCourse.title
+                  }
+                  className="w-full h-full object-cover"
+                />
+
+                <button
+                  onClick={() =>
+                    setShowViewModal(false)
+                  }
+                  className="
+                    absolute top-5 right-5
+                    w-10 h-10
+                    rounded-xl
+                    bg-white/90
+                    hover:bg-white
+                    flex items-center justify-center
+                  "
+                >
+                  <X
+                    size={18}
+                  />
+                </button>
+
+              </div>
+
+              {/* CONTENT */}
+
+              <div className="p-6">
+
+                <h2 className="text-3xl font-black">
+                  {
+                    selectedCourse.title
+                  }
+                </h2>
+
+                <p className="text-gray-500 mt-3">
+                  {
+                    selectedCourse.category
+                  }
+                </p>
+
+                <div className="grid grid-cols-2 gap-5 mt-8">
+
+                  <div className="border rounded-2xl p-4">
+
+                    <p className="text-gray-500 text-sm">
+                      Duration
+                    </p>
+
+                    <h3 className="font-bold mt-1">
+                      {
+                        selectedCourse.duration
+                      }
+                    </h3>
+
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+
+                    <p className="text-gray-500 text-sm">
+                      Level
+                    </p>
+
+                    <h3 className="font-bold mt-1 text-red-600">
+                      {
+                        selectedCourse.level
+                      }
+                    </h3>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
 
       </div>
 
     </div>
   );
 }
-```
