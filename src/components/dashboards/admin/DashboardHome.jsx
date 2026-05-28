@@ -44,47 +44,13 @@ const DashboardHome = () => {
           {/* SUBTITLE */}
 
           <p className="text-slate-500 mt-3 text-lg max-w-2xl leading-relaxed">
-            Welcome back, Admin. Monitor platform growth,
-            student engagement, live cohorts, payments,
-            analytics, and overall learning activities.
+            
           </p>
 
         </div>
 
-        {/* RIGHT STATUS CARD */}
-
-        <motion.div
-          whileHover={{ y: -3 }}
-          transition={{ duration: 0.2 }}
-          className="flex items-center gap-4 rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] px-5 py-4"
-        >
           
-          {/* LIVE DOT */}
-
-          <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{
-              repeat: Infinity,
-              duration: 2,
-            }}
-            className="w-3 h-3 rounded-full bg-emerald-500"
-          />
-
-          {/* STATUS */}
-
-          <div>
-            
-            <p className="text-sm text-slate-500">
-              Platform Status
-            </p>
-
-            <h3 className="text-lg font-semibold text-slate-800">
-              All Systems Active
-            </h3>
-
-          </div>
-
-        </motion.div>
+        
 
       </motion.div>
 
