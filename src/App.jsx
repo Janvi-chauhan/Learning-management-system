@@ -10,6 +10,8 @@ import ResultsPage from "./pages/ResultsPage";
 import DashboardLayout from "./layout/DasboardLayout";
 import DashboardHome from "./components/dashboards/admin/DashboardHome";
 import AdminLayout from "./layout/AdminLayout";
+import PremiumSignInPage from "./pages/SignIn";
+import RegisterPage from "./pages/Register";
 
 export default function App() {
   return (
@@ -24,6 +26,10 @@ export default function App() {
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/dashboard" element={<DashboardLayout/>} />
         <Route path="/adminDashboard" element={<AdminLayout/>} />
+        <Route path="/login" element={<PremiumSignInPage/>} />
+        <Route path="/register" element={<RegisterPage/>} />
+
+
        
         
         
