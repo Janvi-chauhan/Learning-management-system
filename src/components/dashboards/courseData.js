@@ -3,224 +3,339 @@
 const coursesData = [
   {
     id: 1,
-    title: "MERN Stack Development",
-    description:
-      "Build full-stack web applications using MongoDB, Express.js, React, and Node.js.",
+
+    slug: "dsa-with-python",
+
+    category:
+      "IT & Software / Other IT & Software / DSA",
+
+    title: "DSA with Python",
+
+    shortDesc:
+      "Master Data Structures & Algorithms with Python through real projects and placement focused training.",
+
+    createdBy: "Programming Classes",
+
+    updatedAt: "2026-02-01",
+
+    language: ["English", "Hindi"],
+
+    rating: 4.8,
+
+    students: "1200+ Students",
+
     duration: "6 Months",
+
     level: "Intermediate",
-    students: 120,
-    rating: 4.9,
+
     status: "Active",
+
+    latest: true,
+
+    thumbnail:
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4",
+
+    previewVideo:
+      "https://youtube.com",
+
+    brochure:
+      "/brochures/dsa-python.pdf",
+
+    // ================= LEARNINGS =================
+
+    learnings: [
+      "Live project based learning",
+
+      "DSA from basics to advanced",
+
+      "Resume & LinkedIn optimization",
+
+      "Mock interviews with feedback",
+
+      "Placement assistance & referrals",
+
+      "Problem solving & coding mindset",
+
+      "Interview-focused preparation",
+
+      "Real-world industry examples",
+    ],
+
+    // ================= ROADMAP =================
+
+    roadmap: [
+      {
+        step: 1,
+
+        title: "Python Basics",
+
+        desc:
+          "Syntax, variables, loops, functions and foundations",
+      },
+
+      {
+        step: 2,
+
+        title: "DSA Core",
+
+        desc:
+          "Arrays, strings, linked list, stack, queue & recursion",
+      },
+
+      {
+        step: 3,
+
+        title: "Advanced Algorithms",
+
+        desc:
+          "Trees, graphs, hashing, dynamic programming",
+      },
+
+      {
+        step: 4,
+
+        title: "Real Projects",
+
+        desc:
+          "Industry-level practical implementation",
+      },
+
+      {
+        step: 5,
+
+        title: "Placement Preparation",
+
+        desc:
+          "Mock interviews, resume & aptitude",
+      },
+    ],
+
+    // ================= CURRICULUM =================
+
+    curriculum: [
+      "Python Basics",
+
+      "Functions & OOP",
+
+      "Arrays & Strings",
+
+      "Linked List",
+
+      "Stack & Queue",
+
+      "Trees & Graphs",
+
+      "Dynamic Programming",
+
+      "Industry Projects",
+    ],
+
+    // ================= MENTOR =================
+
+    mentor: {
+      name: "Industry Expert",
+
+      experience:
+        "10+ Years Experience",
+
+      image:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+    },
+
+    // ================= CERTIFICATION =================
+
+    certification:
+      "Globally recognized certification with internship letter.",
+
+    // ================= REVIEWS =================
+
+    reviews: [
+      {
+        student:
+          "Rahul Sharma",
+
+        rating: 5,
+
+        comment:
+          "Best course for placements",
+      },
+
+      {
+        student:
+          "Priya Verma",
+
+        rating: 5,
+
+        comment:
+          "Very practical learning experience",
+      },
+    ],
   },
+
+  // ======================================================
+  // SECOND COURSE
+  // ======================================================
+
   {
     id: 2,
-    title: "React.js Advanced",
-    description:
-      "Master hooks, context API, Redux Toolkit, performance optimization, and advanced React patterns.",
-    duration: "3 Months",
-    level: "Advanced",
-    students: 95,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 3,
-    title: "Node.js & Express",
-    description:
-      "Develop scalable REST APIs and backend services using Node.js and Express.",
-    duration: "2 Months",
-    level: "Intermediate",
-    students: 85,
-    rating: 4.7,
-    status: "Active",
-  },
-  {
-    id: 4,
-    title: "MongoDB Mastery",
-    description:
-      "Learn schema design, aggregation pipelines, indexing, and performance optimization.",
-    duration: "2 Months",
-    level: "Intermediate",
-    students: 70,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 5,
-    title: "Java Full Stack Development",
-    description:
-      "Build enterprise-grade applications using Java, Spring Boot, React, and MySQL.",
-    duration: "6 Months",
-    level: "Intermediate",
-    students: 140,
+
+    slug: "mern-stack-development",
+
+    category:
+      "Web Development / Full Stack",
+
+    title: "MERN Stack Development",
+
+    shortDesc:
+      "Become a complete full stack developer using MongoDB, Express, React and Node.js.",
+
+    createdBy: "Programming Classes",
+
+    updatedAt: "2026-01-15",
+
+    language: ["English", "Hindi"],
+
     rating: 4.9,
-    status: "Active",
-  },
-  {
-    id: 6,
-    title: "Spring Boot",
-    description:
-      "Create production-ready Java backend applications with Spring Boot.",
-    duration: "2 Months",
-    level: "Intermediate",
-    students: 110,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 7,
-    title: "Hibernate",
-    description:
-      "Understand ORM concepts and database integration using Hibernate.",
-    duration: "1.5 Months",
-    level: "Intermediate",
-    students: 90,
-    rating: 4.6,
-    status: "Active",
-  },
-  {
-    id: 8,
-    title: "Microservices with Java",
-    description:
-      "Design scalable distributed systems using Spring Cloud and Docker.",
-    duration: "3 Months",
+
+    students: "1800+ Students",
+
+    duration: "8 Months",
+
     level: "Advanced",
-    students: 75,
-    rating: 4.7,
+
     status: "Active",
-  },
-  {
-    id: 9,
-    title: "DSA in Java",
-    description:
-      "Master data structures and algorithms with Java for coding interviews.",
-    duration: "4 Months",
-    level: "Intermediate",
-    students: 180,
-    rating: 4.9,
-    status: "Active",
-  },
-  {
-    id: 10,
-    title: "Python Programming",
-    description:
-      "Learn Python fundamentals, OOP, file handling, and automation.",
-    duration: "2 Months",
-    level: "Beginner",
-    students: 160,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 11,
-    title: "NumPy & Pandas",
-    description:
-      "Analyze and manipulate data efficiently using Python libraries.",
-    duration: "1.5 Months",
-    level: "Intermediate",
-    students: 100,
-    rating: 4.7,
-    status: "Active",
-  },
-  {
-    id: 12,
-    title: "Machine Learning",
-    description:
-      "Build predictive models using scikit-learn and real-world datasets.",
-    duration: "4 Months",
-    level: "Advanced",
-    students: 130,
-    rating: 4.9,
-    status: "Active",
-  },
-  {
-    id: 13,
-    title: "Data Structures",
-    description:
-      "Learn arrays, linked lists, trees, graphs, and their applications.",
-    duration: "3 Months",
-    level: "Intermediate",
-    students: 170,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 14,
-    title: "Algorithms",
-    description:
-      "Master sorting, searching, dynamic programming, and graph algorithms.",
-    duration: "3 Months",
-    level: "Advanced",
-    students: 145,
-    rating: 4.9,
-    status: "Active",
-  },
-  {
-    id: 15,
-    title: "Competitive Programming",
-    description:
-      "Sharpen problem-solving skills for contests and technical interviews.",
-    duration: "4 Months",
-    level: "Advanced",
-    students: 90,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 16,
-    title: "React.js",
-    description:
-      "Build modern and responsive user interfaces using React.",
-    duration: "2 Months",
-    level: "Intermediate",
-    students: 150,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 17,
-    title: "Next.js",
-    description:
-      "Develop server-rendered and SEO-friendly React applications.",
-    duration: "2 Months",
-    level: "Advanced",
-    students: 115,
-    rating: 4.9,
-    status: "Active",
-  },
-  {
-    id: 18,
-    title: "Tailwind CSS",
-    description:
-      "Design beautiful, responsive UIs using utility-first CSS.",
-    duration: "1 Month",
-    level: "Beginner",
-    students: 140,
-    rating: 4.7,
-    status: "Active",
-  },
-  {
-    id: 19,
-    title: "Frontend Performance Optimization",
-    description:
-      "Improve speed, SEO, and Core Web Vitals of web applications.",
-    duration: "1.5 Months",
-    level: "Advanced",
-    students: 60,
-    rating: 4.8,
-    status: "Active",
-  },
-  {
-    id: 20,
-    title: "UI/UX Design Fundamentals",
-    description:
-      "Learn wireframing, prototyping, and design principles for modern applications.",
-    duration: "2 Months",
-    level: "Beginner",
-    students: 80,
-    rating: 4.6,
-    status: "Active",
+
+    latest: true,
+
+    thumbnail:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+
+    previewVideo:
+      "https://youtube.com",
+
+    brochure:
+      "/brochures/mern.pdf",
+
+    learnings: [
+      "Frontend + Backend mastery",
+
+      "Authentication systems",
+
+      "REST APIs",
+
+      "MongoDB integration",
+
+      "Deployment",
+
+      "Real-world projects",
+
+      "Resume building",
+
+      "Placement support",
+    ],
+
+    roadmap: [
+      {
+        step: 1,
+
+        title: "Frontend Basics",
+
+        desc:
+          "HTML, CSS, JavaScript foundations",
+      },
+
+      {
+        step: 2,
+
+        title: "React.js",
+
+        desc:
+          "Hooks, routing, API handling",
+      },
+
+      {
+        step: 3,
+
+        title: "Backend Development",
+
+        desc:
+          "Node.js & Express APIs",
+      },
+
+      {
+        step: 4,
+
+        title: "MongoDB",
+
+        desc:
+          "Database design & integration",
+      },
+
+      {
+        step: 5,
+
+        title: "Deployment",
+
+        desc:
+          "Deploy full applications",
+      },
+    ],
+
+    curriculum: [
+      "HTML & CSS",
+
+      "JavaScript",
+
+      "React",
+
+      "Node.js",
+
+      "Express",
+
+      "MongoDB",
+
+      "Authentication",
+
+      "Deployment",
+    ],
+
+    mentor: {
+      name: "Senior MERN Developer",
+
+      experience:
+        "8+ Years Experience",
+
+      image:
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
+    },
+
+    certification:
+      "Industry-recognized MERN certification.",
+
+    reviews: [
+      {
+        student:
+          "Aditya",
+
+        rating: 5,
+
+        comment:
+          "Got placed after completing this course",
+      },
+    ],
   },
 ];
+
+// ======================================================
+// ONLY SHOW LATEST 7 COURSES
+// ======================================================
+
+export const latestCourses = [...coursesData]
+  .sort(
+    (a, b) =>
+      new Date(b.updatedAt) -
+      new Date(a.updatedAt)
+  )
+  .slice(0, 7);
 
 export default coursesData;

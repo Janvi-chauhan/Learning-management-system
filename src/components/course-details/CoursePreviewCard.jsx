@@ -5,9 +5,9 @@ export default function CoursePreviewCard() {
     <div
       className="
         hidden lg:block
-        absolute
-        top-30
-        right-0
+        fixed
+        top-50
+        right-28
         w-[400px]
         bg-white
         shadow-2xl

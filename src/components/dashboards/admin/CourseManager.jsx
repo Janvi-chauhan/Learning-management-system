@@ -1,552 +1,722 @@
-import React, {
-  useState,
-} from "react";
+```jsx
+import { useState } from "react";
 
 import {
   Plus,
   Pencil,
   Trash2,
-  X,
-  Search,
+  Eye,
   BookOpen,
-  Clock3,
-  IndianRupee,
 } from "lucide-react";
 
-import { motion } from "framer-motion";
+import CourseEditModal from "./courseManager/CourseEditModal";
+import CourseViewModal from "./courseManager/CourseViewModal";
 
-// ================= INITIAL FORM =================
+// ======================================================
+// INITIAL FORM
+// ======================================================
 
 const initialForm = {
   title: "",
-  instructor: "",
+  slug: "",
+  category: "",
   duration: "",
-  price: "",
+  level: "",
+  language: "",
+  thumbnail: "",
+  previewVideo: "",
+  brochure: "",
+
+  learnings: [""],
+
+  roadmap: [
+    {
+      title: "",
+      desc: "",
+    },
+  ],
+
+  curriculum: [""],
+
+  mentorName: "",
+  mentorExperience: "",
+  mentorImage: "",
+
+  reviews: [
+    {
+      student: "",
+      comment: "",
+    },
+  ],
+
   status: "Active",
+  featured: false,
+  latest: true,
 };
 
-// ================= SAMPLE DATA =================
+// ======================================================
+// SAMPLE DATA
+// ======================================================
 
 const sampleCourses = [
   {
     id: 1,
-    title:
-      "MERN Stack Development",
-    instructor:
-      "Rahul Sharma",
+
+    title: "DSA with Python",
+
+    category: "DSA",
+
     duration: "6 Months",
-    price: "25000",
+
+    level: "Intermediate",
+
+    students: "1200+",
+
     status: "Active",
+
+    thumbnail:
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop",
   },
 
   {
     id: 2,
-    title:
-      "Java Full Stack",
-    instructor:
-      "Priya Verma",
-    duration: "5 Months",
-    price: "22000",
-    status: "Active",
-  },
 
-  {
-    id: 3,
-    title:
-      "UI/UX Design",
-    instructor:
-      "Aman Gupta",
-    duration: "3 Months",
-    price: "15000",
-    status: "Inactive",
+    title: "MERN Stack",
+
+    category: "Web Development",
+
+    duration: "8 Months",
+
+    level: "Advanced",
+
+    students: "1800+",
+
+    status: "Active",
+
+    thumbnail:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
   },
 ];
 
-// ================= COMPONENT =================
+// ======================================================
+// COMPONENT
+// ======================================================
 
-const ManageCourses = () => {
-  const [courses, setCourses] =
-    useState(sampleCourses);
+export default function CourseManager() {
 
-  const [search, setSearch] =
-    useState("");
+  // ======================================================
+  // STATES
+  // ======================================================
 
-  const [showModal, setShowModal] =
+  const [showCreator, setShowCreator] =
+    useState(false);
+
+  const [showViewModal, setShowViewModal] =
+    useState(false);
+
+  const [selectedCourse, setSelectedCourse] =
+    useState(null);
+
+  const [editMode, setEditMode] =
     useState(false);
 
   const [editId, setEditId] =
     useState(null);
 
+  const [activeTab, setActiveTab] =
+    useState("basics");
+
   const [formData, setFormData] =
     useState(initialForm);
 
-  // ================= HANDLE CHANGE =================
+  const [courses, setCourses] =
+    useState(sampleCourses);
 
-  const handleChange = ({
-    target,
-  }) =>
-    setFormData({
-      ...formData,
+  // ======================================================
+  // TABS
+  // ======================================================
 
-      [target.name]:
-        target.value,
-    });
+  const tabs = [
+    {
+      id: "basics",
+      label: "Basics",
+    },
 
-  // ================= MODAL =================
+    {
+      id: "content",
+      label: "Content",
+    },
 
-  const openModal = (
-    course = null
-  ) => {
-    setEditId(
-      course?.id || null
-    );
+    {
+      id: "mentor",
+      label:
+        "Mentor & Reviews",
+    },
 
-    setFormData(
-      course || initialForm
-    );
+    {
+      id: "publish",
+      label: "Publish",
+    },
+  ];
 
-    setShowModal(true);
-  };
+  // ======================================================
+  // SUBMIT
+  // ======================================================
 
-  // ================= SUBMIT =================
+  const handleSubmit = () => {
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    if (editMode) {
 
-    setCourses(
-      editId
-        ? courses.map((c) =>
-            c.id === editId
-              ? {
-                  ...c,
-                  ...formData,
-                }
-              : c
-          )
-        : [
-            ...courses,
+      const updatedCourses =
+        courses.map((course) =>
+          course.id === editId
+            ? {
+                ...course,
+                ...formData,
+              }
+            : course
+        );
 
-            {
-              id: Date.now(),
-              ...formData,
-            },
-          ]
-    );
+      setCourses(updatedCourses);
 
-    setShowModal(false);
+      alert("Course Updated");
+
+    } else {
+
+      const newCourse = {
+        id: Date.now(),
+
+        ...formData,
+
+        students: "0",
+      };
+
+      setCourses([
+        newCourse,
+        ...courses,
+      ]);
+
+      alert(
+        "Course Created Successfully"
+      );
+    }
 
     setFormData(initialForm);
+
+    setEditMode(false);
+
+    setEditId(null);
+
+    setShowCreator(false);
+
+    setActiveTab("basics");
   };
 
-  // ================= DELETE =================
+  // ======================================================
+  // DELETE
+  // ======================================================
 
   const handleDelete = (
     id
-  ) =>
-    window.confirm(
-      "Delete this course?"
-    ) &&
-    setCourses(
+  ) => {
+
+    const confirmDelete =
+      window.confirm(
+        "Delete this course?"
+      );
+
+    if (!confirmDelete)
+      return;
+
+    const updated =
       courses.filter(
-        (c) => c.id !== id
-      )
+        (course) =>
+          course.id !== id
+      );
+
+    setCourses(updated);
+  };
+
+  // ======================================================
+  // EDIT
+  // ======================================================
+
+  const handleEdit = (
+    course
+  ) => {
+
+    setEditMode(true);
+
+    setEditId(course.id);
+
+    setFormData(course);
+
+    setShowCreator(true);
+
+    setActiveTab(
+      "basics"
     );
 
-  // ================= FILTER =================
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-  const filteredCourses =
-    courses.filter((c) =>
-      Object.values(c)
-        .join(" ")
-        .toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
+  // ======================================================
+  // VIEW
+  // ======================================================
+
+  const handleView = (
+    course
+  ) => {
+
+    setSelectedCourse(
+      course
     );
+
+    setShowViewModal(true);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-6">
-      
-      {/* ================= HEADER ================= */}
+    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6">
 
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
-        
-        {/* LEFT */}
+      <div className="max-w-7xl mx-auto">
 
-        <div>
-          
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-sm">
-            
-            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+        {/* ======================================================
+        HEADER
+        ====================================================== */}
 
-            <span className="text-sm font-medium text-slate-600">
-              Course Workspace
-            </span>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+
+          <div>
+
+            <h1 className="text-4xl font-black">
+              Course Manager
+            </h1>
+
+            <p className="text-gray-500 mt-2">
+              Manage all your courses professionally
+            </p>
 
           </div>
 
-          <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
-            Manage Courses
-          </h1>
+          {/* BUTTON */}
 
-          <p className="text-slate-500 mt-3 text-lg">
-            Explore, manage and organize learning programs.
-          </p>
+          <button
+            onClick={() => {
 
-        </div>
+              setShowCreator(
+                !showCreator
+              );
 
-        {/* BUTTON */}
+              setEditMode(false);
 
-        <motion.button
-          whileHover={{
-            scale: 1.03,
-          }}
-          whileTap={{
-            scale: 0.97,
-          }}
-          onClick={() =>
-            openModal()
-          }
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
-        >
-          <Plus size={18} />
-          Add Course
-        </motion.button>
+              setEditId(null);
 
-      </div>
+              setFormData(
+                initialForm
+              );
+            }}
+            className="
+              flex items-center gap-2
+              bg-red-600 hover:bg-red-700
+              text-white
+              px-6 py-4
+              rounded-2xl
+              font-semibold
+              shadow-lg
+              transition
+            "
+          >
+            <Plus size={20} />
 
-      {/* ================= SEARCH ================= */}
-
-      <div className="rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-4 mb-6">
-        
-        <div className="flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-3">
-          
-          <Search
-            className="text-slate-400 mr-3"
-            size={18}
-          />
-
-          <input
-            type="text"
-            placeholder="Search courses..."
-            value={search}
-            onChange={(e) =>
-              setSearch(
-                e.target.value
-              )
-            }
-            className="w-full bg-transparent outline-none text-slate-700"
-          />
+            {showCreator
+              ? "Close Creator"
+              : "Create Course"}
+          </button>
 
         </div>
 
-      </div>
+        {/* ======================================================
+        CREATE / EDIT COMPONENT
+        ====================================================== */}
 
-      {/* ================= COURSES ================= */}
+        <CourseEditModal
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          tabs={tabs}
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+          showCreator={showCreator}
+        />
 
-      {filteredCourses.length ? (
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          
-          {filteredCourses.map(
-            (c, index) => (
-              <motion.div
-                key={c.id}
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay:
-                    index * 0.05,
-                }}
-                whileHover={{
-                  y: -4,
-                }}
-                className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-6"
+        {/* ======================================================
+        TABLE
+        ====================================================== */}
+
+        <div className="hidden md:block bg-white border rounded-3xl shadow-sm overflow-hidden">
+
+          <div className="w-full overflow-x-auto">
+
+            <table className="w-full min-w-[950px]">
+
+              <thead className="bg-gray-50 border-b">
+
+                <tr>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Course
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Category
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Duration
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Level
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Students
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Status
+                  </th>
+
+                  <th className="text-left px-4 xl:px-6 py-4 font-bold text-sm">
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {courses.map(
+                  (course) => (
+
+                    <tr
+                      key={course.id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
+
+                      {/* COURSE */}
+
+                      <td className="px-4 xl:px-6 py-4">
+
+                        <div className="flex items-center gap-3">
+
+                          <img
+                            src={
+                              course.thumbnail
+                            }
+                            alt={
+                              course.title
+                            }
+                            className="
+                              w-12 h-12
+                              xl:w-16 xl:h-16
+                              rounded-2xl
+                              object-cover
+                            "
+                          />
+
+                          <div className="min-w-0">
+
+                            <h3 className="font-bold text-sm xl:text-base truncate max-w-[180px] xl:max-w-[250px]">
+                              {
+                                course.title
+                              }
+                            </h3>
+
+                            <p className="text-xs text-gray-500 mt-1">
+                              Course
+                            </p>
+
+                          </div>
+
+                        </div>
+
+                      </td>
+
+                      {/* CATEGORY */}
+
+                      <td className="px-4 xl:px-6 py-4 text-sm">
+                        {course.category}
+                      </td>
+
+                      {/* DURATION */}
+
+                      <td className="px-4 xl:px-6 py-4 text-sm whitespace-nowrap">
+                        {course.duration}
+                      </td>
+
+                      {/* LEVEL */}
+
+                      <td className="px-4 xl:px-6 py-4 text-sm">
+
+                        <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">
+                          {course.level}
+                        </span>
+
+                      </td>
+
+                      {/* STUDENTS */}
+
+                      <td className="px-4 xl:px-6 py-4 text-sm">
+                        {course.students}
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td className="px-4 xl:px-6 py-4 text-sm">
+
+                        <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-medium">
+                          {course.status}
+                        </span>
+
+                      </td>
+
+                      {/* ACTIONS */}
+
+                      <td className="px-4 xl:px-6 py-4">
+
+                        <div className="flex gap-2">
+
+                          {/* VIEW */}
+
+                          <button
+                            onClick={() =>
+                              handleView(course)
+                            }
+                            className="
+                              w-9 h-9
+                              rounded-xl
+                              bg-gray-100
+                              hover:bg-gray-200
+                              flex items-center justify-center
+                              transition
+                            "
+                          >
+                            <Eye size={17} />
+                          </button>
+
+                          {/* EDIT */}
+
+                          <button
+                            onClick={() =>
+                              handleEdit(course)
+                            }
+                            className="
+                              w-9 h-9
+                              rounded-xl
+                              bg-red-100
+                              text-red-600
+                              hover:bg-red-200
+                              flex items-center justify-center
+                              transition
+                            "
+                          >
+                            <Pencil size={17} />
+                          </button>
+
+                          {/* DELETE */}
+
+                          <button
+                            onClick={() =>
+                              handleDelete(
+                                course.id
+                              )
+                            }
+                            className="
+                              w-9 h-9
+                              rounded-xl
+                              bg-black
+                              text-white
+                              hover:bg-gray-800
+                              flex items-center justify-center
+                              transition
+                            "
+                          >
+                            <Trash2 size={17} />
+                          </button>
+
+                        </div>
+
+                      </td>
+
+                    </tr>
+                  )
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        {/* ======================================================
+        MOBILE CARDS
+        ====================================================== */}
+
+        <div className="grid grid-cols-1 gap-5 md:hidden">
+
+          {courses.map(
+            (course) => (
+
+              <div
+                key={course.id}
+                className="bg-white border rounded-3xl overflow-hidden shadow-sm"
               >
-                
-                {/* Glow */}
 
-                <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-orange-200/10 blur-3xl" />
+                {/* IMAGE */}
 
-                {/* Top */}
+                <div className="h-[220px] overflow-hidden">
 
-                <div className="relative z-10 flex items-start justify-between mb-5">
-                  
-                  {/* LEFT */}
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
 
-                  <div>
-                    
-                    <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mb-4">
-                      <BookOpen size={24} />
+                </div>
+
+                {/* CONTENT */}
+
+                <div className="p-5">
+
+                  <div className="flex items-start justify-between mb-4">
+
+                    <div className="min-w-0">
+
+                      <h2 className="text-2xl font-black truncate">
+                        {course.title}
+                      </h2>
+
+                      <p className="text-gray-500 mt-1 text-sm">
+                        {course.category}
+                      </p>
+
                     </div>
 
-                    <h2 className="text-2xl font-bold text-slate-800 leading-snug">
-                      {c.title}
-                    </h2>
-
-                    <p className="text-slate-500 mt-2">
-                      {c.instructor}
-                    </p>
+                    <BookOpen
+                      className="text-red-600"
+                      size={22}
+                    />
 
                   </div>
 
-                  {/* STATUS */}
+                  {/* INFO */}
 
-                  <span
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                      c.status ===
-                      "Active"
-                        ? "bg-emerald-100 text-emerald-600"
-                        : "bg-rose-100 text-rose-600"
-                    }`}
-                  >
-                    {c.status}
-                  </span>
+                  <div className="space-y-3 text-sm">
 
-                </div>
+                    <div className="flex justify-between">
 
-                {/* INFO */}
+                      <span className="text-gray-500">
+                        Duration
+                      </span>
 
-                <div className="relative z-10 space-y-3">
-                  
-                  <div className="flex items-center gap-3 text-slate-600">
-                    
-                    <Clock3 size={17} />
+                      <span className="font-semibold">
+                        {course.duration}
+                      </span>
 
-                    <span>
-                      {c.duration}
-                    </span>
+                    </div>
+
+                    <div className="flex justify-between">
+
+                      <span className="text-gray-500">
+                        Level
+                      </span>
+
+                      <span className="font-semibold text-red-600">
+                        {course.level}
+                      </span>
+
+                    </div>
+
+                    <div className="flex justify-between">
+
+                      <span className="text-gray-500">
+                        Students
+                      </span>
+
+                      <span className="font-semibold">
+                        {course.students}
+                      </span>
+
+                    </div>
 
                   </div>
 
-                  <div className="flex items-center gap-3 text-slate-600">
-                    
-                    <IndianRupee size={17} />
+                  {/* ACTIONS */}
 
-                    <span>
-                      ₹{c.price}
-                    </span>
+                  <div className="grid grid-cols-3 gap-3 mt-6">
+
+                    <button
+                      onClick={() =>
+                        handleView(course)
+                      }
+                      className="bg-gray-100 hover:bg-gray-200 py-3 rounded-2xl font-semibold transition text-sm"
+                    >
+                      View
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleEdit(course)
+                      }
+                      className="bg-red-600 hover:bg-red-700 text-white py-3 rounded-2xl font-semibold transition text-sm"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleDelete(
+                          course.id
+                        )
+                      }
+                      className="bg-black hover:bg-gray-800 text-white py-3 rounded-2xl font-semibold transition text-sm"
+                    >
+                      Delete
+                    </button>
 
                   </div>
 
                 </div>
 
-                {/* ACTIONS */}
-
-                <div className="relative z-10 flex gap-3 mt-6">
-                  
-                  <motion.button
-                    whileHover={{
-                      scale: 1.03,
-                    }}
-                    whileTap={{
-                      scale: 0.97,
-                    }}
-                    onClick={() =>
-                      openModal(c)
-                    }
-                    className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-orange-100 text-orange-600 py-3 hover:bg-orange-200 transition-all"
-                  >
-                    <Pencil size={16} />
-                    Edit
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{
-                      scale: 1.03,
-                    }}
-                    whileTap={{
-                      scale: 0.97,
-                    }}
-                    onClick={() =>
-                      handleDelete(
-                        c.id
-                      )
-                    }
-                    className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-rose-100 text-rose-600 py-3 hover:bg-rose-200 transition-all"
-                  >
-                    <Trash2 size={16} />
-                    Delete
-                  </motion.button>
-
-                </div>
-
-              </motion.div>
+              </div>
             )
           )}
 
         </div>
-      ) : (
-        
-        <div className="rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-14 text-center text-slate-500">
-          No courses found
-        </div>
-      )}
 
-      {/* ================= MODAL ================= */}
+        {/* ======================================================
+        VIEW MODAL COMPONENT
+        ====================================================== */}
 
-      {showModal && (
-        
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-center items-center p-4">
-          
-          <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.95,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-            }}
-            className="w-full max-w-lg rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl"
-          >
-            
-            {/* HEADER */}
+        <CourseViewModal
+          selectedCourse={
+            selectedCourse
+          }
+          setShowViewModal={
+            setShowViewModal
+          }
+        />
 
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-              
-              <h2 className="text-3xl font-bold text-slate-800">
-                {editId
-                  ? "Edit Course"
-                  : "Add Course"}
-              </h2>
+      </div>
 
-              <button
-                onClick={() =>
-                  setShowModal(
-                    false
-                  )
-                }
-                className="p-2 rounded-xl hover:bg-slate-100 transition-all"
-              >
-                <X size={20} />
-              </button>
-
-            </div>
-
-            {/* FORM */}
-
-            <form
-              onSubmit={
-                handleSubmit
-              }
-              className="p-6 space-y-4"
-            >
-              
-              {[
-                [
-                  "title",
-                  "Course Title",
-                ],
-
-                [
-                  "instructor",
-                  "Instructor",
-                ],
-
-                [
-                  "duration",
-                  "Duration",
-                ],
-
-                [
-                  "price",
-                  "Price",
-                ],
-              ].map(
-                ([
-                  name,
-                  placeholder,
-                ]) => (
-                  <input
-                    key={name}
-                    type={
-                      name ===
-                      "price"
-                        ? "number"
-                        : "text"
-                    }
-                    name={name}
-                    placeholder={
-                      placeholder
-                    }
-                    value={
-                      formData[
-                        name
-                      ]
-                    }
-                    onChange={
-                      handleChange
-                    }
-                    required
-                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-orange-300"
-                  />
-                )
-              )}
-
-              {/* STATUS */}
-
-              <select
-                name="status"
-                value={
-                  formData.status
-                }
-                onChange={
-                  handleChange
-                }
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-orange-300"
-              >
-                <option>
-                  Active
-                </option>
-
-                <option>
-                  Inactive
-                </option>
-
-              </select>
-
-              {/* BUTTONS */}
-
-              <div className="flex justify-end gap-3 pt-2">
-                
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowModal(
-                      false
-                    )
-                  }
-                  className="px-5 py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
-                >
-                  {editId
-                    ? "Update"
-                    : "Add"}
-                </button>
-
-              </div>
-
-            </form>
-
-          </motion.div>
-
-        </div>
-      )}
     </div>
   );
-};
-
-export default ManageCourses;
+}
+```

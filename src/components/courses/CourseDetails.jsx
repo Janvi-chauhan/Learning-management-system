@@ -6,7 +6,6 @@ import Projects from "../course-details/Projects";
 import Mentors from "../course-details/Mentors";
 import Certification from "../course-details/Certification";
 import Reviews from "../course-details/Reviews";
-import ApplyCTA from "../course-details/ApplyCTA";
 
 export default function CourseDetails() {
   return (
@@ -26,7 +25,6 @@ export default function CourseDetails() {
         </div>
       </div>
 
-      <ApplyCTA />
     </div>
   );
 }
