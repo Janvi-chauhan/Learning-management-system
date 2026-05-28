@@ -12,6 +12,7 @@ import {
   Settings,
   LogOut,
   ChevronRight,
+  Briefcase,
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,6 +51,12 @@ const adminMenu = {
       name: "Payments",
       icon: CreditCard,
       key: "payments",
+    },
+
+    {
+      name: "Placements",
+      icon: Briefcase,
+      key: "placements",
     },
 
    

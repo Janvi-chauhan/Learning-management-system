@@ -7,6 +7,7 @@ import CourseManager from "../components/dashboards/admin/CourseManager";
 import PaymentsManager from "../components/dashboards/admin/PaymentsManager";
 import Charts from "../components/dashboards/admin/Charts";
 import ManageTeacher from "../components/dashboards/admin/teacher/teacherManager";
+import Placement from "../components/dashboards/admin/Placements";
 
 const componentMap = {
   dashboard: DashboardHome,
@@ -15,6 +16,7 @@ const componentMap = {
   courses: CourseManager,
   payments: PaymentsManager,
   charts: Charts,
+  placements: Placement,
 };
 
 const AdminLayout = () => {
