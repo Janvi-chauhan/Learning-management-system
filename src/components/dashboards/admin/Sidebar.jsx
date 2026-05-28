@@ -1,3 +1,5 @@
+// src/components/dashboards/admin/Sidebar.jsx
+
 import {
   LayoutDashboard,
   Users,
@@ -9,163 +11,546 @@ import {
   Bell,
   Settings,
   LogOut,
+  ChevronRight,
 } from "lucide-react";
+
+import { motion, AnimatePresence } from "framer-motion";
+
+import { useState } from "react";
+
+// ================= MENU =================
 
 const adminMenu = {
   desktopMain: [
-    { name: "Dashboard", icon: LayoutDashboard, key: "dashboard" },
-    { name: "Students", icon: Users, key: "students" },
-    { name: "Teachers", icon: GraduationCap, key: "teachers" },
-    { name: "Courses", icon: BookOpen, key: "courses" },
-    { name: "Payments", icon: CreditCard, key: "payments" },
-    { name: "Reports", icon: BarChart3, key: "reports" },
+    {
+      name: "Dashboard",
+      icon: LayoutDashboard,
+      key: "dashboard",
+    },
+
+    {
+      name: "Students",
+      icon: Users,
+      key: "students",
+    },
+
+    {
+      name: "Teachers",
+      icon: GraduationCap,
+      key: "teachers",
+    },
+
+    {
+      name: "Courses",
+      icon: BookOpen,
+      key: "courses",
+    },
+
+    {
+      name: "Payments",
+      icon: CreditCard,
+      key: "payments",
+    },
+
+   
   ],
 
   desktopPages: [
-    { name: "Messages", icon: MessageSquare, key: "messages" },
-    { name: "Notifications", icon: Bell, key: "notifications" },
-    { name: "Settings", icon: Settings, key: "settings" },
-  ],
+    {
+      name: "Messages",
+      icon: MessageSquare,
+      key: "messages",
+    },
 
-  mobileBottom: [
-    { name: "Home", icon: LayoutDashboard, key: "dashboard" },
-    { name: "Students", icon: Users, key: "students" },
-    { name: "Teachers", icon: GraduationCap, key: "teachers" },
-    { name: "Courses", icon: BookOpen, key: "courses" },
-    { name: "Reports", icon: BarChart3, key: "reports" },
+    {
+      name: "Notifications",
+      icon: Bell,
+      key: "notifications",
+    },
+
+    {
+      name: "Settings",
+      icon: Settings,
+      key: "settings",
+    },
   ],
 };
 
-function DesktopNavItem({ item, activeSection, setActiveSection }) {
+// ================= NAV ITEM =================
+
+function NavItem({ item, activeSection, setActiveSection, collapsed }) {
   const Icon = item.icon;
+
   const isActive = activeSection === item.key;
 
   return (
-    <button
+    <motion.button
+      whileHover={{
+        scale: 1.04,
+      }}
+      whileTap={{
+        scale: 0.96,
+      }}
       onClick={() => setActiveSection(item.key)}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-        isActive
-          ? "bg-gradient-to-r from-[#FFD700] to-[#FFC107] text-[#7A0000] shadow-lg font-semibold"
-          : "text-white hover:bg-white/10 hover:text-[#FFD700]"
-      }`}
-    >
-      <Icon size={25} />
-      <span className="text-lg font-semibold">
-  {item.name}
-</span>
-    </button>
-  );
-}
+      className={`
+        relative
 
-function BottomNavItem({ item, activeSection, setActiveSection }) {
-  const Icon = item.icon;
-  const isActive = activeSection === item.key;
+        flex
+        items-center
 
-  return (
-    <button
-      onClick={() => setActiveSection(item.key)}
-      className="flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200"
+        ${collapsed ? "justify-center" : "justify-start px-4"}
+
+        ${collapsed ? "w-[58px] h-[58px]" : "w-[220px] h-[56px]"}
+
+        rounded-2xl
+
+        overflow-hidden
+
+        transition-all
+        duration-300
+
+        group
+
+        ${isActive ? "bg-white/10" : "hover:bg-white/5"}
+      `}
     >
+      {/* Active Indicator */}
+
+      {isActive && (
+        <motion.div
+          layoutId="activeIndicator"
+          className="
+            absolute
+            left-0
+            top-3
+            bottom-3
+
+            w-[3px]
+
+            rounded-full
+
+            bg-gradient-to-b
+            from-[#ff5a36]
+            to-[#ffb347]
+          "
+        />
+      )}
+
+      {/* ICON */}
+
       <div
-        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-          isActive
-            ? "bg-gradient-to-r from-red-600 to-yellow-500 text-white shadow-md"
-            : "bg-gray-100 text-gray-500"
-        }`}
+        className={`
+          flex
+          items-center
+          justify-center
+
+          min-w-[44px]
+          h-[44px]
+
+          rounded-xl
+
+          transition-all
+          duration-300
+
+          ${
+            isActive
+              ? "bg-gradient-to-br from-[#ff5a36] to-[#ffb347] text-white shadow-lg shadow-orange-500/20"
+              : "text-slate-400 group-hover:text-white"
+          }
+        `}
       >
-        <Icon size={22} />
+        <Icon size={20} />
       </div>
 
-      <span
-        className={`text-[15px] font-semibold mt-1 truncate max-w-[60px] ${
-          isActive ? "text-red-600" : "text-gray-500"
-        }`}
-      >
-        {item.name}
-      </span>
-    </button>
+      {/* TEXT */}
+
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.span
+            initial={{
+              opacity: 0,
+              x: -10,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
+            exit={{
+              opacity: 0,
+              x: -10,
+            }}
+            transition={{
+              duration: 0.2,
+            }}
+            className="
+              ml-3
+
+              text-[15px]
+              font-medium
+
+              text-slate-200
+
+              whitespace-nowrap
+            "
+          >
+            {item.name}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
   );
 }
 
-export default function Sidebar({
-  activeSection,
-  setActiveSection,
-}) {
-  const config = adminMenu;
+// ================= SIDEBAR =================
+
+export default function Sidebar({ activeSection, setActiveSection }) {
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <>
-      <aside className="hidden lg:flex w-72 min-h-screen bg-gradient-to-b from-[#7A0000] via-[#B30000] to-[#E53935] text-white flex-col justify-between shadow-2xl">
-        <div>
-          <div className="px-6 py-8 border-b border-white/10">
-            <h1 className="text-3xl font-extrabold tracking-wide">
-              <span className="text-[#FFD700]">PROGRAMMING</span>
-            </h1>
-            <p className="text-lg tracking-[0.35em] text-yellow-100 mt-1 font-bold">
-              CLASSES
-            </p>
-          </div>
+      {/* DESKTOP SIDEBAR */}
 
-          <div className="px-6 mt-6 ">
-            <p className="text-[18px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
+      <motion.aside
+        animate={{
+          width: collapsed ? "92px" : "280px",
+        }}
+        transition={{
+          duration: 0.35,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="
+          hidden
+          lg:flex
+          sticky
+          top-0
+          h-screen
+          bg-[#0f172a]
+          flex-col
+          py-5
+          px-4
+          overflow-visible
+
+          shadow-2xl
+
+          z-50
+        "
+      >
+        {/* Ambient Glow */}
+
+        <div
+          className="
+            absolute
+            top-0
+            left-0
+
+            w-full
+            h-52
+
+            bg-gradient-to-b
+            from-[#ff5a36]/10
+            to-transparent
+
+            pointer-events-none
+          "
+        />
+
+        {/* ================= LOGO ================= */}
+
+        <div
+          className={`
+            flex
+            items-center
+
+            ${collapsed ? "justify-center" : "px-2"}
+          `}
+        >
+          {/* Logo */}
+
+          <motion.div
+            whileHover={{
+              scale: 1.05,
+              rotate: 4,
+            }}
+            className="
+              w-12
+              h-12
+
+              rounded-2xl
+
+              bg-gradient-to-br
+              from-[#ff5a36]
+              to-[#ffb347]
+
+              flex
+              items-center
+              justify-center
+
+              text-white
+              font-bold
+              text-xl
+
+              shadow-lg
+              shadow-orange-500/20
+            "
+          >
+            P
+          </motion.div>
+
+          {/* Expanded */}
+
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: -10,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -10,
+                }}
+                transition={{
+                  duration: 0.2,
+                }}
+                className="ml-3"
+              >
+                <h1
+                  className="
+                    text-white
+                    text-[17px]
+                    font-semibold
+                    tracking-wide
+                  "
+                >
+                  Programming
+                </h1>
+
+                <p
+                  className="
+                    text-slate-400
+                    text-xs
+
+                    tracking-[0.25em]
+                    uppercase
+
+                    mt-1
+                  "
+                >
+                  Classes
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* ================= TOGGLE ================= */}
+
+        <motion.button
+          whileHover={{
+            scale: 1.08,
+          }}
+          whileTap={{
+            scale: 0.95,
+          }}
+          onClick={() => setCollapsed(!collapsed)}
+          className="
+            absolute
+            -right-4
+            top-7
+
+            z-50
+
+            w-8
+            h-8
+
+            rounded-full
+
+            bg-[#111827]
+
+            border-4
+            border-white
+
+            flex
+            items-center
+            justify-center
+
+            shadow-lg
+          "
+        >
+          <ChevronRight
+            size={20}
+            className={`
+              text-white
+
+              transition-all
+              duration-300
+
+              ${collapsed ? "" : "rotate-180"}
+            `}
+          />
+        </motion.button>
+
+        {/* ================= MAIN MENU ================= */}
+
+        <div className="mt-12">
+          {!collapsed && (
+            <p
+              className="
+                px-3
+                mb-4
+
+                text-[11px]
+
+                uppercase
+                tracking-[0.25em]
+
+                text-slate-500
+
+                font-semibold
+              "
+            >
               Main Menu
             </p>
+          )}
 
-            <nav className="space-y-2">
-              {config.desktopMain.map((item) => (
-                <DesktopNavItem
-                  key={item.key}
-                  item={item}
-                  activeSection={activeSection}
-                  setActiveSection={setActiveSection}
-                />
-              ))}
-            </nav>
-          </div>
-
-          <div className="px-6 mt-10">
-            <p className="text-[18px] uppercase tracking-widest text-yellow-100/80 mb-4 font-semibold">
-              Pages
-            </p>
-
-            <nav className="space-y-2">
-              {config.desktopPages.map((item) => (
-                <DesktopNavItem
-                  key={item.key}
-                  item={item}
-                  activeSection={activeSection}
-                  setActiveSection={setActiveSection}
-                />
-              ))}
-            </nav>
+          <div
+            className="
+              flex
+              flex-col
+              gap-3
+            "
+          >
+            {adminMenu.desktopMain.map((item) => (
+              <NavItem
+                key={item.key}
+                item={item}
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+                collapsed={collapsed}
+              />
+            ))}
           </div>
         </div>
 
-        <div className="px-6 py-6 border-t border-white/10">
-          <DesktopNavItem
-            item={{
-              name: "Logout",
-              icon: LogOut,
-              key: "logout",
-            }}
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-          />
-        </div>
-      </aside>
+        
+        {/* Spacer */}
 
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] px-2 py-2 pb-safe">
-        <div className="grid grid-cols-5 gap-1">
-          {config.mobileBottom.map((item) => (
-            <BottomNavItem
-              key={item.key}
-              item={item}
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
+        <div className="flex-1" />
+
+        {/* ================= ADMIN PROFILE ================= */}
+
+        <motion.div
+          whileHover={{
+            scale: 1.03,
+          }}
+          className={`
+            flex
+            items-center
+
+            ${collapsed ? "justify-center" : "justify-between"}
+
+            rounded-2xl
+
+            bg-white/5
+
+            border
+            border-white/5
+
+            p-3
+          `}
+        >
+          {/* Left */}
+
+          <div className="flex items-center">
+            <img
+              src="https://i.pravatar.cc/100"
+              alt="admin"
+              className="
+                w-11
+                h-11
+
+                rounded-full
+
+                object-cover
+
+                border-2
+                border-white/10
+              "
             />
-          ))}
-        </div>
-      </nav>
+
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: -10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: -10,
+                  }}
+                  className="ml-3"
+                >
+                  <h3
+                    className="
+                      text-sm
+                      font-semibold
+
+                      text-white
+                    "
+                  >
+                    Admin
+                  </h3>
+
+                  <p
+                    className="
+                      text-xs
+                      text-slate-400
+                    "
+                  >
+                    Super Admin
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Logout */}
+
+          {!collapsed && (
+            <motion.button
+              whileHover={{
+                scale: 1.08,
+              }}
+              whileTap={{
+                scale: 0.95,
+              }}
+              className="
+                w-10
+                h-10
+                rounded-xl
+                bg-white/5
+                flex
+                items-center
+                justify-center
+                text-slate-400
+                hover:text-white
+                transition-all
+              "
+            >
+              <LogOut size={18} />
+            </motion.button>
+          )}
+        </motion.div>
+      </motion.aside>
     </>
   );
 }

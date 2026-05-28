@@ -1,6 +1,5 @@
-// StudentProgress.jsx
-
 import React, { useState } from "react";
+
 import {
   Search,
   GraduationCap,
@@ -8,307 +7,582 @@ import {
   ClipboardCheck,
   Calendar,
   Eye,
-  BookOpen,
   Mail,
+  X,
 } from "lucide-react";
+
+import { motion } from "framer-motion";
+
 import studentsData from "../../studentData";
 
-const initialStudents = studentsData
+// ================= INITIAL DATA =================
+
+const initialStudents =
+  studentsData;
+
+// ================= COMPONENT =================
 
 const StudentProgress = () => {
-  const [search, setSearch] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [search, setSearch] =
+    useState("");
 
-  // Calculate progress
-  const students = initialStudents.map((student) => {
-    const assignmentProgress =
-      (student.assignmentsCompleted /
-        student.totalAssignments) *
-      100;
+  const [
+    selectedStudent,
+    setSelectedStudent,
+  ] = useState(null);
 
-    const testProgress =
-      (student.testsCompleted / student.totalTests) *
-      100;
+  // ================= CALCULATE PROGRESS =================
 
-    const overallProgress = Math.round(
-      (assignmentProgress +
-        testProgress +
-        student.attendance) /
-        3
+  const students =
+    initialStudents.map(
+      (student) => {
+        const assignmentProgress =
+          (student.assignmentsCompleted /
+            student.totalAssignments) *
+          100;
+
+        const testProgress =
+          (student.testsCompleted /
+            student.totalTests) *
+          100;
+
+        const overallProgress =
+          Math.round(
+            (assignmentProgress +
+              testProgress +
+              student.attendance) /
+              3
+          );
+
+        return {
+          ...student,
+
+          assignmentProgress:
+            Math.round(
+              assignmentProgress
+            ),
+
+          testProgress:
+            Math.round(
+              testProgress
+            ),
+
+          overallProgress,
+        };
+      }
     );
 
-    return {
-      ...student,
-      assignmentProgress: Math.round(assignmentProgress),
-      testProgress: Math.round(testProgress),
-      overallProgress,
-    };
-  });
+  // ================= FILTER =================
 
-  // Search filter
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredStudents =
+    students.filter(
+      (student) =>
+        student.name
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
 
-  // Reusable progress bar
-  const ProgressBar = ({ value, color = "bg-red-500" }) => (
-    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+  // ================= PROGRESS BAR =================
+
+  const ProgressBar = ({
+    value,
+    color =
+      "from-[#ff6b3d] to-[#ff9f43]",
+  }) => (
+    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
       <div
-        className={`${color} h-2.5 rounded-full transition-all duration-500`}
-        style={{ width: `${value}%` }}
+        className={`h-full rounded-full bg-gradient-to-r ${color} transition-all duration-700`}
+        style={{
+          width: `${value}%`,
+        }}
       />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-6">
+      
+      {/* ================= HEADER ================= */}
+
+      <div className="mb-8">
+        
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-sm">
+          
+          <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+
+          <span className="text-sm font-medium text-slate-600">
+            Progress Workspace
+          </span>
+
+        </div>
+
+        <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
           Student Progress Tracking
         </h1>
-        <p className="text-gray-500 mt-1">
-          Monitor enrolled courses, assignments,
-          tests, attendance, and overall progress.
+
+        <p className="text-slate-500 mt-3 text-lg max-w-3xl">
+          Monitor assignments, tests, attendance,
+          learning activity and overall student
+          performance analytics.
         </p>
+
       </div>
 
-      {/* Search */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex items-center mb-6">
-        <Search className="text-gray-400 mr-3" size={18} />
-        <input
-          type="text"
-          placeholder="Search student by name..."
-          className="w-full outline-none text-gray-700"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* ================= SEARCH ================= */}
+
+      <div className="rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-4 mb-6">
+        
+        <div className="flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-3">
+          
+          <Search
+            className="text-slate-400 mr-3"
+            size={18}
+          />
+
+          <input
+            type="text"
+            placeholder="Search student by name..."
+            className="w-full outline-none bg-transparent text-slate-700"
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
       </div>
 
-      {/* Student Cards */}
+      {/* ================= STUDENT CARDS ================= */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredStudents.map((student) => (
-          <div
-            key={student.id}
-            className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
-          >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-red-500 to-red-600 p-5 text-white">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                  <GraduationCap size={28} />
+        
+        {filteredStudents.map(
+          (student, index) => (
+            <motion.div
+              key={student.id}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay:
+                  index * 0.05,
+              }}
+              whileHover={{
+                y: -4,
+              }}
+              className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)]"
+            >
+              
+              {/* Glow */}
+
+              <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-orange-200/10 blur-3xl" />
+
+              {/* HEADER */}
+
+              <div className="relative bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] p-6 text-white overflow-hidden">
+                
+                <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+
+                <div className="relative z-10 flex items-center gap-4">
+                  
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20">
+                    <GraduationCap size={28} />
+                  </div>
+
+                  <div className="min-w-0">
+                    
+                    <h3 className="text-xl font-bold truncate">
+                      {student.name}
+                    </h3>
+
+                    <p className="text-sm text-orange-100 truncate mt-1">
+                      {student.email}
+                    </p>
+
+                  </div>
+
                 </div>
 
-                <div className="min-w-0">
-                  <h3 className="font-bold text-lg truncate">
-                    {student.name}
-                  </h3>
-                  <p className="text-red-100 text-sm truncate">
-                    {student.email}
+              </div>
+
+              {/* BODY */}
+
+              <div className="p-6">
+                
+                {/* COURSES */}
+
+                <div className="mb-5">
+                  
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                    Enrolled Courses
                   </p>
-                </div>
-              </div>
-            </div>
 
-            {/* Body */}
-            <div className="p-6">
-              {/* Enrolled Courses */}
-              <div className="mb-5">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  Enrolled Courses
-                </p>
+                  <div className="flex flex-wrap gap-2">
+                    
+                    {student.course.map(
+                      (
+                        course,
+                        index
+                      ) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-600"
+                        >
+                          {course}
+                        </span>
+                      )
+                    )}
 
-                <div className="flex flex-wrap gap-2">
-                  {student.course.map((course, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
-                    >
-                      {course}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Overall Progress */}
-              <div className="mb-5">
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="font-medium text-gray-700">
-                    Overall Progress
-                  </span>
-                  <span className="font-semibold text-red-600">
-                    {student.overallProgress}%
-                  </span>
-                </div>
-                <ProgressBar
-                  value={student.overallProgress}
-                />
-              </div>
-
-              {/* Quick Stats */}
-              <div className="space-y-4 text-sm mb-5">
-                {/* Assignments */}
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="flex items-center gap-1 text-gray-600">
-                      <FileText size={14} />
-                      Assignments
-                    </span>
-                    <span>
-                      {student.assignmentsCompleted}/
-                      {student.totalAssignments}
-                    </span>
                   </div>
-                  <ProgressBar
-                    value={student.assignmentProgress}
-                    color="bg-blue-500"
-                  />
+
                 </div>
 
-                {/* Tests */}
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="flex items-center gap-1 text-gray-600">
-                      <ClipboardCheck size={14} />
-                      Tests
+                {/* OVERALL */}
+
+                <div className="mb-6">
+                  
+                  <div className="flex justify-between mb-2">
+                    
+                    <span className="text-sm font-medium text-slate-700">
+                      Overall Progress
                     </span>
-                    <span>
-                      {student.testsCompleted}/
-                      {student.totalTests}
+
+                    <span className="text-sm font-bold text-[#ff6b3d]">
+                      {
+                        student.overallProgress
+                      }
+                      %
                     </span>
+
                   </div>
+
                   <ProgressBar
-                    value={student.testProgress}
-                    color="bg-green-500"
+                    value={
+                      student.overallProgress
+                    }
                   />
+
                 </div>
 
-                {/* Attendance */}
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="flex items-center gap-1 text-gray-600">
-                      <Calendar size={14} />
-                      Attendance
-                    </span>
-                    <span>{student.attendance}%</span>
+                {/* STATS */}
+
+                <div className="space-y-4 mb-6">
+                  
+                  {/* Assignments */}
+
+                  <div>
+                    
+                    <div className="flex justify-between mb-1">
+                      
+                      <span className="flex items-center gap-2 text-sm text-slate-600">
+                        <FileText size={14} />
+                        Assignments
+                      </span>
+
+                      <span className="text-sm font-medium text-slate-700">
+                        {
+                          student.assignmentsCompleted
+                        }
+                        /
+                        {
+                          student.totalAssignments
+                        }
+                      </span>
+
+                    </div>
+
+                    <ProgressBar
+                      value={
+                        student.assignmentProgress
+                      }
+                      color="from-sky-500 to-sky-400"
+                    />
+
                   </div>
-                  <ProgressBar
-                    value={student.attendance}
-                    color="bg-yellow-500"
-                  />
+
+                  {/* Tests */}
+
+                  <div>
+                    
+                    <div className="flex justify-between mb-1">
+                      
+                      <span className="flex items-center gap-2 text-sm text-slate-600">
+                        <ClipboardCheck size={14} />
+                        Tests
+                      </span>
+
+                      <span className="text-sm font-medium text-slate-700">
+                        {
+                          student.testsCompleted
+                        }
+                        /
+                        {
+                          student.totalTests
+                        }
+                      </span>
+
+                    </div>
+
+                    <ProgressBar
+                      value={
+                        student.testProgress
+                      }
+                      color="from-emerald-500 to-emerald-400"
+                    />
+
+                  </div>
+
+                  {/* Attendance */}
+
+                  <div>
+                    
+                    <div className="flex justify-between mb-1">
+                      
+                      <span className="flex items-center gap-2 text-sm text-slate-600">
+                        <Calendar size={14} />
+                        Attendance
+                      </span>
+
+                      <span className="text-sm font-medium text-slate-700">
+                        {
+                          student.attendance
+                        }
+                        %
+                      </span>
+
+                    </div>
+
+                    <ProgressBar
+                      value={
+                        student.attendance
+                      }
+                      color="from-yellow-500 to-orange-400"
+                    />
+
+                  </div>
+
                 </div>
+
+                {/* BUTTON */}
+
+                <motion.button
+                  whileHover={{
+                    scale: 1.02,
+                  }}
+                  whileTap={{
+                    scale: 0.97,
+                  }}
+                  onClick={() =>
+                    setSelectedStudent(
+                      student
+                    )
+                  }
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white py-3 rounded-2xl font-semibold shadow-lg shadow-orange-200"
+                >
+                  <Eye size={16} />
+                  View Details
+                </motion.button>
+
               </div>
 
-              {/* View Details Button */}
-              <button
-                onClick={() =>
-                  setSelectedStudent(student)
-                }
-                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#EF0000] to-[#C40000] text-white py-3 rounded-xl font-medium hover:opacity-90 transition"
-              >
-                <Eye size={16} />
-                View Details
-              </button>
-            </div>
-          </div>
-        ))}
+            </motion.div>
+          )
+        )}
+
       </div>
 
-      {/* No Students */}
-      {filteredStudents.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+      {/* ================= NO STUDENTS ================= */}
+
+      {filteredStudents.length ===
+        0 && (
+        <div className="rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-14 text-center text-slate-500 mt-6">
           No students found.
         </div>
       )}
 
-      {/* Details Modal */}
+      {/* ================= MODAL ================= */}
+
       {selectedStudent && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              {selectedStudent.name}
-            </h2>
+          
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.95,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            className="w-full max-w-2xl rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto"
+          >
+            
+            {/* TOP */}
 
-            {/* Email */}
-            <div className="mb-6">
-              <p className="text-sm text-gray-500 mb-1">
-                Email
-              </p>
-              <p className="font-medium">
-                {selectedStudent.email}
-              </p>
+            <div className="flex items-start justify-between mb-8">
+              
+              <div>
+                
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 text-orange-600 text-xs font-semibold">
+                  
+                  <div className="w-2 h-2 rounded-full bg-orange-500" />
+
+                  Student Analytics
+
+                </div>
+
+                <h2 className="mt-4 text-4xl font-bold text-slate-800">
+                  {
+                    selectedStudent.name
+                  }
+                </h2>
+
+                <div className="flex items-center gap-2 mt-3 text-slate-500">
+                  
+                  <Mail size={16} />
+
+                  <span>
+                    {
+                      selectedStudent.email
+                    }
+                  </span>
+
+                </div>
+
+              </div>
+
+              <button
+                onClick={() =>
+                  setSelectedStudent(
+                    null
+                  )
+                }
+                className="p-2 rounded-xl hover:bg-slate-100 transition-all"
+              >
+                <X size={20} />
+              </button>
+
             </div>
 
-            {/* Courses */}
-            <div className="mb-6">
-              <p className="text-sm text-gray-500 mb-2">
+            {/* COURSES */}
+
+            <div className="mb-8">
+              
+              <p className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
                 Enrolled Courses
               </p>
+
               <div className="flex flex-wrap gap-2">
+                
                 {selectedStudent.course.map(
-                  (course, index) => (
+                  (
+                    course,
+                    index
+                  ) => (
                     <span
                       key={index}
-                      className="px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-100"
+                      className="px-3 py-1.5 rounded-full text-sm font-semibold bg-orange-100 text-orange-600"
                     >
                       {course}
                     </span>
                   )
                 )}
+
               </div>
+
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-50 p-4 rounded-xl">
-                <p className="text-sm text-gray-500">
-                  Assignments
-                </p>
-                <p className="text-lg font-semibold">
-                  {selectedStudent.assignmentsCompleted}
-                  /
-                  {selectedStudent.totalAssignments}
-                </p>
-              </div>
+            {/* ANALYTICS */}
 
-              <div className="bg-gray-50 p-4 rounded-xl">
-                <p className="text-sm text-gray-500">
-                  Tests
-                </p>
-                <p className="text-lg font-semibold">
-                  {selectedStudent.testsCompleted}/
-                  {selectedStudent.totalTests}
-                </p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              
+              {[
+                {
+                  label:
+                    "Assignments",
 
-              <div className="bg-gray-50 p-4 rounded-xl">
-                <p className="text-sm text-gray-500">
-                  Attendance
-                </p>
-                <p className="text-lg font-semibold">
-                  {selectedStudent.attendance}%
-                </p>
-              </div>
+                  value: `${selectedStudent.assignmentsCompleted}/${selectedStudent.totalAssignments}`,
 
-              <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                <p className="text-sm text-gray-500">
-                  Overall Progress
-                </p>
-                <p className="text-lg font-bold text-red-600">
-                  {selectedStudent.overallProgress}%
-                </p>
-              </div>
+                  color:
+                    "bg-sky-100 text-sky-600",
+                },
+
+                {
+                  label: "Tests",
+
+                  value: `${selectedStudent.testsCompleted}/${selectedStudent.totalTests}`,
+
+                  color:
+                    "bg-emerald-100 text-emerald-600",
+                },
+
+                {
+                  label:
+                    "Attendance",
+
+                  value: `${selectedStudent.attendance}%`,
+
+                  color:
+                    "bg-yellow-100 text-yellow-600",
+                },
+
+                {
+                  label:
+                    "Overall Progress",
+
+                  value: `${selectedStudent.overallProgress}%`,
+
+                  color:
+                    "bg-orange-100 text-orange-600",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-3xl border border-slate-100 bg-slate-50/80 p-5"
+                >
+                  
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${item.color}`}>
+                    <GraduationCap size={20} />
+                  </div>
+
+                  <p className="text-sm text-slate-500">
+                    {item.label}
+                  </p>
+
+                  <h3 className="text-2xl font-bold text-slate-800 mt-2">
+                    {item.value}
+                  </h3>
+
+                </div>
+              ))}
+
             </div>
+
+            {/* CLOSE */}
 
             <button
               onClick={() =>
-                setSelectedStudent(null)
+                setSelectedStudent(
+                  null
+                )
               }
-              className="w-full py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="w-full py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all font-medium"
             >
               Close
             </button>
-          </div>
+
+          </motion.div>
+
         </div>
       )}
     </div>

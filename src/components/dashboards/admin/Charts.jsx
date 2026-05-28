@@ -12,6 +12,10 @@ import {
   Legend,
 } from "recharts";
 
+import { motion } from "framer-motion";
+
+// ================= DATA =================
+
 const studentData = [
   { month: "Jan", students: 40 },
   { month: "Feb", students: 55 },
@@ -28,92 +32,274 @@ const courseData = [
   { name: "Data Science", value: 15 },
 ];
 
-const COLORS = ["#ef4444", "#3b82f6", "#22c55e", "#f59e0b"];
+// ================= COLORS =================
+
+const COLORS = [
+  "#ff6b3d",
+  "#ffb347",
+  "#8b5cf6",
+  "#0ea5e9",
+];
+
+// ================= CUSTOM TOOLTIP =================
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}) => {
+  if (
+    active &&
+    payload &&
+    payload.length
+  ) {
+    return (
+      <div className="rounded-2xl border border-white/80 bg-white/90 backdrop-blur-xl shadow-xl px-4 py-3">
+        
+        <p className="text-sm font-semibold text-slate-800">
+          {label}
+        </p>
+
+        <p className="text-sm text-orange-500 mt-1">
+          {payload[0].value} Students
+        </p>
+
+      </div>
+    );
+  }
+
+  return null;
+};
+
+// ================= CHARTS =================
 
 export default function Charts() {
   return (
-    <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
-        <div className="mb-4">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+    <div className="grid grid-cols-2 2xl:grid-cols-2 gap-6">
+      
+      {/* ================= BAR CHART ================= */}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        whileHover={{ y: -2 }}
+        className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-5 sm:p-6"
+      >
+        
+        {/* Ambient Glow */}
+
+        <div className="absolute top-0 right-0 w-44 h-44 rounded-full bg-orange-200/10 blur-3xl" />
+
+        {/* Header */}
+
+        <div className="relative z-10 mb-6">
+          
+          {/* Label */}
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50">
+            
+            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+
+            <span className="text-xs font-semibold text-[#ff6b3d]">
+              Analytics
+            </span>
+
+          </div>
+
+          {/* Title */}
+
+          <h3 className="mt-4 text-2xl font-bold text-slate-800">
             Student Growth
           </h3>
-          <p className="text-sm text-gray-500">
+
+          {/* Subtitle */}
+
+          <p className="text-sm text-slate-500 mt-2">
             Monthly increase in enrolled students
           </p>
+
         </div>
 
-        <div className="h-[300px] sm:h-[340px]">
+        {/* Chart */}
+
+        <div className="relative z-10 h-[300px] sm:h-[340px]">
+          
           <ResponsiveContainer width="100%" height="100%">
+            
             <BarChart
               data={studentData}
-              margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+              margin={{
+                top: 10,
+                right: 0,
+                left: -20,
+                bottom: 0,
+              }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              
+              {/* Grid */}
+
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#e2e8f0"
+              />
+
+              {/* X Axis */}
+
               <XAxis
                 dataKey="month"
-                tick={{ fontSize: 12 }}
+                tick={{
+                  fontSize: 12,
+                  fill: "#64748b",
+                }}
                 axisLine={false}
                 tickLine={false}
               />
+
+              {/* Y Axis */}
+
               <YAxis
-                tick={{ fontSize: 12 }}
+                tick={{
+                  fontSize: 12,
+                  fill: "#64748b",
+                }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip />
+
+              {/* Tooltip */}
+
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{
+                  fill:
+                    "rgba(255,107,61,0.06)",
+                }}
+              />
+
+              {/* Bars */}
+
               <Bar
                 dataKey="students"
-                fill="#ef4444"
-                radius={[8, 8, 0, 0]}
-                barSize={36}
+                radius={[12, 12, 0, 0]}
+                barSize={38}
+                fill="#ff6b3d"
               />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
-        <div className="mb-4">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+            </BarChart>
+
+          </ResponsiveContainer>
+
+        </div>
+
+      </motion.div>
+
+      {/* ================= PIE CHART ================= */}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.05,
+          duration: 0.35,
+        }}
+        whileHover={{ y: -2 }}
+        className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-5 sm:p-6"
+      >
+        
+        {/* Ambient Glow */}
+
+        <div className="absolute bottom-0 left-0 w-44 h-44 rounded-full bg-sky-200/10 blur-3xl" />
+
+        {/* Header */}
+
+        <div className="relative z-10 mb-6">
+          
+          {/* Label */}
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-50">
+            
+            <div className="w-2 h-2 rounded-full bg-sky-500" />
+
+            <span className="text-xs font-semibold text-sky-600">
+              Courses
+            </span>
+
+          </div>
+
+          {/* Title */}
+
+          <h3 className="mt-4 text-2xl font-bold text-slate-800">
             Course Distribution
           </h3>
-          <p className="text-sm text-gray-500">
+
+          {/* Subtitle */}
+
+          <p className="text-sm text-slate-500 mt-2">
             Popularity of courses by enrollment
           </p>
+
         </div>
 
-        <div className="h-[300px] sm:h-[340px]">
+        {/* Chart */}
+
+        <div className="relative z-10 h-[300px] sm:h-[340px]">
+          
           <ResponsiveContainer width="100%" height="100%">
+            
             <PieChart>
+
+              {/* Pie */}
+
               <Pie
                 data={courseData}
                 dataKey="value"
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius="75%"
-                innerRadius="45%"
-                paddingAngle={3}
+                outerRadius="78%"
+                innerRadius="52%"
+                paddingAngle={4}
               >
-                {courseData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
+                {courseData.map(
+                  (entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        COLORS[
+                          index %
+                            COLORS.length
+                        ]
+                      }
+                    />
+                  )
+                )}
               </Pie>
 
+              {/* Tooltip */}
+
               <Tooltip />
+
+              {/* Legend */}
+
               <Legend
                 verticalAlign="bottom"
                 iconType="circle"
-                wrapperStyle={{ fontSize: "12px" }}
+                wrapperStyle={{
+                  fontSize: "13px",
+                  paddingTop: "10px",
+                  color: "#64748b",
+                }}
               />
+
             </PieChart>
+
           </ResponsiveContainer>
+
         </div>
-      </div>
+
+      </motion.div>
     </div>
   );
 }

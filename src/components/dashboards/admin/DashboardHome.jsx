@@ -1,41 +1,183 @@
 import React from "react";
+
+import { motion } from "framer-motion";
+
 import DashboardCards from "./DashboardCards";
 import ActivityPanel from "./ActivityPanel";
 import Charts from "./Charts";
 
 const DashboardHome = () => {
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Admin Dashboard
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Welcome back, Admin. Here's what's happening today.
-        </p>
-      </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] space-y-8">
+      
+      {/* ================= HEADER ================= */}
 
-      <DashboardCards />
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2">
-          <div className="bg-gradient-to-br from-red-50 via-white to-yellow-50 rounded-3xl border border-gray-200 shadow-sm p-4 sm:p-6">
-            <div className="mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                Analytics Overview
-              </h2>
-              <p className="text-sm text-gray-500 mt-1">
-                Insights into student growth and course distribution.
-              </p>
-            </div>
-
-            <Charts />
-          </div>
-        </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5"
+      >
+        
+        {/* LEFT */}
 
         <div>
-          <ActivityPanel />
+          
+          {/* LABEL */}
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-sm">
+            
+            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+
+            <span className="text-sm font-medium text-slate-600">
+              Admin Workspace
+            </span>
+
+          </div>
+
+          {/* TITLE */}
+
+          <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
+            Admin Dashboard
+          </h1>
+
+          {/* SUBTITLE */}
+
+          <p className="text-slate-500 mt-3 text-lg max-w-2xl leading-relaxed">
+            Welcome back, Admin. Monitor platform growth,
+            student engagement, live cohorts, payments,
+            analytics, and overall learning activities.
+          </p>
+
         </div>
+
+        {/* RIGHT STATUS CARD */}
+
+        <motion.div
+          whileHover={{ y: -3 }}
+          transition={{ duration: 0.2 }}
+          className="flex items-center gap-4 rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] px-5 py-4"
+        >
+          
+          {/* LIVE DOT */}
+
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{
+              repeat: Infinity,
+              duration: 2,
+            }}
+            className="w-3 h-3 rounded-full bg-emerald-500"
+          />
+
+          {/* STATUS */}
+
+          <div>
+            
+            <p className="text-sm text-slate-500">
+              Platform Status
+            </p>
+
+            <h3 className="text-lg font-semibold text-slate-800">
+              All Systems Active
+            </h3>
+
+          </div>
+
+        </motion.div>
+
+      </motion.div>
+
+      {/* ================= DASHBOARD CARDS ================= */}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.05,
+          duration: 0.35,
+        }}
+      >
+        <DashboardCards />
+      </motion.div>
+
+      {/* ================= ANALYTICS + ACTIVITY ================= */}
+
+      <div className="">
+        
+        {/* ================= CHART SECTION ================= */}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.1,
+            duration: 0.35,
+          }}
+          className="xl:col-span-2"
+        >
+          
+          <div className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-5 sm:p-6">
+            
+            {/* AMBIENT GLOW */}
+
+            <div className="absolute top-0 right-0 w-52 h-52 rounded-full bg-orange-200/10 blur-3xl" />
+
+            {/* HEADER */}
+
+            <div className="relative z-10 mb-6">
+              
+              {/* LABEL */}
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50">
+                
+                <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+
+                <span className="text-xs font-semibold text-[#ff6b3d]">
+                  Analytics
+                </span>
+
+              </div>
+
+              {/* TITLE */}
+
+              <h2 className="mt-4 text-3xl font-bold text-slate-800">
+                Analytics Overview
+              </h2>
+
+              {/* SUBTITLE */}
+
+              <p className="text-slate-500 mt-2 leading-relaxed">
+                Insights into student growth, course
+                engagement, live classes, teacher
+                performance, and payment activity.
+              </p>
+
+            </div>
+
+            {/* CHART */}
+
+            <div className="relative z-10">
+              <Charts />
+            </div>
+
+          </div>
+
+        </motion.div>
+
+        {/* ================= ACTIVITY PANEL ================= */}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.15,
+            duration: 0.35,
+          }}
+        >
+          <ActivityPanel />
+        </motion.div>
+
       </div>
     </div>
   );

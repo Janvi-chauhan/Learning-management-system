@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   Plus,
   Pencil,
@@ -7,12 +8,18 @@ import {
   Search,
   GraduationCap,
   Eye,
-  KeyRound,
   BookOpen,
   ClipboardCheck,
   Calendar,
+  Mail,
+  User2,
 } from "lucide-react";
+
+import { motion } from "framer-motion";
+
 import studentsData from "../../studentData";
+
+// ================= INITIAL FORM =================
 
 const initialForm = {
   name: "",
@@ -23,28 +30,47 @@ const initialForm = {
   password: "",
   status: "Active",
 
-  // Progress Fields
   assignmentsCompleted: 0,
   totalAssignments: 20,
+
   testsCompleted: 0,
   totalTests: 5,
+
   attendance: 0,
 };
 
+// ================= COMPONENT =================
+
 const ManageStudents = () => {
-  const [students, setStudents] = useState(studentsData);
+  const [students, setStudents] =
+    useState(studentsData);
 
-  const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState(initialForm);
+  const [search, setSearch] =
+    useState("");
 
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [editId, setEditId] =
+    useState(null);
+
+  const [formData, setFormData] =
+    useState(initialForm);
+
+  const [selectedStudent, setSelectedStudent] =
+    useState(null);
+
+  const [
+    showProgressModal,
+    setShowProgressModal,
+  ] = useState(false);
+
+  // ================= HANDLE CHANGE =================
 
   const handleChange = ({ target }) => {
     setFormData({
       ...formData,
+
       [target.name]:
         target.type === "number"
           ? Number(target.value)
@@ -52,17 +78,29 @@ const ManageStudents = () => {
     });
   };
 
-  const openModal = (student = null) => {
+  // ================= MODAL =================
+
+  const openModal = (
+    student = null
+  ) => {
     setEditId(student?.id || null);
-    setFormData(student || initialForm);
+
+    setFormData(
+      student || initialForm
+    );
+
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
+
     setEditId(null);
+
     setFormData(initialForm);
   };
+
+  // ================= SUBMIT =================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,13 +109,17 @@ const ManageStudents = () => {
       setStudents((prev) =>
         prev.map((student) =>
           student.id === editId
-            ? { ...student, ...formData }
+            ? {
+                ...student,
+                ...formData,
+              }
             : student
         )
       );
     } else {
       setStudents((prev) => [
         ...prev,
+
         {
           id: Date.now(),
           ...formData,
@@ -88,24 +130,37 @@ const ManageStudents = () => {
     closeModal();
   };
 
+  // ================= DELETE =================
+
   const handleDelete = (id) => {
-    if (window.confirm("Delete this student?")) {
+    if (
+      window.confirm(
+        "Delete this student?"
+      )
+    ) {
       setStudents((prev) =>
-        prev.filter((student) => student.id !== id)
+        prev.filter(
+          (student) =>
+            student.id !== id
+        )
       );
     }
   };
 
+  // ================= PROGRESS =================
 
-
-  const calculateOverallProgress = (student) => {
+  const calculateOverallProgress = (
+    student
+  ) => {
     const assignmentProgress =
       (student.assignmentsCompleted /
         student.totalAssignments) *
       100;
 
     const testProgress =
-      (student.testsCompleted / student.totalTests) * 100;
+      (student.testsCompleted /
+        student.totalTests) *
+      100;
 
     return Math.round(
       (assignmentProgress +
@@ -115,464 +170,414 @@ const ManageStudents = () => {
     );
   };
 
-  const openProgressModal = (student) => {
+  const openProgressModal = (
+    student
+  ) => {
     setSelectedStudent({
       ...student,
+
       overallProgress:
-        calculateOverallProgress(student),
+        calculateOverallProgress(
+          student
+        ),
     });
+
     setShowProgressModal(true);
   };
 
   const closeProgressModal = () => {
     setSelectedStudent(null);
+
     setShowProgressModal(false);
   };
 
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // ================= FILTER =================
 
-  const ProgressBar = ({ value, color = "bg-red-500" }) => (
-    <div className="w-full bg-gray-200 rounded-full h-2.5">
+  const filteredStudents =
+    students.filter((student) =>
+      student.name
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+    );
+
+  // ================= PROGRESS BAR =================
+
+  const ProgressBar = ({
+    value,
+    color =
+      "from-[#ff6b3d] to-[#ff9f43]",
+  }) => (
+    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
       <div
-        className={`${color} h-2.5 rounded-full`}
-        style={{ width: `${value}%` }}
+        className={`h-full rounded-full bg-gradient-to-r ${color} transition-all duration-700`}
+        style={{
+          width: `${value}%`,
+        }}
       />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-6">
+      
+      {/* ================= HEADER ================= */}
+
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+        
+        {/* LEFT */}
+
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-sm">
+            
+            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+
+            <span className="text-sm font-medium text-slate-600">
+              Student Workspace
+            </span>
+
+          </div>
+
+          <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
             Manage Students
           </h1>
-          <p className="text-gray-500 mt-1">
-            Create student accounts and track their progress
+
+          <p className="text-slate-500 mt-3 text-lg">
+            Create student accounts and track learning progress.
           </p>
+
         </div>
 
-        <button
-          onClick={() => openModal()}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EF0000] to-[#C40000] text-white px-5 py-3 rounded-xl shadow-lg font-semibold"
+        {/* BUTTON */}
+
+        <motion.button
+          whileHover={{
+            scale: 1.03,
+          }}
+          whileTap={{
+            scale: 0.97,
+          }}
+          onClick={() =>
+            openModal()
+          }
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
         >
           <Plus size={18} />
           Add Student
-        </button>
+        </motion.button>
+
       </div>
 
-      {/* Search */}
-      <div className="bg-white p-4 rounded-2xl mb-6 shadow-sm border border-gray-200 flex items-center">
-        <Search className="text-gray-400 mr-3" size={18} />
-        <input
-          type="text"
-          placeholder="Search student by name..."
-          className="w-full outline-none text-gray-700"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* ================= SEARCH ================= */}
+
+      <div className="rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-4 mb-6">
+        
+        <div className="flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-3">
+          
+          <Search
+            className="text-slate-400 mr-3"
+            size={18}
+          />
+
+          <input
+            type="text"
+            placeholder="Search student by name..."
+            className="w-full outline-none bg-transparent text-slate-700"
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
       </div>
 
-      {/* Student Cards */}
+      {/* ================= STUDENT CARDS ================= */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-  {filteredStudents.map((student) => {
-    const overallProgress = calculateOverallProgress(student);
+        
+        {filteredStudents.map(
+          (student, index) => {
+            const overallProgress =
+              calculateOverallProgress(
+                student
+              );
 
-    return (
-      <div
-        key={student.id}
-        className="group bg-white rounded-3xl border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-      >
-        {/* Top Gradient Header */}
-        <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-5 text-white relative">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
-          <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-6 -translate-x-6" />
-
-          <div className="relative flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/20">
-              <GraduationCap size={28} />
-            </div>
-
-            <div className="min-w-0">
-              <h3 className="text-lg font-bold truncate">
-                {student.name}
-              </h3>
-              <p className="text-sm text-red-100 truncate">
-                {student.course}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Card Body */}
-        <div className="p-6">
-          {/* Student Details */}
-          <div className="space-y-3 text-sm mb-5">
-            <div className="flex justify-between gap-3">
-              <span className="text-gray-500">Email</span>
-              <span className="text-gray-800 font-medium text-right truncate max-w-[180px]">
-                {student.email}
-              </span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-gray-500">Duration</span>
-              <span className="text-gray-800 font-medium">
-                {student.year}
-              </span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-gray-500">Batch</span>
-              <span
-                className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                  student.batchType === "Online"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-purple-100 text-purple-700"
-                }`}
+            return (
+              <motion.div
+                key={student.id}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  delay:
+                    index * 0.05,
+                }}
+                whileHover={{
+                  y: -4,
+                }}
+                className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)]"
               >
-                {student.batchType}
-              </span>
-            </div>
+                
+                {/* Glow */}
 
-            <div className="flex justify-between">
-              <span className="text-gray-500">Status</span>
-              <span
-                className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                  student.status === "Active"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {student.status}
-              </span>
-            </div>
-          </div>
+                <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-orange-200/10 blur-3xl" />
 
-          {/* Progress Section */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">
-                Overall Progress
-              </span>
-              <span className="text-sm font-bold text-red-600">
-                {overallProgress}%
-              </span>
-            </div>
+                {/* TOP */}
 
-            <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-700"
-                style={{ width: `${overallProgress}%` }}
-              />
-            </div>
-          </div>
+                <div className="relative bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] p-6 text-white overflow-hidden">
+                  
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
 
-          {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => openModal(student)}
-              className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition"
-            >
-              <Pencil size={16} />
-              <span className="text-xs font-medium">Edit</span>
-            </button>
+                  <div className="flex items-center gap-4 relative z-10">
+                    
+                    <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20">
+                      <GraduationCap size={28} />
+                    </div>
 
-            <button
-              onClick={() => openProgressModal(student)}
-              className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
-            >
-              <Eye size={16} />
-              <span className="text-xs font-medium">
-                Progress
-              </span>
-            </button>
+                    <div className="min-w-0">
+                      
+                      <h3 className="text-xl font-bold truncate">
+                        {student.name}
+                      </h3>
 
-            <button
-              onClick={() => handleDelete(student.id)}
-              className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition"
-            >
-              <Trash2 size={16} />
-              <span className="text-xs font-medium">
-                Delete
-              </span>
-            </button>
-          </div>
-        </div>
+                      <p className="text-sm text-orange-100 truncate mt-1">
+                        {student.course}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* BODY */}
+
+                <div className="p-6">
+                  
+                  {/* DETAILS */}
+
+                  <div className="space-y-4 mb-6">
+                    
+                    <div className="flex items-center gap-3 text-slate-600">
+                      
+                      <Mail size={16} />
+
+                      <span className="text-sm truncate">
+                        {student.email}
+                      </span>
+
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <Calendar size={16} />
+                        <span className="text-sm">
+                          {student.year}
+                        </span>
+                      </div>
+
+                      <span
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
+                          student.batchType ===
+                          "Online"
+                            ? "bg-sky-100 text-sky-600"
+                            : "bg-violet-100 text-violet-600"
+                        }`}
+                      >
+                        {student.batchType}
+                      </span>
+
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      
+                      <span className="text-sm text-slate-500">
+                        Status
+                      </span>
+
+                      <span
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
+                          student.status ===
+                          "Active"
+                            ? "bg-emerald-100 text-emerald-600"
+                            : "bg-rose-100 text-rose-600"
+                        }`}
+                      >
+                        {student.status}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                  {/* PROGRESS */}
+
+                  <div className="mb-6">
+                    
+                    <div className="flex items-center justify-between mb-2">
+                      
+                      <span className="text-sm font-medium text-slate-700">
+                        Overall Progress
+                      </span>
+
+                      <span className="text-sm font-bold text-[#ff6b3d]">
+                        {overallProgress}%
+                      </span>
+
+                    </div>
+
+                    <ProgressBar
+                      value={
+                        overallProgress
+                      }
+                    />
+
+                  </div>
+
+                  {/* ACTIONS */}
+
+                  <div className="grid grid-cols-3 gap-3">
+                    
+                    <motion.button
+                      whileHover={{
+                        scale: 1.03,
+                      }}
+                      whileTap={{
+                        scale: 0.97,
+                      }}
+                      onClick={() =>
+                        openModal(
+                          student
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all"
+                    >
+                      <Pencil size={16} />
+
+                      <span className="text-xs font-medium">
+                        Edit
+                      </span>
+
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{
+                        scale: 1.03,
+                      }}
+                      whileTap={{
+                        scale: 0.97,
+                      }}
+                      onClick={() =>
+                        openProgressModal(
+                          student
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-sky-100 text-sky-600 hover:bg-sky-200 transition-all"
+                    >
+                      <Eye size={16} />
+
+                      <span className="text-xs font-medium">
+                        Progress
+                      </span>
+
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{
+                        scale: 1.03,
+                      }}
+                      whileTap={{
+                        scale: 0.97,
+                      }}
+                      onClick={() =>
+                        handleDelete(
+                          student.id
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-rose-100 text-rose-600 hover:bg-rose-200 transition-all"
+                    >
+                      <Trash2 size={16} />
+
+                      <span className="text-xs font-medium">
+                        Delete
+                      </span>
+
+                    </motion.button>
+
+                  </div>
+
+                </div>
+
+              </motion.div>
+            );
+          }
+        )}
+
       </div>
-    );
-  })}
-</div>
 
-      {/* No Data */}
-      {filteredStudents.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+      {/* ================= NO DATA ================= */}
+
+      {filteredStudents.length ===
+        0 && (
+        <div className="rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-14 text-center text-slate-500 mt-6">
           No students found.
         </div>
       )}
 
-      {/* Add/Edit Student Modal */}
+      {/* ================= ADD/EDIT MODAL ================= */}
+
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-5 border-b">
-              <h2 className="text-2xl font-bold">
+          
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.95,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            className="w-full max-w-2xl rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl"
+          >
+            
+            {/* HEADER */}
+
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+              
+              <h2 className="text-3xl font-bold text-slate-800">
                 {editId
                   ? "Edit Student"
                   : "Add Student"}
               </h2>
 
               <button
-                onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-gray-100"
+                onClick={
+                  closeModal
+                }
+                className="p-2 rounded-xl hover:bg-slate-100 transition-all"
               >
                 <X size={20} />
               </button>
+
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              {[
-                "name",
-                "email",
-                "course",
-                "year",
-                "password",
-              ].map((field) => (
-                <input
-                  key={field}
-                  type={
-                    field === "email"
-                      ? "email"
-                      : field === "password"
-                      ? "password"
-                      : "text"
-                  }
-                  name={field}
-                  placeholder={
-                    field.charAt(0).toUpperCase() +
-                    field.slice(1)
-                  }
-                  value={formData[field]}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 rounded-xl px-4 py-3"
-                />
-              ))}
+          </motion.div>
 
-              <select
-                name="batchType"
-                value={formData.batchType}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-xl px-4 py-3"
-              >
-                <option>Online</option>
-                <option>Offline</option>
-              </select>
-
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-xl px-4 py-3"
-              >
-                <option>Active</option>
-                <option>Inactive</option>
-              </select>
-
-              {/* Progress fields should be shown only while editing an existing student */}
-{editId && (
-  <>
-    <input
-      type="number"
-      name="assignmentsCompleted"
-      placeholder="Assignments Completed"
-      value={formData.assignmentsCompleted}
-      onChange={handleChange}
-      min="0"
-      className="border border-gray-300 rounded-xl px-4 py-3"
-    />
-
-    <input
-      type="number"
-      name="testsCompleted"
-      placeholder="Tests Completed"
-      value={formData.testsCompleted}
-      onChange={handleChange}
-      min="0"
-      className="border border-gray-300 rounded-xl px-4 py-3"
-    />
-
-    <input
-      type="number"
-      name="attendance"
-      placeholder="Attendance %"
-      value={formData.attendance}
-      onChange={handleChange}
-      min="0"
-      max="100"
-      className="border border-gray-300 rounded-xl px-4 py-3"
-    />
-  </>
-)}
-
-              <div className="md:col-span-2 flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-5 py-3 rounded-xl border border-gray-300"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#EF0000] to-[#C40000] text-white"
-                >
-                  {editId
-                    ? "Update Student"
-                    : "Add Student"}
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       )}
-
-      {/* Progress Modal */}
-{/* Progress Modal */}
-{showProgressModal && selectedStudent && (
-  <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
-      {/* Header */}
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">
-        {selectedStudent.name} Progress
-      </h2>
-
-      {/* Email */}
-      <div className="mb-6">
-        <p className="text-sm text-gray-500 mb-1">Email</p>
-        <p className="font-medium text-gray-900">
-          {selectedStudent.email}
-        </p>
-      </div>
-
-      {/* Enrolled Courses */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Enrolled Courses
-        </p>
-
-        <div className="flex flex-wrap gap-2">
-          {Array.isArray(selectedStudent.course) ? (
-            selectedStudent.course.map((course, index) => (
-              <span
-                key={index}
-                className="px-3 py-1.5 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-100"
-              >
-                {course}
-              </span>
-            ))
-          ) : (
-            <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-100">
-              {selectedStudent.course}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Progress Details */}
-      <div className="space-y-5">
-        {/* Assignments */}
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <span className="font-medium text-gray-700">
-              Assignments
-            </span>
-            <span className="text-gray-800">
-              {selectedStudent.assignmentsCompleted}/
-              {selectedStudent.totalAssignments}
-            </span>
-          </div>
-          <ProgressBar
-            value={
-              (selectedStudent.assignmentsCompleted /
-                selectedStudent.totalAssignments) *
-              100
-            }
-            color="bg-blue-500"
-          />
-        </div>
-
-        {/* Tests */}
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <span className="font-medium text-gray-700">
-              Tests
-            </span>
-            <span className="text-gray-800">
-              {selectedStudent.testsCompleted}/
-              {selectedStudent.totalTests}
-            </span>
-          </div>
-          <ProgressBar
-            value={
-              (selectedStudent.testsCompleted /
-                selectedStudent.totalTests) *
-              100
-            }
-            color="bg-green-500"
-          />
-        </div>
-
-        {/* Attendance */}
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <span className="font-medium text-gray-700">
-              Attendance
-            </span>
-            <span className="text-gray-800">
-              {selectedStudent.attendance}%
-            </span>
-          </div>
-          <ProgressBar
-            value={selectedStudent.attendance}
-            color="bg-yellow-500"
-          />
-        </div>
-
-        {/* Overall Progress */}
-        <div>
-          <div className="flex justify-between mb-1 text-sm font-semibold">
-            <span className="text-gray-900">
-              Overall Progress
-            </span>
-            <span className="text-red-600">
-              {selectedStudent.overallProgress}%
-            </span>
-          </div>
-          <ProgressBar
-            value={selectedStudent.overallProgress}
-            color="bg-red-500"
-          />
-        </div>
-      </div>
-
-      {/* Close Button */}
-      <button
-        onClick={closeProgressModal}
-        className="mt-8 w-full py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
     </div>
   );
 };

@@ -9,12 +9,10 @@ export default function DashboardLayout({
   role = "teacher",
 }) {
   
-  // ================= STATE =================
 
   const [activeSection, setActiveSection] =
     useState("dashboard");
 
-  // ================= ROLE CONFIG =================
 
   const config = roleConfig[role];
   console.log(config.sidebarItems);

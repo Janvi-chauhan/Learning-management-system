@@ -7,10 +7,9 @@ import Home from "./pages/Home";
 import CoursesPage from "./components/courses/CoursesPage";
 import CourseDetails from "./components/courses/CourseDetails";
 import ResultsPage from "./pages/ResultsPage";
-// import TeacherDashboard from "./dashboards/teacherDashboard";
-// import StudentDashboard from "./dashboards/studentDashboard";
 import DashboardLayout from "./layout/DasboardLayout";
 import DashboardHome from "./components/dashboards/admin/DashboardHome";
+import AdminLayout from "./layout/AdminLayout";
 
 export default function App() {
   return (
@@ -24,9 +23,7 @@ export default function App() {
         <Route path="/courses/:slug" element={<CourseDetails />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/dashboard" element={<DashboardLayout/>} />
-        <Route path="/adminDashboard" element={<DashboardHome/>} />
-        {/* <Route path="/teacherDashboard" element={<TeacherDashboard/>}/> */}
-        {/* <Route path="/studentDashboard" element={<StudentDashboard/>}/> */}
+        <Route path="/adminDashboard" element={<AdminLayout/>} />
        
         
         
