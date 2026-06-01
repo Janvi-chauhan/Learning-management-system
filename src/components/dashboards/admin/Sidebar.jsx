@@ -137,8 +137,7 @@ function NavItem({ item, activeSection, setActiveSection, collapsed }) {
             rounded-full
 
             bg-gradient-to-b
-            from-[#ff5a36]
-            to-[#ffb347]
+            to-red-600
           "
         />
       )}
@@ -161,7 +160,7 @@ function NavItem({ item, activeSection, setActiveSection, collapsed }) {
 
           ${
             isActive
-              ? "bg-gradient-to-br from-[#ff5a36] to-[#ffb347] text-white shadow-lg shadow-orange-500/20"
+              ? "bg-red-600 text-white shadow-lg shadow-orange-500/20"
               : "text-slate-400 group-hover:text-white"
           }
         `}
@@ -285,8 +284,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
               rounded-2xl
 
               bg-gradient-to-br
-              from-[#ff5a36]
-              to-[#ffb347]
+              from-red-600
 
               flex
               items-center
@@ -300,7 +298,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
               shadow-orange-500/20
             "
           >
-            P
+            
           </motion.div>
 
           {/* Expanded */}
