@@ -35,35 +35,24 @@ const courseData = [
 // ================= COLORS =================
 
 const COLORS = [
-  "#ff6b3d",
-  "#ffb347",
-  "#8b5cf6",
-  "#0ea5e9",
+  "#ff0000", 
+  "#ffffff", 
+  "#991b1b", 
+  "#525252", 
 ];
 
 // ================= CUSTOM TOOLTIP =================
-
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}) => {
-  if (
-    active &&
-    payload &&
-    payload.length
-  ) {
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
     return (
-      <div className="rounded-2xl border border-white/80 bg-white/90 backdrop-blur-xl shadow-xl px-4 py-3">
-        
-        <p className="text-sm font-semibold text-slate-800">
+      <div className="rounded-2xl border border-red-900/40 bg-[#18181b] backdrop-blur-xl shadow-xl px-4 py-3">
+        <p className="text-sm font-semibold text-white">
           {label}
         </p>
 
-        <p className="text-sm text-orange-500 mt-1">
+        <p className="text-sm text-red-400 mt-1">
           {payload[0].value} Students
         </p>
-
       </div>
     );
   }
@@ -84,7 +73,7 @@ export default function Charts() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
         whileHover={{ y: -2 }}
-        className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-5 sm:p-6"
+       className="relative overflow-hidden rounded-[30px]   bg-white/75 backdrop-blur-2xl shadow-[1px_1px_10px_rgba(15,23,42,0.05)] p-5 sm:p-6"
       >
         
         {/* Ambient Glow */}
@@ -99,9 +88,9 @@ export default function Charts() {
 
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50">
             
-            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+            <div className="w-2 h-2 rounded-full bg-[#ff0904]" />
 
-            <span className="text-xs font-semibold text-[#ff6b3d]">
+            <span className="text-xs font-semibold text-[#ff3d3d]">
               Analytics
             </span>
 
@@ -142,7 +131,7 @@ export default function Charts() {
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
-                stroke="#e2e8f0"
+                stroke="#525252"
               />
 
               {/* X Axis */}
@@ -151,7 +140,7 @@ export default function Charts() {
                 dataKey="month"
                 tick={{
                   fontSize: 12,
-                  fill: "#64748b",
+                  fill: "#525252",
                 }}
                 axisLine={false}
                 tickLine={false}
@@ -184,7 +173,7 @@ export default function Charts() {
                 dataKey="students"
                 radius={[12, 12, 0, 0]}
                 barSize={38}
-                fill="#ff6b3d"
+                fill="#ff0000"
               />
 
             </BarChart>
@@ -205,7 +194,7 @@ export default function Charts() {
           duration: 0.35,
         }}
         whileHover={{ y: -2 }}
-        className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-5 sm:p-6"
+        className="relative overflow-hidden rounded-[30px] backdrop-blur-2xl shadow-[1px_1px_10px_rgba(0,0,0,0.1)] p-5 sm:p-6"
       >
         
         {/* Ambient Glow */}

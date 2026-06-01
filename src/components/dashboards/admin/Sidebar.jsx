@@ -280,12 +280,9 @@ export default function Sidebar({ activeSection, setActiveSection }) {
             className="
               w-12
               h-12
-
               rounded-2xl
-
               bg-gradient-to-br
               from-red-600
-
               flex
               items-center
               justify-center
@@ -298,7 +295,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
               shadow-orange-500/20
             "
           >
-            
+            P
           </motion.div>
 
           {/* Expanded */}

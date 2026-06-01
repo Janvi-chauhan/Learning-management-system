@@ -485,7 +485,7 @@ const ManageTeacher = () => {
                         teacher
                       )
                     }
-                    className="w-9 h-9 rounded-xl bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-all flex items-center justify-center"
+                    className="w-9 h-9 rounded-xl  text-yellow-700  transition-all flex items-center justify-center"
                   >
                     <Pencil size={15} />
                   </button>
@@ -496,7 +496,7 @@ const ManageTeacher = () => {
                         teacher
                       )
                     }
-                    className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 hover:bg-blue-200 transition-all flex items-center justify-center"
+                    className="w-9 h-9 rounded-xl  text-blue-700  transition-all flex items-center justify-center"
                   >
                     <Eye size={15} />
                   </button>
@@ -507,7 +507,7 @@ const ManageTeacher = () => {
                         teacher.id
                       )
                     }
-                    className="w-9 h-9 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 transition-all flex items-center justify-center"
+                    className="w-9 h-9 rounded-xl  text-red-600  transition-all flex items-center justify-center"
                   >
                     <Trash2 size={15} />
                   </button>

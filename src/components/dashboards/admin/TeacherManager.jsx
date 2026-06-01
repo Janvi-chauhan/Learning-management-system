@@ -202,7 +202,7 @@ const ManageTeachers = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => openModal(teacher)}
-                        className="p-2 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                        className="p-2 rounded-lg  text-yellow-700 "
                       >
                         <Pencil size={16} />
                       </button>
