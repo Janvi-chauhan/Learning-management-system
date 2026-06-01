@@ -11,15 +11,7 @@ const Dashboard = ({ role }) => {
 
 
       <main className="flex-1 p-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800">
-            Welcome Back 👋
-          </h1>
-
-          <p className="text-slate-500 mt-2">
-            Here's your dashboard overview.
-          </p>
-        </div>
+          
 
         <DashboardCards cards={config.cards} />
       </main>

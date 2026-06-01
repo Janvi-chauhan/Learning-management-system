@@ -55,7 +55,7 @@ const ActivityPanel = ({ role }) => {
       icon: CalendarDays,
 
       iconBg:
-        "bg-sky-100 text-sky-600",
+        "bg-red-100 text-red-600",
 
       status: "Updated",
     },
@@ -66,7 +66,7 @@ const ActivityPanel = ({ role }) => {
       icon: ClipboardCheck,
 
       iconBg:
-        "bg-violet-100 text-violet-600",
+        "bg-gray-300 text-gray-800",
 
       status: "Reviewed",
     },

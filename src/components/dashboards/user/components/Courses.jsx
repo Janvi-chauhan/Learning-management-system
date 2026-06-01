@@ -306,15 +306,7 @@ function CourseCard({
                 transition={{
                   duration: 0.8,
                 }}
-                className="
-                  h-full
-
-                  rounded-full
-
-                  bg-gradient-to-r
-                  from-[#ff6b3d]
-                  to-[#ffb347]
-                "
+                className=" h-full rounded-full bg-gradient-to-r from-[#ff6b3d] to-[#ffb347]"
               />
             </div>
           </div>

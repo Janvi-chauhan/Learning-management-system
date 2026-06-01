@@ -16,11 +16,7 @@ import { motion } from "framer-motion";
 export default function DashboardHome({
   role = "student",
 }) {
-  // ================= ROLE CONFIG =================
-
   const dashboardConfig = {
-    // ================= STUDENT =================
-
     student: {
       title: "Student Dashboard",
 
@@ -32,41 +28,31 @@ export default function DashboardHome({
           title: "Enrolled Courses",
           value: "08",
           icon: BookOpen,
-
-          gradient:
-            "from-[#ff4a3d] to-[#ffb347]",
+          color: "#FF0000",
         },
 
         {
           title: "Assignments",
           value: "12",
           icon: ClipboardList,
-
-          gradient:
-            "from-[#ff8c42] to-[#ffb347]",
+          color: "#000000",
         },
 
         {
           title: "Attendance",
           value: "92%",
           icon: CalendarCheck,
-
-          gradient:
-            "from-[#ff7a59] to-[#ffb347]",
+          color: "#FF0000",
         },
 
         {
           title: "Pending Fees",
           value: "₹12K",
           icon: IndianRupee,
-
-          gradient:
-            "from-[#ff5e62] to-[#ff9966]",
+          color: "#000000",
         },
       ],
     },
-
-    // ================= TEACHER =================
 
     teacher: {
       title: "Teacher Dashboard",
@@ -79,42 +65,32 @@ export default function DashboardHome({
           title: "Active Courses",
           value: "05",
           icon: BookOpen,
-
-          gradient:
-            "from-[#ff4a3d] to-[#ffb347]",
+          color: "#FF0000",
         },
 
         {
           title: "Assignments",
           value: "18",
           icon: ClipboardList,
-
-          gradient:
-            "from-[#ff8c42] to-[#ffb347]",
+          color: "#000000",
         },
 
         {
           title: "Students",
           value: "320",
           icon: Users,
-
-          gradient:
-            "from-[#ff7a59] to-[#ffb347]",
+          color: "#FF0000",
         },
 
         {
           title: "Performance",
           value: "+18%",
           icon: TrendingUp,
-
-          gradient:
-            "from-[#ff5e62] to-[#ff9966]",
+          color: "#000000",
         },
       ],
     },
   };
-
-  // ================= ACTIVE CONFIG =================
 
   const config =
     dashboardConfig[role] ||
@@ -125,24 +101,12 @@ export default function DashboardHome({
       className="
         min-h-screen
         w-full
-
-        bg-gradient-to-br
-        from-[#f8fafc]
-        via-[#f9fafb]
-        to-[#eef2ff]
-
+        bg-white
         px-6
         py-7
       "
     >
-      {/* MAIN CONTAINER */}
-
-      <div
-        className="
-          max-w-[1600px]
-          mx-auto
-        "
-      >
+      <div className="max-w-[1600px] mx-auto">
         {/* HEADER */}
 
         <motion.div
@@ -159,26 +123,20 @@ export default function DashboardHome({
           }}
           className="mb-8"
         >
-          {/* Tiny Label */}
+          {/* WORKSPACE TAG */}
 
           <div
             className="
               inline-flex
               items-center
               gap-2
-
               px-4
               py-2
               mb-4
-
               rounded-full
-
-              bg-white/70
-              backdrop-blur-xl
-
-              border
-              border-white/80
-
+              bg-white
+              border-2
+              border-red-600
               shadow-sm
             "
           >
@@ -187,15 +145,15 @@ export default function DashboardHome({
                 w-2
                 h-2
                 rounded-full
-                bg-[#ff4a3d]
+                bg-red-600
               "
             />
 
             <span
               className="
                 text-sm
-                font-medium
-                text-slate-600
+                font-semibold
+                text-black
                 capitalize
               "
             >
@@ -203,24 +161,24 @@ export default function DashboardHome({
             </span>
           </div>
 
-          {/* Heading */}
+          {/* HEADING */}
 
           <h1
             className="
               text-5xl
               font-bold
               tracking-tight
-              text-slate-800
+              text-black
             "
           >
             {config.title}
           </h1>
 
-          {/* Subtitle */}
+          {/* SUBTITLE */}
 
           <p
             className="
-              text-slate-500
+              text-black/70
               mt-3
               text-lg
               max-w-2xl
@@ -247,9 +205,7 @@ export default function DashboardHome({
           }}
           className="mb-8"
         >
-          <DashboardCards
-            cards={config.cards}
-          />
+          <DashboardCards cards={config.cards} />
         </motion.div>
 
         {/* CHARTS */}

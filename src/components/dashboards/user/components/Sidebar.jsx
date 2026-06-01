@@ -102,8 +102,8 @@ const Sidebar = ({
             h-12
             rounded-2xl
             bg-gradient-to-br
-            from-[#ff5a36]
-            to-[#ffb347]
+            from-[#ff3636]
+            to-[#ff4747]
             flex
             items-center
             justify-center
@@ -286,8 +286,8 @@ const Sidebar = ({
                     w-[3px]
                     rounded-full
                     bg-gradient-to-b
-                    from-[rgb(255,98,50)]
-                    to-[#ff9a47]
+                    from-[rgb(255,50,50)]
+                    to-[#ff4747]
                   "
                 />
               )}
@@ -306,7 +306,7 @@ const Sidebar = ({
                   duration-300
                   ${
                     isActive
-                      ? "bg-gradient-to-br from-[#ff5136] to-[#ff8747] text-white shadow-lg shadow-orange-500/20"
+                      ? "bg-gradient-to-br from-[#ff5136] to-[#ff4747] text-white shadow-lg shadow-orange-500/20"
                       : "text-slate-400 group-hover:text-white"
                   }
                 `}

@@ -1,7 +1,6 @@
 import {
   BarChart,
   Bar,
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -15,8 +14,6 @@ import {
 import { motion } from "framer-motion";
 
 const DashboardCharts = ({ role }) => {
-  // ================= DATA =================
-
   const studentData = [
     { name: "Mon", progress: 60 },
     { name: "Tue", progress: 75 },
@@ -54,74 +51,31 @@ const DashboardCharts = ({ role }) => {
         gap-6
       "
     >
-      {/* ================= LINE / AREA CHART ================= */}
+      {/* AREA CHART */}
 
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.35,
-        }}
-        whileHover={{
-          y: -3,
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -3 }}
         className="
-          relative
-          overflow-hidden
-
-          rounded-[32px]
-
-          border
-          border-white/80
-
-          bg-white/75
-          backdrop-blur-2xl
-
-          shadow-[0_10px_35px_rgba(15,23,42,0.05)]
-
+          bg-white
+          border-2
+          border-black
+          rounded-3xl
           p-6
+          shadow-lg
         "
       >
-        {/* Ambient Glow */}
-
-        <div
-          className="
-            absolute
-            -top-10
-            -right-10
-
-            w-40
-            h-40
-
-            rounded-full
-
-            bg-orange-300/20
-
-            blur-3xl
-          "
-        />
-
-        {/* Header */}
-
-        <div className="relative z-10 mb-6">
+        <div className="mb-6">
           <div
             className="
               inline-flex
               items-center
               gap-2
-
               px-3
               py-1.5
-
               rounded-full
-
-              bg-orange-50
+              bg-black
             "
           >
             <div
@@ -129,7 +83,7 @@ const DashboardCharts = ({ role }) => {
                 w-2
                 h-2
                 rounded-full
-                bg-[#ff6b3d]
+                bg-red-600
               "
             />
 
@@ -137,7 +91,7 @@ const DashboardCharts = ({ role }) => {
               className="
                 text-xs
                 font-semibold
-                text-[#ff6b3d]
+                text-white
               "
             >
               Analytics
@@ -147,11 +101,9 @@ const DashboardCharts = ({ role }) => {
           <h2
             className="
               mt-4
-
               text-2xl
               font-bold
-
-              text-slate-800
+              text-black
             "
           >
             {role === "student"
@@ -161,7 +113,7 @@ const DashboardCharts = ({ role }) => {
 
           <p
             className="
-              text-slate-500
+              text-black/70
               mt-1
             "
           >
@@ -169,171 +121,94 @@ const DashboardCharts = ({ role }) => {
           </p>
         </div>
 
-        {/* Chart */}
+        <ResponsiveContainer
+          width="100%"
+          height={320}
+        >
+          <AreaChart data={chartData}>
+            <CartesianGrid
+              stroke="#d1d5db"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
 
-        <div className="relative z-10">
-          <ResponsiveContainer
-            width="100%"
-            height={320}
-          >
-            <AreaChart data={chartData}>
-              <defs>
-                <linearGradient
-                  id="orangeGradient"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="#ff6b3d"
-                    stopOpacity={0.35}
-                  />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "#000000",
+                fontSize: 13,
+              }}
+            />
 
-                  <stop
-                    offset="100%"
-                    stopColor="#ffb347"
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              </defs>
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "#000000",
+                fontSize: 13,
+              }}
+            />
 
-              <CartesianGrid
-                strokeDasharray="4 4"
-                stroke="#e2e8f0"
-                vertical={false}
-              />
+            <Tooltip
+              contentStyle={{
+                background: "#FFFFFF",
+                border: "2px solid #000000",
+                borderRadius: "12px",
+              }}
+            />
 
-              <XAxis
-                dataKey="name"
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 13,
-                }}
-              />
+            <Area
+              type="monotone"
+              dataKey={dataKey}
+              stroke="#FF0000"
+              fill="#FF0000"
+              fillOpacity={0.15}
+              strokeWidth={3}
+            />
 
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 13,
-                }}
-              />
-
-              <Tooltip
-                contentStyle={{
-                  borderRadius: "18px",
-                  border:
-                    "1px solid rgba(255,255,255,0.8)",
-                  background:
-                    "rgba(255,255,255,0.9)",
-                  backdropFilter: "blur(12px)",
-                  boxShadow:
-                    "0 10px 30px rgba(0,0,0,0.08)",
-                }}
-              />
-
-              <Area
-                type="monotone"
-                dataKey={dataKey}
-                stroke="#ff6b3d"
-                strokeWidth={4}
-                fill="url(#orangeGradient)"
-              />
-
-              <Line
-                type="monotone"
-                dataKey={dataKey}
-                stroke="#ff6b3d"
-                strokeWidth={4}
-                dot={{
-                  r: 5,
-                  fill: "#fff",
-                  stroke: "#ff6b3d",
-                  strokeWidth: 3,
-                }}
-                activeDot={{
-                  r: 7,
-                }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+            <Line
+              type="monotone"
+              dataKey={dataKey}
+              stroke="#FF0000"
+              strokeWidth={3}
+              dot={{
+                fill: "#FFFFFF",
+                stroke: "#FF0000",
+                strokeWidth: 3,
+                r: 5,
+              }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </motion.div>
 
-      {/* ================= BAR CHART ================= */}
+      {/* BAR CHART */}
 
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.35,
-          delay: 0.05,
-        }}
-        whileHover={{
-          y: -3,
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -3 }}
         className="
-          relative
-          overflow-hidden
-
-          rounded-[32px]
-
-          border
-          border-white/80
-
-          bg-white/75
-          backdrop-blur-2xl
-
-          shadow-[0_10px_35px_rgba(15,23,42,0.05)]
-
+          bg-white
+          border-2
+          border-black
+          rounded-3xl
           p-6
+          shadow-lg
         "
       >
-        {/* Ambient Glow */}
-
-        <div
-          className="
-            absolute
-            bottom-0
-            right-0
-
-            w-40
-            h-40
-
-            rounded-full
-
-            bg-red-300/20
-
-            blur-3xl
-          "
-        />
-
-        {/* Header */}
-
-        <div className="relative z-10 mb-6">
+        <div className="mb-6">
           <div
             className="
               inline-flex
               items-center
               gap-2
-
               px-3
               py-1.5
-
               rounded-full
-
-              bg-red-50
+              bg-red-600
             "
           >
             <div
@@ -341,7 +216,7 @@ const DashboardCharts = ({ role }) => {
                 w-2
                 h-2
                 rounded-full
-                bg-[#ff5a36]
+                bg-white
               "
             />
 
@@ -349,7 +224,7 @@ const DashboardCharts = ({ role }) => {
               className="
                 text-xs
                 font-semibold
-                text-[#ff5a36]
+                text-white
               "
             >
               Reports
@@ -359,11 +234,9 @@ const DashboardCharts = ({ role }) => {
           <h2
             className="
               mt-4
-
               text-2xl
               font-bold
-
-              text-slate-800
+              text-black
             "
           >
             {role === "student"
@@ -373,7 +246,7 @@ const DashboardCharts = ({ role }) => {
 
           <p
             className="
-              text-slate-500
+              text-black/70
               mt-1
             "
           >
@@ -381,65 +254,52 @@ const DashboardCharts = ({ role }) => {
           </p>
         </div>
 
-        {/* Chart */}
+        <ResponsiveContainer
+          width="100%"
+          height={320}
+        >
+          <BarChart data={chartData}>
+            <CartesianGrid
+              stroke="#d1d5db"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
 
-        <div className="relative z-10">
-          <ResponsiveContainer
-            width="100%"
-            height={320}
-          >
-            <BarChart data={chartData}>
-              <CartesianGrid
-                strokeDasharray="4 4"
-                stroke="#e2e8f0"
-                vertical={false}
-              />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "#000000",
+                fontSize: 13,
+              }}
+            />
 
-              <XAxis
-                dataKey="name"
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 13,
-                }}
-              />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "#000000",
+                fontSize: 13,
+              }}
+            />
 
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 13,
-                }}
-              />
+            <Tooltip
+              contentStyle={{
+                background: "#FFFFFF",
+                border: "2px solid #000000",
+                borderRadius: "12px",
+              }}
+            />
 
-              <Tooltip
-                cursor={{
-                  fill:
-                    "rgba(255,107,61,0.06)",
-                }}
-                contentStyle={{
-                  borderRadius: "18px",
-                  border:
-                    "1px solid rgba(255,255,255,0.8)",
-                  background:
-                    "rgba(255,255,255,0.9)",
-                  backdropFilter: "blur(12px)",
-                  boxShadow:
-                    "0 10px 30px rgba(0,0,0,0.08)",
-                }}
-              />
-
-              <Bar
-                dataKey={dataKey}
-                radius={[14, 14, 0, 0]}
-                fill="#ff6b3d"
-                barSize={42}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+            <Bar
+              dataKey={dataKey}
+              fill="#FF0000"
+              radius={[10, 10, 0, 0]}
+              barSize={42}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </motion.div>
     </div>
   );

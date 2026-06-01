@@ -1,6 +1,7 @@
 import previewImg from "../../assets/course/dsa_Python.jpeg";
 
 export default function CoursePreviewCard() {
+  const brochureLink="https://drive.google.com/file/d/1ek89Kv91GTwrbMmeczeP7xK_u_cxSSyB/view?usp=sharing"
   return (
     <div
       className="
@@ -23,7 +24,6 @@ export default function CoursePreviewCard() {
           className="w-full h-[180px] object-cover"
         />
 
-        {/* PLAY ICON */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white w-12 h-12 rounded-full flex items-center justify-center shadow">
             ▶
@@ -43,12 +43,19 @@ export default function CoursePreviewCard() {
         </p>
 
         <button className="mt-5 w-full py-3 bg-red-600 text-white font-bold">
-          Apply Now
+          Buy Now
         </button>
 
-        <button className="mt-3 w-full py-3 border border-red-600 text-red-600 font-semibold">
-          Download Brochure
-        </button>
+        {brochureLink && (
+          <a
+            href={brochureLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 w-full py-3 border border-red-600 text-red-600 font-semibold flex justify-center items-center hover:bg-red-50 transition"
+          >
+            Download Brochure
+          </a>
+        )}
       </div>
     </div>
   );
