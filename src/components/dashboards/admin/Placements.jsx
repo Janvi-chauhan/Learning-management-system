@@ -19,7 +19,7 @@ const initialForm = {
   name: "",
   company: "",
   batch: "",
-  domain: "",
+ domain: "",
   linkedin: "",
   social: "",
   image: "",
@@ -94,6 +94,16 @@ export default function Placements() {
     setShowModal(true);
   };
 
+  // ================= CLOSE MODAL =================
+
+  const closeModal = () => {
+    setShowModal(false);
+
+    setFormData(initialForm);
+
+    setEditId(null);
+  };
+
   // ================= SUBMIT =================
 
   const handleSubmit = (e) => {
@@ -120,11 +130,7 @@ export default function Placements() {
       ]);
     }
 
-    setShowModal(false);
-
-    setFormData(initialForm);
-
-    setEditId(null);
+    closeModal();
   };
 
   // ================= DELETE =================
@@ -154,32 +160,38 @@ export default function Placements() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50 p-4 sm:p-6 lg:p-8">
+      
       {/* ================= HEADER ================= */}
 
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+        
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">
+          
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
             Placements
           </h1>
 
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-2">
             Manage placed students
           </p>
+
         </div>
 
         <button
           onClick={() => openModal()}
-          className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl font-medium transition"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-5 py-3 rounded-2xl font-medium transition-all shadow-lg"
         >
           <Plus size={18} />
           Add Placement
         </button>
+
       </div>
 
       {/* ================= SEARCH BAR ================= */}
 
-      <div className="relative mb-6">
+      <div className="relative mb-8">
+        
         <Search
           size={18}
           className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -192,67 +204,110 @@ export default function Placements() {
           onChange={(e) =>
             setSearch(e.target.value)
           }
-          className="w-full bg-white border border-gray-200 rounded-2xl py-3 pl-12 pr-4 outline-none focus:border-red-500 shadow-sm"
+          className="w-full bg-white border border-gray-200 rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-red-500 shadow-sm"
         />
+
       </div>
 
-      {/* ================= PLACEMENT CARDS ================= */}
+      {/* ================= DESKTOP TABLE ================= */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+<div className="hidden lg:block w-full">
+  <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+    <div>
+    
+    <table className="w-full table-fixed">
+      
+      <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
+        <tr>
+          <th className="w-[28%] px-4 py-4 text-left text-sm font-semibold">
+            Student
+          </th>
+
+          <th className="w-[16%] px-4 py-4 text-left text-sm font-semibold">
+            Company
+          </th>
+
+          <th className="w-[12%] px-4 py-4 text-left text-sm font-semibold">
+            Batch
+          </th>
+
+          <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
+            Domain
+          </th>
+
+          <th className="w-[12%] px-4 py-4 text-center text-sm font-semibold">
+            Social
+          </th>
+
+          <th className="w-[12%] px-4 py-4 text-center text-sm font-semibold">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
         {filteredStudents.length > 0 ? (
           filteredStudents.map((student) => (
-            <div
+            <tr
               key={student.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300"
+              className="border-b border-gray-100 hover:bg-red-50/40 transition"
             >
-              {/* IMAGE */}
+              
+              {/* STUDENT */}
+              <td className="px-4 py-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  
+                  <img
+                    src={student.image}
+                    alt={student.name}
+                    className="w-12 h-12 rounded-xl object-cover shrink-0"
+                  />
 
-              <div className="h-60 overflow-hidden">
-                <img
-                  src={student.image}
-                  alt={student.name}
-                  className="w-full h-full object-cover hover:scale-105 transition duration-500"
-                />
-              </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-gray-800">
+                      {student.name}
+                    </h3>
 
-              {/* CONTENT */}
-
-              <div className="p-5">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {student.name}
-                </h2>
-
-                <p className="text-red-600 font-semibold mt-1 text-lg">
-                  {student.company}
-                </p>
-
-                <div className="mt-4 space-y-2 text-gray-600">
-                  <p>
-                    <span className="font-semibold">
-                      Batch:
-                    </span>{" "}
-                    {student.batch}
-                  </p>
-
-                  <p>
-                    <span className="font-semibold">
-                      Domain:
-                    </span>{" "}
-                    {student.domain}
-                  </p>
+                    <p className="text-sm text-gray-500">
+                      Placement Student
+                    </p>
+                  </div>
                 </div>
+              </td>
 
-                {/* SOCIAL ICONS */}
+              {/* COMPANY */}
+              <td className="px-4 py-4">
+                <span className="font-semibold text-red-600 block">
+                  {student.company}
+                </span>
+              </td>
 
-                <div className="flex items-center gap-3 mt-5">
+              {/* BATCH */}
+              <td className="px-4 py-4">
+                <span className="px-3 py-1 rounded-full bg-red-50 text-red-600 text-sm font-medium">
+                  {student.batch}
+                </span>
+              </td>
+
+              {/* DOMAIN */}
+              <td className="px-4 py-4">
+                <p className="text-gray-700 break-words">
+                  {student.domain}
+                </p>
+              </td>
+
+              {/* SOCIAL */}
+              <td className="px-4 py-4">
+                <div className="flex items-center justify-center gap-2">
+                  
                   {student.linkedin && (
                     <a
                       href={student.linkedin}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center hover:scale-105 transition"
+                      className="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"
                     >
-                      <FaLinkedin size={20} />
+                      <FaLinkedin size={16} />
                     </a>
                   )}
 
@@ -261,60 +316,178 @@ export default function Placements() {
                       href={student.social}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-11 h-11 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center hover:scale-105 transition"
+                      className="w-9 h-9 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center"
                     >
-                      <FaInstagram size={20} />
+                      <FaInstagram size={16} />
                     </a>
                   )}
                 </div>
+              </td>
 
-                {/* ACTION BUTTONS */}
-
-                <div className="flex gap-3 mt-6">
+              {/* ACTIONS */}
+              <td className="px-4 py-4">
+                <div className="flex items-center justify-center gap-2">
+                  
                   <button
-                    onClick={() =>
-                      openModal(student)
-                    }
-                    className="flex-1 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 py-3 rounded-xl font-medium transition"
+                    onClick={() => openModal(student)}
+                    className="w-9 h-9 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-600 flex items-center justify-center transition"
                   >
-                    <Pencil size={18} />
-                    Edit
+                    <Pencil size={16} />
                   </button>
 
                   <button
-                    onClick={() =>
-                      handleDelete(student.id)
-                    }
-                    className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 py-3 rounded-xl font-medium transition"
+                    onClick={() => handleDelete(student.id)}
+                    className="w-9 h-9 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition"
                   >
-                    <Trash2 size={18} />
-                    Delete
+                    <Trash2 size={16} />
                   </button>
                 </div>
-              </div>
-            </div>
+              </td>
+            </tr>
           ))
         ) : (
-          <div className="col-span-full bg-white rounded-3xl py-16 text-center shadow-sm">
-            <h3 className="text-2xl font-semibold text-gray-700">
+          <tr>
+            <td
+              colSpan="6"
+              className="py-16 text-center text-gray-500"
+            >
               No Placements Found
-            </h3>
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
 
-            <p className="text-gray-500 mt-2">
-              Add newly placed students
+{/* ================= MOBILE + TABLET CARDS ================= */}
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:hidden">
+  
+  {filteredStudents.length > 0 ? (
+    filteredStudents.map((student) => (
+      <div
+        key={student.id}
+        className="bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm"
+      >
+        
+        
+        {/* IMAGE */}
+
+
+
+<div className=" relative w-full h-72 overflow-hidden bg-gray-100">
+  
+  <img
+    src={student.image}
+    alt={student.name}
+    className="absolute inset-0 w-full h-full object-cover object-center"
+    loading="lazy"
+  />
+
+</div>
+
+        {/* CONTENT */}
+        <div className="p-5">
+          
+          <h2 className="text-xl font-bold text-gray-800">
+            {student.name}
+          </h2>
+
+          <p className="text-red-600 font-semibold mt-1">
+            {student.company}
+          </p>
+
+          <div className="mt-4 space-y-2 text-sm text-gray-600">
+            
+            <p>
+              <span className="font-semibold">
+                Batch:
+              </span>{" "}
+              {student.batch}
+            </p>
+
+            <p>
+              <span className="font-semibold">
+                Domain:
+              </span>{" "}
+              {student.domain}
             </p>
           </div>
-        )}
+
+          {/* SOCIAL */}
+          <div className="flex gap-3 mt-5">
+            
+            {student.linkedin && (
+              <a
+                href={student.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center"
+              >
+                <FaLinkedin size={18} />
+              </a>
+            )}
+
+            {student.social && (
+              <a
+                href={student.social}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center"
+              >
+                <FaInstagram size={18} />
+              </a>
+            )}
+          </div>
+
+          {/* ACTIONS */}
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            
+            <button
+              onClick={() => openModal(student)}
+              className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 py-3 rounded-xl font-medium"
+            >
+              <Pencil size={18} />
+              Edit
+            </button>
+
+            <button
+              onClick={() => handleDelete(student.id)}
+              className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 py-3 rounded-xl font-medium"
+            >
+              <Trash2 size={18} />
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
+    ))
+  ) : (
+    <div className="col-span-full bg-white rounded-3xl py-16 text-center border border-gray-200">
+      <h3 className="text-2xl font-semibold text-gray-700">
+        No Placements Found
+      </h3>
+
+      <p className="text-gray-500 mt-2">
+        Add newly placed students
+      </p>
+    </div>
+  )}
+</div>
 
       {/* ================= MODAL ================= */}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white w-full max-w-2xl rounded-3xl p-6 sm:p-7">
+          
+          <div className="bg-white w-full max-w-2xl rounded-3xl p-6 sm:p-7 max-h-[90vh] overflow-y-auto">
+            
             {/* TOP */}
 
             <div className="flex items-center justify-between mb-6">
+              
               <h2 className="text-2xl font-bold text-gray-800">
                 {editId
                   ? "Edit Placement"
@@ -322,13 +495,12 @@ export default function Placements() {
               </h2>
 
               <button
-                onClick={() =>
-                  setShowModal(false)
-                }
+                onClick={closeModal}
                 className="p-2 rounded-lg hover:bg-gray-100 transition"
               >
                 <X />
               </button>
+
             </div>
 
             {/* FORM */}
@@ -337,6 +509,7 @@ export default function Placements() {
               onSubmit={handleSubmit}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
+              
               <input
                 type="text"
                 name="name"
@@ -360,7 +533,7 @@ export default function Placements() {
               <input
                 type="text"
                 name="batch"
-                placeholder="Batch (Example: 2025)"
+                placeholder="Batch"
                 value={formData.batch}
                 onChange={handleChange}
                 required
@@ -370,7 +543,7 @@ export default function Placements() {
               <input
                 type="text"
                 name="domain"
-                placeholder="Domain (MERN Stack)"
+                placeholder="Domain"
                 value={formData.domain}
                 onChange={handleChange}
                 required
@@ -380,17 +553,16 @@ export default function Placements() {
               <input
                 type="url"
                 name="linkedin"
-                placeholder="LinkedIn Profile Link"
+                placeholder="LinkedIn URL"
                 value={formData.linkedin}
                 onChange={handleChange}
-                required
                 className="border rounded-xl px-4 py-3 outline-none focus:border-red-500 sm:col-span-2"
               />
 
               <input
                 type="url"
                 name="social"
-                placeholder="Instagram / Social Link"
+                placeholder="Instagram URL"
                 value={formData.social}
                 onChange={handleChange}
                 className="border rounded-xl px-4 py-3 outline-none focus:border-red-500 sm:col-span-2"
@@ -408,12 +580,11 @@ export default function Placements() {
 
               {/* BUTTONS */}
 
-              <div className="sm:col-span-2 flex justify-end gap-3 pt-2">
+              <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowModal(false)
-                  }
+                  onClick={closeModal}
                   className="px-5 py-3 border rounded-xl hover:bg-gray-100 transition"
                 >
                   Cancel
@@ -427,9 +598,13 @@ export default function Placements() {
                     ? "Update Placement"
                     : "Add Placement"}
                 </button>
+
               </div>
+
             </form>
+
           </div>
+
         </div>
       )}
     </div>

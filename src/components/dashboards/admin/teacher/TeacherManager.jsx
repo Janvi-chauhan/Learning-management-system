@@ -1,6 +1,7 @@
 // ManageTeacher.jsx
 
 import React, { useState } from "react";
+
 import {
   Plus,
   Pencil,
@@ -9,8 +10,16 @@ import {
   Search,
   GraduationCap,
   Eye,
+  Mail,
+  Layers3,
+  Briefcase,
 } from "lucide-react";
+
+import { motion } from "framer-motion";
+
 import teachersData from "../../teachersData";
+
+// ================= INITIAL FORM =================
 
 const initialForm = {
   name: "",
@@ -22,7 +31,6 @@ const initialForm = {
   password: "",
   status: "Active",
 
-  // Performance Fields
   coursesAssigned: 0,
   totalCourses: 5,
   studentsHandled: 0,
@@ -30,20 +38,35 @@ const initialForm = {
 };
 
 const ManageTeacher = () => {
-  const [teachers, setTeachers] = useState(teachersData);
-  const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState(initialForm);
+  const [teachers, setTeachers] =
+    useState(teachersData);
 
-  const [selectedTeacher, setSelectedTeacher] = useState(null);
-  const [showPerformanceModal, setShowPerformanceModal] =
+  const [search, setSearch] =
+    useState("");
+
+  const [showModal, setShowModal] =
     useState(false);
 
-  // Handle Input Changes
+  const [editId, setEditId] =
+    useState(null);
+
+  const [formData, setFormData] =
+    useState(initialForm);
+
+  const [selectedTeacher, setSelectedTeacher] =
+    useState(null);
+
+  const [
+    showPerformanceModal,
+    setShowPerformanceModal,
+  ] = useState(false);
+
+  // ================= HANDLE CHANGE =================
+
   const handleChange = ({ target }) => {
     setFormData({
       ...formData,
+
       [target.name]:
         target.type === "number"
           ? Number(target.value)
@@ -51,34 +74,48 @@ const ManageTeacher = () => {
     });
   };
 
-  // Open Modal
-  const openModal = (teacher = null) => {
+  // ================= OPEN MODAL =================
+
+  const openModal = (
+    teacher = null
+  ) => {
     setEditId(teacher?.id || null);
+
     setFormData({
       ...initialForm,
       ...teacher,
     });
+
     setShowModal(true);
   };
 
-  // Close Modal
+  // ================= CLOSE MODAL =================
+
   const closeModal = () => {
     setShowModal(false);
+
     setEditId(null);
+
     setFormData(initialForm);
   };
 
-  // Submit Form
+  // ================= SUBMIT =================
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const teacherData = {
       ...formData,
-      courses: Array.isArray(formData.courses)
+
+      courses: Array.isArray(
+        formData.courses
+      )
         ? formData.courses
         : formData.courses
             .split(",")
-            .map((course) => course.trim())
+            .map((course) =>
+              course.trim()
+            )
             .filter(Boolean),
     };
 
@@ -86,13 +123,17 @@ const ManageTeacher = () => {
       setTeachers((prev) =>
         prev.map((teacher) =>
           teacher.id === editId
-            ? { ...teacher, ...teacherData }
+            ? {
+                ...teacher,
+                ...teacherData,
+              }
             : teacher
         )
       );
     } else {
       setTeachers((prev) => [
         ...prev,
+
         {
           id: Date.now(),
           ...teacherData,
@@ -103,216 +144,350 @@ const ManageTeacher = () => {
     closeModal();
   };
 
-  // Delete Teacher
+  // ================= DELETE =================
+
   const handleDelete = (id) => {
-    if (window.confirm("Delete this teacher?")) {
+    if (
+      window.confirm(
+        "Delete this teacher?"
+      )
+    ) {
       setTeachers((prev) =>
-        prev.filter((teacher) => teacher.id !== id)
+        prev.filter(
+          (teacher) =>
+            teacher.id !== id
+        )
       );
     }
   };
 
-  // Calculate Overall Performance
-  const calculateOverallPerformance = (teacher) => {
-    const courseProgress =
-      teacher.totalCourses > 0
-        ? (teacher.coursesAssigned / teacher.totalCourses) *
+  // ================= PERFORMANCE =================
+
+  const calculateOverallPerformance =
+    (teacher) => {
+      const courseProgress =
+        teacher.totalCourses > 0
+          ? (teacher.coursesAssigned /
+              teacher.totalCourses) *
+            100
+          : 0;
+
+      const studentsScore =
+        Math.min(
+          teacher.studentsHandled || 0,
           100
-        : 0;
+        );
 
-    const studentsScore = Math.min(
-      teacher.studentsHandled || 0,
-      100
-    );
+      return Math.round(
+        (courseProgress +
+          studentsScore +
+          (teacher.attendance ||
+            0)) /
+          3
+      );
+    };
 
-    return Math.round(
-      (courseProgress +
-        studentsScore +
-        (teacher.attendance || 0)) /
-        3
-    );
-  };
+  // ================= PERFORMANCE MODAL =================
 
-  // Open Performance Modal
-  const openPerformanceModal = (teacher) => {
+  const openPerformanceModal = (
+    teacher
+  ) => {
     setSelectedTeacher({
       ...teacher,
+
       overallPerformance:
-        calculateOverallPerformance(teacher),
+        calculateOverallPerformance(
+          teacher
+        ),
     });
+
     setShowPerformanceModal(true);
   };
 
-  // Close Performance Modal
   const closePerformanceModal = () => {
     setSelectedTeacher(null);
+
     setShowPerformanceModal(false);
   };
 
-  // Search Filter
-  const filteredTeachers = teachers.filter((teacher) =>
-    teacher.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // ================= FILTER =================
 
-  // Progress Bar
+  const filteredTeachers =
+    teachers.filter((teacher) =>
+      teacher.name
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+    );
+
+  // ================= PROGRESS BAR =================
+
   const ProgressBar = ({
     value,
-    color = "bg-red-500",
   }) => (
-    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+    <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
       <div
-        className={`${color} h-2.5 rounded-full transition-all duration-500`}
+        className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
         style={{
-          width: `${Math.min(value, 100)}%`,
+          width: `${Math.min(
+            value,
+            100
+          )}%`,
         }}
       />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-4 sm:p-5 lg:p-6">
+      
+      {/* ================= HEADER ================= */}
+
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5 mb-6">
+        
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 shadow-sm">
+            
+            <div className="w-2 h-2 rounded-full bg-red-600" />
+
+            <span className="text-sm font-medium text-gray-600">
+              Teacher Workspace
+            </span>
+
+          </div>
+
+          <h1 className="mt-4 text-3xl sm:text-4xl font-bold text-gray-900">
             Manage Teachers
           </h1>
-          <p className="text-gray-500 mt-1">
-            Create teacher accounts and track their
-            performance.
+
+          <p className="mt-2 text-gray-500 text-sm sm:text-base">
+            Create teacher accounts and track performance.
           </p>
+
         </div>
 
-        <button
-          onClick={() => openModal()}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EF0000] to-[#C40000] text-white px-5 py-3 rounded-xl shadow-lg font-semibold"
+        <motion.button
+          whileHover={{
+            scale: 1.02,
+          }}
+          whileTap={{
+            scale: 0.98,
+          }}
+          onClick={() =>
+            openModal()
+          }
+          className="w-full sm:w-fit inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold shadow-lg"
         >
           <Plus size={18} />
           Add Teacher
-        </button>
+        </motion.button>
+
       </div>
 
-      {/* Search */}
-      <div className="bg-white p-4 rounded-2xl mb-6 shadow-sm border border-gray-200 flex items-center">
-        <Search
-          className="text-gray-400 mr-3"
-          size={18}
-        />
-        <input
-          type="text"
-          placeholder="Search teacher by name..."
-          className="w-full outline-none text-gray-700"
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-        />
+      {/* ================= SEARCH ================= */}
+
+      <div className="rounded-[24px] border border-white/80 bg-white/80 backdrop-blur-xl shadow-sm p-4 mb-6">
+        
+        <div className="flex items-center rounded-2xl border border-gray-200 bg-white px-4 py-3">
+          
+          <Search
+            className="text-gray-400 mr-3"
+            size={18}
+          />
+
+          <input
+            type="text"
+            placeholder="Search teacher by name..."
+            className="w-full outline-none bg-transparent text-gray-700"
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
       </div>
 
-      {/* Teacher Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredTeachers.map((teacher) => {
+
+      {/* ================= DESKTOP TABLE ================= */}
+
+<div className="hidden xl:block overflow-hidden rounded-[30px] border border-gray-200 bg-white shadow-sm">
+  
+  <table className="w-full table-fixed">
+    
+    <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
+      
+      <tr>
+        
+        <th className="w-[28%] px-5 py-4 text-left text-sm font-semibold">
+          Teacher
+        </th>
+
+        <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
+          Specialization
+        </th>
+
+        <th className="w-[8%] px-4 py-4 text-left text-sm font-semibold">
+          Experience
+        </th>
+
+        <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
+          Courses
+        </th>
+
+        <th className="w-[10%] px-4 py-4 text-left text-sm font-semibold">
+          Performance
+        </th>
+
+        <th className="w-[8%] px-4 py-4 text-center text-sm font-semibold">
+          Actions
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+      
+      {filteredTeachers.map(
+        (teacher) => {
           const overallPerformance =
-            calculateOverallPerformance(teacher);
+            calculateOverallPerformance(
+              teacher
+            );
 
           return (
-            <div
+            <tr
               key={teacher.id}
-              className="group bg-white rounded-3xl border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              className="border-b border-gray-100 hover:bg-red-50/40 transition-all"
             >
-              {/* Header */}
-              <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-5 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                    <GraduationCap size={28} />
+              
+              {/* TEACHER */}
+
+              <td className="px-5 py-5">
+                
+                <div className="flex items-center gap-4 min-w-0">
+                  
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-center text-white shrink-0">
+                    <GraduationCap size={20} />
                   </div>
 
                   <div className="min-w-0">
-                    <h3 className="text-lg font-bold truncate">
+                    
+                    <h3 className="font-semibold text-gray-800 truncate">
                       {teacher.name}
                     </h3>
-                    <p className="text-sm text-red-100 truncate">
-                      {teacher.specialization}
+
+                    <p className="text-sm text-gray-500 truncate">
+                      {teacher.email}
                     </p>
+
                   </div>
-                </div>
-              </div>
 
-              {/* Body */}
-              <div className="p-6">
-                {/* Email */}
-                <div className="mb-3">
-                  <p className="text-sm text-gray-500">
-                    {teacher.email}
-                  </p>
                 </div>
 
-                {/* Courses */}
-                <div className="mb-5">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                    Courses Assigned
-                  </p>
+              </td>
 
-                  <div className="flex flex-wrap gap-2">
-                    {teacher.courses &&
-                    teacher.courses.length > 0 ? (
-                      <>
-                        {teacher.courses
-                          .slice(0, 3)
-                          .map((course, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
-                            >
-                              {course}
-                            </span>
-                          ))}
+              {/* SPECIALIZATION */}
 
-                        {teacher.courses.length >
-                          3 && (
-                          <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
-                            +
-                            {teacher.courses
-                              .length - 3}{" "}
-                            more
-                          </span>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-gray-400 text-xs">
-                        No courses assigned
-                      </span>
+              <td className="px-4 py-5">
+                
+                <p className="font-medium text-gray-700 truncate">
+                  {teacher.specialization}
+                </p>
+
+              </td>
+
+              {/* EXPERIENCE */}
+
+              <td className="px-4 py-5">
+                
+                <span className="text-gray-700 font-medium">
+                  {teacher.experience}
+                </span>
+
+              </td>
+
+              {/* COURSES */}
+
+              <td className="px-4 py-5">
+                
+                <div className="flex flex-wrap gap-2">
+                  
+                  {teacher.courses
+                    ?.slice(0, 2)
+                    .map(
+                      (
+                        course,
+                        index
+                      ) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100 truncate"
+                        >
+                          {course}
+                        </span>
+                      )
                     )}
-                  </div>
+
+                  {teacher.courses
+                    ?.length > 2 && (
+                    <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
+                      +
+                      {teacher.courses
+                        .length - 2}
+                    </span>
+                  )}
+
                 </div>
 
-                {/* Performance */}
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">
-                      Overall Performance
-                    </span>
-                    <span className="text-sm font-bold text-red-600">
-                      {overallPerformance}%
-                    </span>
+              </td>
+
+              {/* PERFORMANCE */}
+
+              <td className="px-4 py-5">
+                
+                <div className="flex items-center gap-3">
+                  
+                  <div className="flex-1">
+                    <ProgressBar
+                      value={
+                        overallPerformance
+                      }
+                    />
                   </div>
-                  <ProgressBar
-                    value={overallPerformance}
-                  />
+
+                  <span className="text-sm font-bold text-red-600">
+                    {
+                      overallPerformance
+                    }
+                    %
+                  </span>
+
                 </div>
 
-                {/* Action Buttons */}
-                <div className="grid grid-cols-3 gap-2">
+              </td>
+
+              {/* ACTIONS */}
+
+              <td className="px-4 py-5">
+                
+                <div className="flex items-center justify-center gap-2">
+                  
                   <button
                     onClick={() =>
-                      openModal(teacher)
+                      openModal(
+                        teacher
+                      )
                     }
-                    className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition"
+                    className="w-9 h-9 rounded-xl bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-all flex items-center justify-center"
                   >
-                    <Pencil size={16} />
-                    <span className="text-xs font-medium">
-                      Edit
-                    </span>
+                    <Pencil size={15} />
                   </button>
 
                   <button
@@ -321,45 +496,492 @@ const ManageTeacher = () => {
                         teacher
                       )
                     }
-                    className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
+                    className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 hover:bg-blue-200 transition-all flex items-center justify-center"
                   >
-                    <Eye size={16} />
-                    <span className="text-xs font-medium">
-                      Details
-                    </span>
+                    <Eye size={15} />
                   </button>
 
                   <button
                     onClick={() =>
-                      handleDelete(teacher.id)
+                      handleDelete(
+                        teacher.id
+                      )
                     }
-                    className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition"
+                    className="w-9 h-9 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 transition-all flex items-center justify-center"
                   >
-                    <Trash2 size={16} />
-                    <span className="text-xs font-medium">
-                      Delete
-                    </span>
+                    <Trash2 size={15} />
                   </button>
+
                 </div>
-              </div>
-            </div>
+
+              </td>
+
+            </tr>
           );
-        })}
+        }
+      )}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{/* ================= MOBILE + TABLET CARDS ================= */}
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-5 xl:hidden">
+  
+  {filteredTeachers.map(
+    (teacher, index) => {
+      const overallPerformance =
+        calculateOverallPerformance(
+          teacher
+        );
+
+      return (
+        <motion.div
+          key={teacher.id}
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            delay:
+              index * 0.04,
+          }}
+          className="overflow-hidden rounded-[30px] border border-white/80 bg-white shadow-sm"
+        >
+          
+          {/* CARD TOP */}
+
+          <div className="bg-gradient-to-r from-red-600 to-red-500 p-5 text-white">
+            
+            <div className="flex items-center gap-4">
+              
+              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                <GraduationCap size={24} />
+              </div>
+
+              <div className="min-w-0">
+                
+                <h3 className="text-lg font-bold truncate">
+                  {teacher.name}
+                </h3>
+
+                <p className="text-sm text-red-100 truncate">
+                  {
+                    teacher.specialization
+                  }
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* CARD BODY */}
+
+          <div className="p-5">
+            
+            <div className="space-y-4">
+              
+              <div className="flex items-center gap-2 text-gray-600">
+                
+                <Mail size={16} />
+
+                <span className="text-sm truncate">
+                  {teacher.email}
+                </span>
+
+              </div>
+
+              <div>
+                
+                <p className="text-sm text-gray-500 mb-2">
+                  Courses
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  
+                  {teacher.courses
+                    ?.length > 0 ? (
+                    teacher.courses.map(
+                      (
+                        course,
+                        index
+                      ) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
+                        >
+                          {course}
+                        </span>
+                      )
+                    )
+                  ) : (
+                    <span className="text-xs text-gray-400">
+                      No Courses
+                    </span>
+                  )}
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* PERFORMANCE */}
+
+            <div className="mt-5">
+              
+              <div className="flex justify-between mb-2">
+                
+                <span className="text-sm font-medium text-gray-700">
+                  Performance
+                </span>
+
+                <span className="text-sm font-bold text-red-600">
+                  {
+                    overallPerformance
+                  }
+                  %
+                </span>
+
+              </div>
+
+              <ProgressBar
+                value={
+                  overallPerformance
+                }
+              />
+
+            </div>
+
+            {/* ACTIONS */}
+
+            <div className="grid grid-cols-3 gap-2 mt-6">
+              
+              <button
+                onClick={() =>
+                  openModal(
+                    teacher
+                  )
+                }
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-yellow-50 text-yellow-700"
+              >
+                <Pencil size={16} />
+
+                <span className="text-xs font-medium">
+                  Edit
+                </span>
+
+              </button>
+
+              <button
+                onClick={() =>
+                  openPerformanceModal(
+                    teacher
+                  )
+                }
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-blue-50 text-blue-700"
+              >
+                <Eye size={16} />
+
+                <span className="text-xs font-medium">
+                  Details
+                </span>
+
+              </button>
+
+              <button
+                onClick={() =>
+                  handleDelete(
+                    teacher.id
+                  )
+                }
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-red-50 text-red-600"
+              >
+                <Trash2 size={16} />
+
+                <span className="text-xs font-medium">
+                  Delete
+                </span>
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </motion.div>
+      );
+    }
+  )}
+
+</div>
+
+      {/* ================= MOBILE + TABLET CARDS ================= */}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 xl:hidden">
+        
+        {filteredTeachers.map(
+          (teacher, index) => {
+            const overallPerformance =
+              calculateOverallPerformance(
+                teacher
+              );
+
+            return (
+              <motion.div
+                key={teacher.id}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  delay:
+                    index * 0.04,
+                }}
+                className="overflow-hidden rounded-[30px] border border-white/80 bg-white/80 backdrop-blur-xl shadow-sm hover:shadow-xl transition-all"
+              >
+                
+                {/* TOP */}
+
+                <div className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 p-5 text-white">
+                  
+                  <div className="flex items-center gap-4">
+                    
+                    <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                      <GraduationCap size={24} />
+                    </div>
+
+                    <div className="min-w-0">
+                      
+                      <h3 className="text-lg font-bold truncate">
+                        {teacher.name}
+                      </h3>
+
+                      <p className="text-sm text-red-100 truncate">
+                        {
+                          teacher.specialization
+                        }
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* BODY */}
+
+                <div className="p-5">
+                  
+                  <div className="space-y-4">
+                    
+                    <div className="flex items-center gap-2 text-gray-600">
+                      
+                      <Mail
+                        size={16}
+                      />
+
+                      <span className="text-sm truncate">
+                        {teacher.email}
+                      </span>
+
+                    </div>
+
+                    <div className="flex items-center gap-2 text-gray-600">
+                      
+                      <Briefcase
+                        size={16}
+                      />
+
+                      <span className="text-sm">
+                        {
+                          teacher.experience
+                        }
+                      </span>
+
+                    </div>
+
+                    <div>
+                      
+                      <div className="flex items-center gap-2 mb-2">
+                        
+                        <Layers3
+                          size={16}
+                          className="text-gray-500"
+                        />
+
+                        <span className="text-sm font-medium text-gray-700">
+                          Courses
+                        </span>
+
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        
+                        {teacher.courses
+                          ?.length >
+                        0 ? (
+                          teacher.courses.map(
+                            (
+                              course,
+                              index
+                            ) => (
+                              <span
+                                key={
+                                  index
+                                }
+                                className="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
+                              >
+                                {
+                                  course
+                                }
+                              </span>
+                            )
+                          )
+                        ) : (
+                          <span className="text-xs text-gray-400">
+                            No Courses
+                          </span>
+                        )}
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  {/* PERFORMANCE */}
+
+                  <div className="mt-5">
+                    
+                    <div className="flex items-center justify-between mb-2">
+                      
+                      <span className="text-sm font-medium text-gray-700">
+                        Overall Performance
+                      </span>
+
+                      <span className="text-sm font-bold text-red-600">
+                        {
+                          overallPerformance
+                        }
+                        %
+                      </span>
+
+                    </div>
+
+                    <ProgressBar
+                      value={
+                        overallPerformance
+                      }
+                    />
+
+                  </div>
+
+                  {/* ACTIONS */}
+
+                  <div className="grid grid-cols-3 gap-2 mt-6">
+                    
+                    <button
+                      onClick={() =>
+                        openModal(
+                          teacher
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-all"
+                    >
+                      <Pencil size={16} />
+
+                      <span className="text-xs font-medium">
+                        Edit
+                      </span>
+
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        openPerformanceModal(
+                          teacher
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-all"
+                    >
+                      <Eye size={16} />
+
+                      <span className="text-xs font-medium">
+                        Details
+                      </span>
+
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleDelete(
+                          teacher.id
+                        )
+                      }
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-all"
+                    >
+                      <Trash2 size={16} />
+
+                      <span className="text-xs font-medium">
+                        Delete
+                      </span>
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </motion.div>
+            );
+          }
+        )}
+
       </div>
 
-      {/* No Teachers */}
-      {filteredTeachers.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+      {/* ================= NO DATA ================= */}
+
+      {filteredTeachers.length ===
+        0 && (
+        <div className="mt-6 rounded-[28px] border border-gray-200 bg-white p-10 text-center text-gray-500 shadow-sm">
           No teachers found.
         </div>
       )}
 
-      {/* Add/Edit Modal */}
+      {/* ================= ADD / EDIT MODAL ================= */}
+
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-5 border-b">
-              <h2 className="text-2xl font-bold">
+          
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.95,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            className="bg-white w-full max-w-2xl rounded-[30px] shadow-2xl"
+          >
+            
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+              
+              <h2 className="text-2xl font-bold text-gray-900">
                 {editId
                   ? "Edit Teacher"
                   : "Add Teacher"}
@@ -367,16 +989,20 @@ const ManageTeacher = () => {
 
               <button
                 onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-gray-100"
+                className="p-2 rounded-xl hover:bg-gray-100"
               >
                 <X size={20} />
               </button>
+
             </div>
 
             <form
-              onSubmit={handleSubmit}
+              onSubmit={
+                handleSubmit
+              }
               className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
             >
+              
               {[
                 "name",
                 "email",
@@ -388,60 +1014,96 @@ const ManageTeacher = () => {
                 <input
                   key={field}
                   type={
-                    field === "email"
+                    field ===
+                    "email"
                       ? "email"
-                      : field === "password"
+                      : field ===
+                        "password"
                       ? "password"
                       : "text"
                   }
                   name={field}
                   placeholder={
-                    field === "courses"
+                    field ===
+                    "courses"
                       ? "Courses (comma separated)"
                       : field
-                          .charAt(0)
+                          .charAt(
+                            0
+                          )
                           .toUpperCase() +
-                        field.slice(1)
+                        field.slice(
+                          1
+                        )
                   }
                   value={
-                    field === "courses" &&
+                    field ===
+                      "courses" &&
                     Array.isArray(
                       formData.courses
                     )
                       ? formData.courses.join(
                           ", "
                         )
-                      : formData[field]
+                      : formData[
+                          field
+                        ]
                   }
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   required
-                  className="border border-gray-300 rounded-xl px-4 py-3"
+                  className="border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
                 />
               ))}
 
               <select
                 name="batchType"
-                value={formData.batchType}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-xl px-4 py-3"
+                value={
+                  formData.batchType
+                }
+                onChange={
+                  handleChange
+                }
+                className="border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
               >
-                <option>Online</option>
-                <option>Offline</option>
-                <option>Hybrid</option>
+                <option>
+                  Online
+                </option>
+
+                <option>
+                  Offline
+                </option>
+
+                <option>
+                  Hybrid
+                </option>
+
               </select>
 
               <select
                 name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-xl px-4 py-3"
+                value={
+                  formData.status
+                }
+                onChange={
+                  handleChange
+                }
+                className="border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
               >
-                <option>Active</option>
-                <option>Inactive</option>
+                <option>
+                  Active
+                </option>
+
+                <option>
+                  Inactive
+                </option>
+
               </select>
 
               {editId && (
                 <>
+                  
                   <input
                     type="number"
                     name="coursesAssigned"
@@ -449,8 +1111,10 @@ const ManageTeacher = () => {
                     value={
                       formData.coursesAssigned
                     }
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-xl px-4 py-3"
+                    onChange={
+                      handleChange
+                    }
+                    className="border border-gray-300 rounded-2xl px-4 py-3"
                   />
 
                   <input
@@ -460,90 +1124,129 @@ const ManageTeacher = () => {
                     value={
                       formData.studentsHandled
                     }
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-xl px-4 py-3"
+                    onChange={
+                      handleChange
+                    }
+                    className="border border-gray-300 rounded-2xl px-4 py-3"
                   />
 
                   <input
                     type="number"
                     name="attendance"
                     placeholder="Attendance %"
-                    value={formData.attendance}
-                    onChange={handleChange}
+                    value={
+                      formData.attendance
+                    }
+                    onChange={
+                      handleChange
+                    }
                     min="0"
                     max="100"
-                    className="border border-gray-300 rounded-xl px-4 py-3"
+                    className="border border-gray-300 rounded-2xl px-4 py-3"
                   />
+
                 </>
               )}
 
-              <div className="md:col-span-2 flex justify-end gap-3 pt-2">
+              <div className="md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                
                 <button
                   type="button"
-                  onClick={closeModal}
-                  className="px-5 py-3 rounded-xl border border-gray-300"
+                  onClick={
+                    closeModal
+                  }
+                  className="px-5 py-3 rounded-2xl border border-gray-300"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#EF0000] to-[#C40000] text-white"
+                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold"
                 >
                   {editId
                     ? "Update Teacher"
                     : "Add Teacher"}
                 </button>
+
               </div>
+
             </form>
-          </div>
+
+          </motion.div>
+
         </div>
       )}
 
-      {/* Performance Modal */}
+      {/* ================= PERFORMANCE MODAL ================= */}
+
       {showPerformanceModal &&
         selectedTeacher && (
           <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
-              <h2 className="text-3xl font-bold mb-6">
-                {selectedTeacher.name}
-              </h2>
+            
+            <div className="bg-white w-full max-w-3xl rounded-[30px] shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
+              
+              <div className="flex items-center justify-between mb-6">
+                
+                <h2 className="text-3xl font-bold text-gray-900">
+                  {
+                    selectedTeacher.name
+                  }
+                </h2>
+
+                <button
+                  onClick={
+                    closePerformanceModal
+                  }
+                  className="p-2 rounded-xl hover:bg-gray-100"
+                >
+                  <X size={20} />
+                </button>
+
+              </div>
 
               <div className="space-y-5">
-                {/* Email */}
+                
                 <div>
+                  
                   <p className="text-sm text-gray-500">
                     Email
                   </p>
-                  <p className="font-medium">
-                    {selectedTeacher.email}
+
+                  <p className="font-medium text-gray-800">
+                    {
+                      selectedTeacher.email
+                    }
                   </p>
+
                 </div>
 
-                {/* Specialization */}
                 <div>
+                  
                   <p className="text-sm text-gray-500">
                     Specialization
                   </p>
-                  <p className="font-medium">
+
+                  <p className="font-medium text-gray-800">
                     {
                       selectedTeacher.specialization
                     }
                   </p>
+
                 </div>
 
-                {/* Courses Assigned */}
                 <div>
+                  
                   <p className="text-sm text-gray-500 mb-2">
-                    Courses Assigned
+                    Courses
                   </p>
 
                   <div className="flex flex-wrap gap-2">
+                    
                     {selectedTeacher
-                      .courses &&
-                    selectedTeacher
-                      .courses.length >
-                      0 ? (
+                      .courses
+                      ?.length >
+                    0 ? (
                       selectedTeacher.courses.map(
                         (
                           course,
@@ -558,51 +1261,70 @@ const ManageTeacher = () => {
                         )
                       )
                     ) : (
-                      <p className="text-gray-400 text-sm">
-                        No courses
-                        assigned
+                      <p className="text-sm text-gray-400">
+                        No Courses
                       </p>
                     )}
+
                   </div>
+
                 </div>
 
-                {/* Experience */}
                 <div>
+                  
                   <p className="text-sm text-gray-500">
                     Experience
                   </p>
-                  <p className="font-medium">
+
+                  <p className="font-medium text-gray-800">
                     {
                       selectedTeacher.experience
                     }
                   </p>
+
                 </div>
 
-                {/* Overall Performance */}
                 <div>
-                  <p className="text-sm text-gray-500">
-                    Overall Performance
-                  </p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {
+                  
+                  <div className="flex justify-between mb-2">
+                    
+                    <span className="text-sm text-gray-500">
+                      Overall Performance
+                    </span>
+
+                    <span className="text-lg font-bold text-red-600">
+                      {
+                        selectedTeacher.overallPerformance
+                      }
+                      %
+                    </span>
+
+                  </div>
+
+                  <ProgressBar
+                    value={
                       selectedTeacher.overallPerformance
                     }
-                    %
-                  </p>
+                  />
+
                 </div>
+
               </div>
 
               <button
                 onClick={
                   closePerformanceModal
                 }
-                className="mt-8 w-full py-3 rounded-xl border border-gray-300"
+                className="mt-8 w-full py-3 rounded-2xl border border-gray-300 hover:bg-gray-50 transition-all"
               >
                 Close
               </button>
+
             </div>
+
           </div>
         )}
+
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Plus,
@@ -8,11 +8,8 @@ import {
   Search,
   GraduationCap,
   Eye,
-  BookOpen,
-  ClipboardCheck,
   Calendar,
   Mail,
-  User2,
 } from "lucide-react";
 
 import { motion } from "framer-motion";
@@ -39,8 +36,6 @@ const initialForm = {
   attendance: 0,
 };
 
-// ================= COMPONENT =================
-
 const ManageStudents = () => {
   const [students, setStudents] =
     useState(studentsData);
@@ -64,6 +59,32 @@ const ManageStudents = () => {
     showProgressModal,
     setShowProgressModal,
   ] = useState(false);
+
+  // ================= RESPONSIVE TABLE =================
+
+  const [showTable, setShowTable] =
+    useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Show table only on extra large screens
+      // where full table can fit properly
+      setShowTable(window.innerWidth >= 1400);
+    };
+
+    handleResize();
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+  }, []);
 
   // ================= HANDLE CHANGE =================
 
@@ -119,7 +140,6 @@ const ManageStudents = () => {
     } else {
       setStudents((prev) => [
         ...prev,
-
         {
           id: Date.now(),
           ...formData,
@@ -206,12 +226,10 @@ const ManageStudents = () => {
 
   const ProgressBar = ({
     value,
-    color =
-      "from-[#ff6b3d] to-[#ff9f43]",
   }) => (
-    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
       <div
-        className={`h-full rounded-full bg-gradient-to-r ${color} transition-all duration-700`}
+        className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
         style={{
           width: `${value}%`,
         }}
@@ -220,19 +238,17 @@ const ManageStudents = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-6">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-3 sm:p-5 lg:p-6">
       
       {/* ================= HEADER ================= */}
 
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5 mb-6">
         
-        {/* LEFT */}
-
-        <div>
+        <div className="min-w-0">
           
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-sm">
             
-            <div className="w-2 h-2 rounded-full bg-[#ff6b3d]" />
+            <div className="w-2 h-2 rounded-full bg-red-600" />
 
             <span className="text-sm font-medium text-slate-600">
               Student Workspace
@@ -240,29 +256,27 @@ const ManageStudents = () => {
 
           </div>
 
-          <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
+          <h1 className="mt-4 text-3xl sm:text-4xl xl:text-5xl font-bold tracking-tight text-slate-800 leading-tight">
             Manage Students
           </h1>
 
-          <p className="text-slate-500 mt-3 text-lg">
+          <p className="text-slate-500 mt-2 text-sm sm:text-base">
             Create student accounts and track learning progress.
           </p>
 
         </div>
 
-        {/* BUTTON */}
-
         <motion.button
           whileHover={{
-            scale: 1.03,
+            scale: 1.02,
           }}
           whileTap={{
-            scale: 0.97,
+            scale: 0.98,
           }}
           onClick={() =>
             openModal()
           }
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
+          className="w-full sm:w-fit inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold shadow-lg"
         >
           <Plus size={18} />
           Add Student
@@ -272,19 +286,19 @@ const ManageStudents = () => {
 
       {/* ================= SEARCH ================= */}
 
-      <div className="rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-4 mb-6">
+      <div className="rounded-[24px] border border-white/80 bg-white/80 backdrop-blur-2xl shadow-lg p-4 mb-6">
         
         <div className="flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-3">
           
           <Search
-            className="text-slate-400 mr-3"
+            className="text-slate-400 mr-3 shrink-0"
             size={18}
           />
 
           <input
             type="text"
             placeholder="Search student by name..."
-            className="w-full outline-none bg-transparent text-slate-700"
+            className="w-full outline-none bg-transparent text-slate-700 text-sm sm:text-base"
             value={search}
             onChange={(e) =>
               setSearch(
@@ -297,249 +311,425 @@ const ManageStudents = () => {
 
       </div>
 
-      {/* ================= STUDENT CARDS ================= */}
+      {/* ================= TABLE VIEW ================= */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        
-        {filteredStudents.map(
-          (student, index) => {
-            const overallProgress =
-              calculateOverallProgress(
-                student
-              );
-
-            return (
-              <motion.div
-                key={student.id}
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay:
-                    index * 0.05,
-                }}
-                whileHover={{
-                  y: -4,
-                }}
-                className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)]"
-              >
+      {showTable ? (
+        <div className="rounded-[28px] border border-white/80 bg-white/80 backdrop-blur-2xl shadow-lg overflow-hidden">
+          
+          <table className="w-full table-fixed">
+            
+            <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
+              
+              <tr>
                 
-                {/* Glow */}
+                <th className="w-[18%] px-4 py-4 text-left text-sm font-semibold">
+                  Student
+                </th>
 
-                <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-orange-200/10 blur-3xl" />
+                <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
+                  Course
+                </th>
 
-                {/* TOP */}
+                <th className="w-[10%] px-4 py-4 text-left text-sm font-semibold">
+                  Batch
+                </th>
 
-                <div className="relative bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] p-6 text-white overflow-hidden">
-                  
-                  <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+                <th className="w-[5%] px-4 py-4 text-left text-sm font-semibold">
+                  Status
+                </th>
 
-                  <div className="flex items-center gap-4 relative z-10">
-                    
-                    <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20">
-                      <GraduationCap size={28} />
-                    </div>
+                <th className="w-[10%] px-4 py-4 text-left text-sm font-semibold">
+                  Progress
+                </th>
 
-                    <div className="min-w-0">
+                <th className="w-[10%] px-4 py-4 text-center text-sm font-semibold">
+                  Actions
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+              
+              {filteredStudents.map(
+                (student) => {
+                  const overallProgress =
+                    calculateOverallProgress(
+                      student
+                    );
+
+                  return (
+                    <tr
+                      key={student.id}
+                      className="border-b border-slate-100 hover:bg-red-50/40 transition-all"
+                    >
                       
-                      <h3 className="text-xl font-bold truncate">
-                        {student.name}
-                      </h3>
+                      {/* STUDENT */}
 
-                      <p className="text-sm text-orange-100 truncate mt-1">
-                        {student.course}
-                      </p>
+                      <td className="px-4 py-5">
+                        
+                        <div className="flex items-center gap-3 min-w-0">
+                          
+                          <div className="w-11 h-11 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-center text-white shrink-0">
+                            <GraduationCap size={18} />
+                          </div>
 
-                    </div>
+                          <div className="min-w-0">
+                            
+                            <h3 className="font-semibold text-slate-800 truncate text-sm">
+                              {student.name}
+                            </h3>
 
-                  </div>
+                            <p className="text-xs text-slate-500 truncate">
+                              {student.email}
+                            </p>
 
-                </div>
+                          </div>
 
-                {/* BODY */}
+                        </div>
 
-                <div className="p-6">
-                  
-                  {/* DETAILS */}
+                      </td>
 
-                  <div className="space-y-4 mb-6">
-                    
-                    <div className="flex items-center gap-3 text-slate-600">
-                      
-                      <Mail size={16} />
+                      {/* COURSE */}
 
-                      <span className="text-sm truncate">
-                        {student.email}
-                      </span>
+                      <td className="px-4 py-5">
+                        
+                        <p className="text-sm font-medium text-slate-700 truncate">
+                          {student.course}
+                        </p>
 
-                    </div>
+                      </td>
 
-                    <div className="flex items-center justify-between">
-                      
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Calendar size={16} />
-                        <span className="text-sm">
-                          {student.year}
+                      {/* BATCH */}
+
+                      <td className="px-4 py-5">
+                        
+                        <div className="flex flex-col gap-1">
+                          
+                          <span className="text-sm text-slate-700 truncate">
+                            {student.year}
+                          </span>
+
+                          <span className="w-fit px-2 py-1 rounded-full text-[10px] font-semibold bg-red-100 text-red-600">
+                            {student.batchType}
+                          </span>
+
+                        </div>
+
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td className="px-4 py-5">
+                        
+                        <span
+                          className={`px-2 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap ${
+                            student.status ===
+                            "Active"
+                              ? "bg-emerald-100 text-emerald-600"
+                              : "bg-rose-100 text-rose-600"
+                          }`}
+                        >
+                          {student.status}
                         </span>
+
+                      </td>
+
+                      {/* PROGRESS */}
+
+                      <td className="px-4 py-5">
+                        
+                        <div className="flex items-center gap-2">
+                          
+                          <ProgressBar
+                            value={
+                              overallProgress
+                            }
+                          />
+
+                          <span className="text-xs font-semibold text-red-600 shrink-0">
+                            {
+                              overallProgress
+                            }
+                            %
+                          </span>
+
+                        </div>
+
+                      </td>
+
+                      {/* ACTIONS */}
+
+                      <td className="px-4 py-5">
+                        
+                        <div className="flex items-center justify-center gap-1">
+                          
+                          <button
+                            onClick={() =>
+                              openModal(
+                                student
+                              )
+                            }
+                            className="w-8 h-8 rounded-lg bg-yellow-100 text-yellow-600 hover:bg-yellow-200 transition-all flex items-center justify-center"
+                          >
+                            <Pencil size={14} />
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              openProgressModal(
+                                student
+                              )
+                            }
+                            className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all flex items-center justify-center"
+                          >
+                            <Eye size={14} />
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              handleDelete(
+                                student.id
+                              )
+                            }
+                            className="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-all flex items-center justify-center"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+
+                        </div>
+
+                      </td>
+
+                    </tr>
+                  );
+                }
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+      ) : (
+        /* ================= CARD VIEW ================= */
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          
+          {filteredStudents.map(
+            (student, index) => {
+              const overallProgress =
+                calculateOverallProgress(
+                  student
+                );
+
+              return (
+                <motion.div
+                  key={student.id}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay:
+                      index * 0.04,
+                  }}
+                  className="overflow-hidden rounded-[28px] border border-white/80 bg-white/80 backdrop-blur-2xl shadow-lg"
+                >
+                  
+                  {/* TOP */}
+
+                  <div className="bg-gradient-to-r from-red-600 to-red-500 p-5 text-white">
+                    
+                    <div className="flex items-center gap-4">
+                      
+                      <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                        <GraduationCap size={24} />
                       </div>
 
-                      <span
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                          student.batchType ===
-                          "Online"
-                            ? "bg-sky-100 text-sky-600"
-                            : "bg-violet-100 text-violet-600"
-                        }`}
-                      >
-                        {student.batchType}
-                      </span>
+                      <div className="min-w-0">
+                        
+                        <h3 className="text-lg font-bold truncate">
+                          {student.name}
+                        </h3>
 
-                    </div>
+                        <p className="text-sm text-red-100 truncate">
+                          {student.course}
+                        </p>
 
-                    <div className="flex items-center justify-between">
-                      
-                      <span className="text-sm text-slate-500">
-                        Status
-                      </span>
-
-                      <span
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                          student.status ===
-                          "Active"
-                            ? "bg-emerald-100 text-emerald-600"
-                            : "bg-rose-100 text-rose-600"
-                        }`}
-                      >
-                        {student.status}
-                      </span>
+                      </div>
 
                     </div>
 
                   </div>
 
-                  {/* PROGRESS */}
+                  {/* BODY */}
 
-                  <div className="mb-6">
+                  <div className="p-5">
                     
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="space-y-4">
                       
-                      <span className="text-sm font-medium text-slate-700">
-                        Overall Progress
-                      </span>
+                      <div className="flex items-center gap-2 text-slate-600 min-w-0">
+                        
+                        <Mail
+                          size={16}
+                          className="shrink-0"
+                        />
 
-                      <span className="text-sm font-bold text-[#ff6b3d]">
-                        {overallProgress}%
-                      </span>
+                        <span className="text-sm truncate">
+                          {student.email}
+                        </span>
+
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3 flex-wrap">
+                        
+                        <div className="flex items-center gap-2 text-slate-600">
+                          
+                          <Calendar size={16} />
+
+                          <span className="text-sm">
+                            {student.year}
+                          </span>
+
+                        </div>
+
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600">
+                          {student.batchType}
+                        </span>
+
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        
+                        <span className="text-sm text-slate-500">
+                          Status
+                        </span>
+
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            student.status ===
+                            "Active"
+                              ? "bg-emerald-100 text-emerald-600"
+                              : "bg-rose-100 text-rose-600"
+                          }`}
+                        >
+                          {student.status}
+                        </span>
+
+                      </div>
 
                     </div>
 
-                    <ProgressBar
-                      value={
-                        overallProgress
-                      }
-                    />
+                    {/* PROGRESS */}
+
+                    <div className="mt-5">
+                      
+                      <div className="flex items-center justify-between mb-2">
+                        
+                        <span className="text-sm font-medium text-slate-700">
+                          Overall Progress
+                        </span>
+
+                        <span className="text-sm font-bold text-red-600">
+                          {
+                            overallProgress
+                          }
+                          %
+                        </span>
+
+                      </div>
+
+                      <ProgressBar
+                        value={
+                          overallProgress
+                        }
+                      />
+
+                    </div>
+
+                    {/* ACTIONS */}
+
+                    <div className="grid grid-cols-3 gap-2 mt-6">
+                      
+                      <button
+                        onClick={() =>
+                          openModal(
+                            student
+                          )
+                        }
+                        className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-orange-100 text-orange-600"
+                      >
+                        <Pencil size={16} />
+
+                        <span className="text-xs font-medium">
+                          Edit
+                        </span>
+
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          openProgressModal(
+                            student
+                          )
+                        }
+                        className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-sky-100 text-sky-600"
+                      >
+                        <Eye size={16} />
+
+                        <span className="text-xs font-medium">
+                          Progress
+                        </span>
+
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDelete(
+                            student.id
+                          )
+                        }
+                        className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-red-100 text-red-600"
+                      >
+                        <Trash2 size={16} />
+
+                        <span className="text-xs font-medium">
+                          Delete
+                        </span>
+
+                      </button>
+
+                    </div>
 
                   </div>
 
-                  {/* ACTIONS */}
+                </motion.div>
+              );
+            }
+          )}
 
-                  <div className="grid grid-cols-3 gap-3">
-                    
-                    <motion.button
-                      whileHover={{
-                        scale: 1.03,
-                      }}
-                      whileTap={{
-                        scale: 0.97,
-                      }}
-                      onClick={() =>
-                        openModal(
-                          student
-                        )
-                      }
-                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all"
-                    >
-                      <Pencil size={16} />
-
-                      <span className="text-xs font-medium">
-                        Edit
-                      </span>
-
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{
-                        scale: 1.03,
-                      }}
-                      whileTap={{
-                        scale: 0.97,
-                      }}
-                      onClick={() =>
-                        openProgressModal(
-                          student
-                        )
-                      }
-                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-sky-100 text-sky-600 hover:bg-sky-200 transition-all"
-                    >
-                      <Eye size={16} />
-
-                      <span className="text-xs font-medium">
-                        Progress
-                      </span>
-
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{
-                        scale: 1.03,
-                      }}
-                      whileTap={{
-                        scale: 0.97,
-                      }}
-                      onClick={() =>
-                        handleDelete(
-                          student.id
-                        )
-                      }
-                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-rose-100 text-rose-600 hover:bg-rose-200 transition-all"
-                    >
-                      <Trash2 size={16} />
-
-                      <span className="text-xs font-medium">
-                        Delete
-                      </span>
-
-                    </motion.button>
-
-                  </div>
-
-                </div>
-
-              </motion.div>
-            );
-          }
-        )}
-
-      </div>
+        </div>
+      )}
 
       {/* ================= NO DATA ================= */}
 
       {filteredStudents.length ===
         0 && (
-        <div className="rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-14 text-center text-slate-500 mt-6">
+        <div className="rounded-[28px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-lg p-10 text-center text-slate-500 mt-6">
           No students found.
         </div>
       )}
 
-      {/* ================= ADD/EDIT MODAL ================= */}
+      {/* ================= ADD / EDIT MODAL ================= */}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-3">
           
           <motion.div
             initial={{
@@ -550,14 +740,12 @@ const ManageStudents = () => {
               opacity: 1,
               scale: 1,
             }}
-            className="w-full max-w-2xl rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl"
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[28px] bg-white shadow-2xl"
           >
             
-            {/* HEADER */}
-
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
               
-              <h2 className="text-3xl font-bold text-slate-800">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">
                 {editId
                   ? "Edit Student"
                   : "Add Student"}
@@ -567,12 +755,137 @@ const ManageStudents = () => {
                 onClick={
                   closeModal
                 }
-                className="p-2 rounded-xl hover:bg-slate-100 transition-all"
+                className="p-2 rounded-xl hover:bg-slate-100"
               >
                 <X size={20} />
               </button>
 
             </div>
+
+            <form
+              onSubmit={
+                handleSubmit
+              }
+              className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              
+              {[
+                [
+                  "name",
+                  "Student Name",
+                  "text",
+                ],
+                [
+                  "email",
+                  "Email",
+                  "email",
+                ],
+                [
+                  "course",
+                  "Course",
+                  "text",
+                ],
+                [
+                  "year",
+                  "Year",
+                  "text",
+                ],
+                [
+                  "attendance",
+                  "Attendance %",
+                  "number",
+                ],
+              ].map(
+                ([
+                  name,
+                  placeholder,
+                  type,
+                ]) => (
+                  <input
+                    key={name}
+                    type={type}
+                    name={name}
+                    placeholder={
+                      placeholder
+                    }
+                    value={
+                      formData[
+                        name
+                      ]
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    className="w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
+                    required
+                  />
+                )
+              )}
+
+              <select
+                name="batchType"
+                value={
+                  formData.batchType
+                }
+                onChange={
+                  handleChange
+                }
+                className="w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
+              >
+                <option>
+                  Online
+                </option>
+
+                <option>
+                  Offline
+                </option>
+
+              </select>
+
+              <select
+                name="status"
+                value={
+                  formData.status
+                }
+                onChange={
+                  handleChange
+                }
+                className="w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:border-red-500"
+              >
+                <option>
+                  Active
+                </option>
+
+                <option>
+                  Inactive
+                </option>
+
+              </select>
+
+              <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                
+                <button
+                  type="button"
+                  onClick={
+                    closeModal
+                  }
+                  className="px-5 py-3 rounded-2xl border border-slate-200"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold"
+                >
+                  {editId
+                    ? "Update Student"
+                    : "Add Student"}
+                </button>
+
+              </div>
+
+            </form>
 
           </motion.div>
 

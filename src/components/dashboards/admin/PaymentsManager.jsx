@@ -528,9 +528,9 @@ export default function ManagePayments() {
           
           {/* HEAD */}
 
-          <thead className="bg-slate-50/80">
+          <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
             
-            <tr className="text-left text-sm font-semibold text-slate-500">
+            <tr className="text-left text-sm font-semibold text-white">
               
               {[
                 "Student",
@@ -637,7 +637,7 @@ export default function ManagePayments() {
                         
                         <div className="flex gap-2">
                           
-                          <button className="p-2.5 rounded-xl bg-sky-100 text-sky-600 hover:bg-sky-200 transition-all">
+                          <button className="p-2.5 rounded-xl bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all">
                             <Eye size={16} />
                           </button>
 
@@ -647,7 +647,7 @@ export default function ManagePayments() {
                                 payment
                               )
                             }
-                            className="p-2.5 rounded-xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all"
+                            className="p-2.5 rounded-xl bg-yellow-100 text-yellow-600 hover:bg-yellow-200 transition-all"
                           >
                             <Pencil size={16} />
                           </button>
