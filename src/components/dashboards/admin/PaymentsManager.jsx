@@ -381,7 +381,7 @@ export default function ManagePayments() {
             onClick={() =>
               openModal()
             }
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-red-600 text-white font-semibold shadow-lg transition-all"
           >
             <Plus size={18} />
             Add Payment
@@ -447,7 +447,7 @@ export default function ManagePayments() {
 
               </div>
 
-              <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center">
                 <CreditCard size={24} />
               </div>
 
