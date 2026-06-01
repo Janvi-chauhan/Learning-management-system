@@ -324,7 +324,7 @@ export default function ManagePayments() {
   }, [payments]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-6">
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] md:p-6">
       
       {/* ================= HEADER ================= */}
 
@@ -344,7 +344,7 @@ export default function ManagePayments() {
 
           </div>
 
-          <h1 className="mt-5 text-5xl font-bold tracking-tight text-slate-800">
+          <h1 className="mt-5 text-3xl md:text-5xl font-bold tracking-tight text-slate-800">
             Manage Payments
           </h1>
 
@@ -520,175 +520,227 @@ export default function ManagePayments() {
 
       </div>
 
-      {/* ================= TABLE ================= */}
+      {/* ================= DESKTOP TABLE ================= */}
 
-      <div className="overflow-x-auto rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)]">
-        
-        <table className="w-full min-w-[1100px]">
-          
-          {/* HEAD */}
+<div className="hidden lg:block rounded-[30px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] overflow-hidden">
 
-          <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
-            
-            <tr className="text-left text-sm font-semibold text-white">
-              
-              {[
-                "Student",
-                "Course",
-                "Amount",
-                "Method",
-                "Transaction ID",
-                "Date",
-                "Status",
-                "Actions",
-              ].map((head) => (
-                <th
-                  key={head}
-                  className="px-6 py-5"
-                >
-                  {head}
-                </th>
-              ))}
+  <table className="w-full">
+    
+    <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
+      <tr className="text-left text-sm font-semibold">
+        <th className="px-6 py-5">Student</th>
+        <th className="px-6 py-5">Course</th>
+        <th className="px-6 py-5">Amount</th>
+        <th className="px-6 py-5">Method</th>
+        <th className="px-6 py-5">Transaction ID</th>
+        <th className="px-6 py-5">Date</th>
+        <th className="px-6 py-5">Status</th>
+        <th className="px-6 py-5">Actions</th>
+      </tr>
+    </thead>
 
-            </tr>
+    <tbody>
+      {filteredPayments.map((payment) => {
+        const StatusIcon =
+          statusIcons[payment.status];
 
-          </thead>
+        return (
+          <tr
+            key={payment.id}
+            className="border-t border-slate-100 hover:bg-slate-50 transition"
+          >
+            <td className="px-6 py-5 font-semibold">
+              {payment.studentName}
+            </td>
 
-          {/* BODY */}
+            <td className="px-6 py-5">
+              {payment.course}
+            </td>
 
-          <tbody>
-            
-            {filteredPayments.length >
-            0 ? (
-              filteredPayments.map(
-                (
-                  payment
-                ) => {
-                  const StatusIcon =
-                    statusIcons[
-                      payment
-                        .status
-                    ];
+            <td className="px-6 py-5 font-bold">
+              {formatCurrency(payment.amount)}
+            </td>
 
-                  return (
-                    <tr
-                      key={
-                        payment.id
-                      }
-                      className="border-t border-slate-100 hover:bg-slate-50/50 transition-all"
-                    >
-                      
-                      <td className="px-6 py-5 font-semibold text-slate-800">
-                        {
-                          payment.studentName
-                        }
-                      </td>
+            <td className="px-6 py-5">
+              {payment.paymentMethod}
+            </td>
 
-                      <td className="px-6 py-5 text-slate-600">
-                        {
-                          payment.course
-                        }
-                      </td>
+            <td className="px-6 py-5 font-mono text-sm">
+              {payment.transactionId}
+            </td>
 
-                      <td className="px-6 py-5 font-bold text-slate-800">
-                        {formatCurrency(
-                          payment.amount
-                        )}
-                      </td>
+            <td className="px-6 py-5">
+              {payment.paymentDate}
+            </td>
 
-                      <td className="px-6 py-5 text-slate-600">
-                        {
-                          payment.paymentMethod
-                        }
-                      </td>
+            <td className="px-6 py-5">
+              <span
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold ${statusStyles[payment.status]}`}
+              >
+                <StatusIcon size={12} />
+                {payment.status}
+              </span>
+            </td>
 
-                      <td className="px-6 py-5 font-mono text-sm text-slate-500">
-                        {
-                          payment.transactionId
-                        }
-                      </td>
-
-                      <td className="px-6 py-5 text-slate-500">
-                        {
-                          payment.paymentDate
-                        }
-                      </td>
-
-                      <td className="px-6 py-5">
-                        
-                        <span
-                          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold ${statusStyles[payment.status]}`}
-                        >
-                          <StatusIcon
-                            size={
-                              12
-                            }
-                          />
-
-                          {
-                            payment.status
-                          }
-
-                        </span>
-
-                      </td>
-
-                      <td className="px-6 py-5">
-                        
-                        <div className="flex gap-2">
-                          
-                          <button className="p-2.5 rounded-xl bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all">
-                            <Eye size={16} />
-                          </button>
-
-                          <button
-                            onClick={() =>
-                              openModal(
-                                payment
-                              )
-                            }
-                            className="p-2.5 rounded-xl bg-yellow-100 text-yellow-600 hover:bg-yellow-200 transition-all"
-                          >
-                            <Pencil size={16} />
-                          </button>
-
-                          <button
-                            onClick={() =>
-                              handleDelete(
-                                payment.id
-                              )
-                            }
-                            className="p-2.5 rounded-xl bg-rose-100 text-rose-600 hover:bg-rose-200 transition-all"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-
-                        </div>
-
-                      </td>
-
-                    </tr>
-                  );
-                }
-              )
-            ) : (
-              <tr>
+            <td className="px-6 py-5">
+              <div className="flex gap-2">
                 
-                <td
-                  colSpan="8"
-                  className="py-16 text-center text-slate-500"
+                <button className="p-2.5 rounded-xl bg-blue-100 text-blue-600">
+                  <Eye size={16} />
+                </button>
+
+                <button
+                  onClick={() =>
+                    openModal(payment)
+                  }
+                  className="p-2.5 rounded-xl bg-yellow-100 text-yellow-600"
                 >
-                  No payment records found.
-                </td>
+                  <Pencil size={16} />
+                </button>
 
-              </tr>
-            )}
+                <button
+                  onClick={() =>
+                    handleDelete(payment.id)
+                  }
+                  className="p-2.5 rounded-xl bg-rose-100 text-rose-600"
+                >
+                  <Trash2 size={16} />
+                </button>
 
-          </tbody>
+              </div>
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
 
-        </table>
+  </table>
 
-      </div>
+</div>
+
+{/* ================= MOBILE CARDS ================= */}
+
+<div className="grid gap-4 lg:hidden">
+
+  {filteredPayments.length > 0 ? (
+    filteredPayments.map((payment) => {
+      const StatusIcon =
+        statusIcons[payment.status];
+
+      return (
+        <motion.div
+          key={payment.id}
+          whileHover={{ y: -2 }}
+          className="bg-white/80 backdrop-blur-xl border border-white rounded-3xl p-5 shadow-sm"
+        >
+          
+          {/* Header */}
+
+          <div className="flex justify-between items-start mb-4">
+
+            <div>
+              <h3 className="font-bold text-lg text-slate-800">
+                {payment.studentName}
+              </h3>
+
+              <p className="text-sm text-slate-500">
+                {payment.course}
+              </p>
+            </div>
+
+            <span
+              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[payment.status]}`}
+            >
+              <StatusIcon size={12} />
+              {payment.status}
+            </span>
+
+          </div>
+
+          {/* Details */}
+
+          <div className="space-y-3 text-sm">
+
+            <div className="flex justify-between">
+              <span className="text-slate-500">
+                Amount
+              </span>
+
+              <span className="font-bold text-slate-800">
+                {formatCurrency(payment.amount)}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-slate-500">
+                Method
+              </span>
+
+              <span>
+                {payment.paymentMethod}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-slate-500">
+                Transaction
+              </span>
+
+              <span className="font-mono text-xs">
+                {payment.transactionId}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-slate-500">
+                Date
+              </span>
+
+              <span>
+                {payment.paymentDate}
+              </span>
+            </div>
+
+          </div>
+
+          {/* Actions */}
+
+          <div className="flex gap-3 mt-5">
+
+            <button className="flex-1 py-2 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+              <Eye size={16} />
+            </button>
+
+            <button
+              onClick={() =>
+                openModal(payment)
+              }
+              className="flex-1 py-2 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center"
+            >
+              <Pencil size={16} />
+            </button>
+
+            <button
+              onClick={() =>
+                handleDelete(payment.id)
+              }
+              className="flex-1 py-2 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center"
+            >
+              <Trash2 size={16} />
+            </button>
+
+          </div>
+
+        </motion.div>
+      );
+    })
+  ) : (
+    <div className="bg-white rounded-3xl p-8 text-center text-slate-500">
+      No payment records found.
+    </div>
+  )}
+
+</div>
 
       {/* ================= MODAL ================= */}
 
@@ -704,7 +756,7 @@ export default function ManagePayments() {
               opacity: 1,
               scale: 1,
             }}
-            className="w-full max-w-2xl rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl"
+            className="w-full max-w-2xl max-h-[90vh] rounded-[32px] border border-white/80 bg-white/90 backdrop-blur-2xl shadow-2xl"
           >
             
             {/* HEADER */}

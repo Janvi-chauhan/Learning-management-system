@@ -314,9 +314,9 @@ const ManageStudents = () => {
       {/* ================= TABLE VIEW ================= */}
 
       {showTable ? (
-        <div className="rounded-[28px] border border-white/80 bg-white/80 backdrop-blur-2xl shadow-lg overflow-hidden">
+        <div className="hidden xl:block rounded-[28px] border border-white/80 bg-white/80 backdrop-blur-2xl shadow-lg overflow-hidden">
           
-          <table className="w-full table-fixed">
+          <table className="w-full">
             
             <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
               
@@ -515,7 +515,7 @@ const ManageStudents = () => {
       ) : (
         /* ================= CARD VIEW ================= */
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:hi">
           
           {filteredStudents.map(
             (student, index) => {
