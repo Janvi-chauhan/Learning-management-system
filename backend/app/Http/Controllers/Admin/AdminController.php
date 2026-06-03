@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Course;
 
 class AdminController extends Controller
 {
@@ -11,7 +12,17 @@ class AdminController extends Controller
     {
         return response()->json([
             'success' => true,
-            'message' => 'Admin Dashboard'
+
+            'data' => [
+                'totalTeachers' =>
+                    User::where('role', 'teacher')->count(),
+
+                'totalStudents' =>
+                    User::where('role', 'student')->count(),
+
+                'totalCourses' =>
+                    Course::count()
+            ]
         ]);
     }
 }
