@@ -8,9 +8,33 @@ class Course extends Model
 {
     protected $fillable = [
         'title',
-        'description',
-        'teacher_id',
+        'slug',
+        'category',
         'duration',
-        'status'
+        'level',
+        'language',
+        'thumbnail',
+        'preview_video',
+        'brochure',
+        'learnings',
+        'roadmap',
+        'curriculum',
+        'mentor_name',
+        'mentor_experience',
+        'mentor_image',
+        'reviews',
+        'status',
+        'featured',
+        'latest',
+        'teacher_id'
+    ];
+
+    protected $casts = [
+        'learnings' => 'array',
+        'roadmap' => 'array',
+        'curriculum' => 'array',
+        'reviews' => 'array',
+        'featured' => 'boolean',
+        'latest' => 'boolean',
     ];
 }
