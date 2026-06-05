@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 import {
   Menu,
@@ -13,13 +14,15 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
+  
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
+  const navigate = useNavigate();
   const profileRef = useRef();
 
   // DEMO LOGIN STATE
-  const isLoggedIn = true;
+  const isLoggedIn = !!localStorage.getItem("token") ;
 
   // CLOSE PROFILE DROPDOWN OUTSIDE CLICK
   useEffect(() => {
@@ -60,6 +63,26 @@ export default function Navbar() {
       path: "/quick-links",
     },
   ];
+
+  const handleLogout = async () => {
+  try {
+    await api.post("/logout");
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    alert("Logout Successful");
+
+    navigate("/login");
+  } catch (error) {
+    console.error(error);
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/login");
+  }
+};
 
   return (
     <>
@@ -181,7 +204,9 @@ export default function Navbar() {
                       </span>
                     </NavLink>
 
-                    <button className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 transition text-red-600">
+                    <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 transition text-red-600">
                       <LogOut size={20} />
 
                       <span className="font-medium">
@@ -330,7 +355,9 @@ export default function Navbar() {
                   Settings
                 </NavLink>
 
-                <button className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 transition">
+                <button 
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 transition">
                   <LogOut size={20} />
 
                   Logout

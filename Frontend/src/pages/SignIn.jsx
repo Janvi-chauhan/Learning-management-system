@@ -40,7 +40,7 @@ export default function PremiumSignInPage() {
 
       alert("Login Successful");
 
-      navigate("/admin/dashboard");
+      navigate("/");
 
     } catch (error) {
       console.error(error);
