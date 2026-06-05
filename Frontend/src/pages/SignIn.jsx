@@ -8,10 +8,50 @@ import {
   Code2,
   Sparkles,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 export default function PremiumSignInPage() {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post("/login", {
+        email,
+        password,
+      });
+
+       localStorage.setItem(
+      "token",
+      response.data.token
+    );
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      alert("Login Successful");
+
+      navigate("/admin/dashboard");
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.message ||
+          "Invalid Credentials"
+      );
+    }
+  };
+
 
   return (
     <div className="h-screen bg-white flex overflow-hidden">
@@ -123,7 +163,10 @@ export default function PremiumSignInPage() {
             </div>
 
             {/* FORM */}
-            <form className="space-y-6">
+            <form
+            onSubmit={handleLogin}
+            className="space-y-6">
+
               {/* EMAIL */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 block mb-3">
@@ -136,6 +179,10 @@ export default function PremiumSignInPage() {
                   <input
                     type="email"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
                 </div>
@@ -162,6 +209,10 @@ export default function PremiumSignInPage() {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
 
@@ -188,7 +239,9 @@ export default function PremiumSignInPage() {
               </div>
 
               {/* BUTTON */}
-              <button className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30">
+              <button
+              type="submit"
+              className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30">
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Sign In
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />

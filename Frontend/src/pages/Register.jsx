@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import api from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
 import {
   User,
   Mail,
@@ -10,11 +12,46 @@ import {
   Sparkles,
   Phone,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post("/register", {
+        name,
+        email,
+        password,
+        password_confirmation: confirmPassword,
+        role: "student",
+      });
+
+      alert("Registration Successful");
+
+      console.log(response.data);
+
+      navigate("/login");
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Registration Failed"
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex overflow-hidden">
@@ -141,7 +178,9 @@ export default function RegisterPage() {
             </div>
 
             {/* FORM */}
-            <form className="space-y-5">
+            <form
+            onSubmit={handleRegister} 
+            className="space-y-5">
               {/* FULL NAME */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 block mb-3">
@@ -154,6 +193,10 @@ export default function RegisterPage() {
                   <input
                     type="text"
                     placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => 
+                      setName(e.target.value)
+                    }
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
                 </div>
@@ -171,6 +214,8 @@ export default function RegisterPage() {
                   <input
                     type="email"
                     placeholder="Enter your email"
+                    value={email}
+                     onChange={(e) => setEmail(e.target.value)}
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
                 </div>
@@ -188,6 +233,8 @@ export default function RegisterPage() {
                   <input
                     type="tel"
                     placeholder="Enter your phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
                 </div>
@@ -205,6 +252,8 @@ export default function RegisterPage() {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Create password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
 
@@ -234,6 +283,8 @@ export default function RegisterPage() {
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="bg-transparent outline-none border-none w-full ml-4 text-black placeholder-gray-400"
                   />
 
@@ -273,7 +324,9 @@ export default function RegisterPage() {
               </div>
 
               {/* BUTTON */}
-              <button className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30 mt-2">
+              <button 
+              type="submit"
+              className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30 mt-2">
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Create Account
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
