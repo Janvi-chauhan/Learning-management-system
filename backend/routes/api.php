@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Authentication\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,23 @@ Route::get('/test', function () {
         'success' => true,
         'message' => 'Laravel Backend Connected'
     ]);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/user', [AuthController::class, 'user']);
 });
 
 /*
