@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -12,11 +12,13 @@ import DashboardHome from "./components/dashboards/admin/DashboardHome";
 import AdminLayout from "./layout/AdminLayout";
 import PremiumSignInPage from "./pages/SignIn";
 import RegisterPage from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
+  const location = useLocation();
   return (
     <>
-      {window.location.pathname !== "/adminDashboard" && (
+      {location.pathname !== "/adminDashboard" && (
   <Navbar />
 )}
       <Routes>
@@ -24,10 +26,15 @@ export default function App() {
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:slug" element={<CourseDetails />} />
         <Route path="/results" element={<ResultsPage />} />
-        <Route path="/dashboard" element={<DashboardLayout/>} />
-        <Route path="/adminDashboard" element={<AdminLayout/>} />
+        <Route path="/dashboard" element={ <ProtectedRoute> 
+          <DashboardLayout/> 
+          </ProtectedRoute>} />
+        <Route path="/adminDashboard" element={<ProtectedRoute>
+          <AdminLayout/>
+          </ProtectedRoute> } />
         <Route path="/login" element={<PremiumSignInPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
+
 
 
        
@@ -38,8 +45,10 @@ export default function App() {
 
 
       </Routes>
-
-      <Footer />
+  {location.pathname !== "/adminDashboard" && (
+    <Footer />
+  )}
+      
     </>
   );
 }

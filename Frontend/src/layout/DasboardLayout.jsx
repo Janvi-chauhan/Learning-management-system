@@ -6,7 +6,7 @@ import Dashboard from "../components/dashboards/user/Dashboard";
 import { roleConfig } from "../config/roleConfig";
 
 export default function DashboardLayout({
-  role = "teacher",
+  role = "student",
 }) {
   
 
@@ -22,6 +22,8 @@ export default function DashboardLayout({
   const ActiveComponent =
     config.componentMap[activeSection] ||
     Dashboard;
+    console.log("Active Section:", activeSection);
+    console.log("Active Component:", ActiveComponent);
 
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">

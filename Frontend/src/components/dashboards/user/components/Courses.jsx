@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 import {
   BookOpen,
   Clock3,
@@ -251,7 +253,7 @@ function CourseCard({
 
         {/* Progress */}
 
-        {showProgress && (
+        {false && (
           <div className="mt-5">
             <div
               className="
@@ -352,6 +354,31 @@ function CourseCard({
 export default function Courses({
   role = "student",
 }) {
+
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchCourses = async () => {
+    try{
+        const response = await api.get("/admin/courses");
+
+        console.log("Courses API Response:", response.data);
+
+
+      setCourses(response.data);
+    } catch (error) {
+      console.error(
+        "Error fetching courses:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
   // ================= STATS =================
 
   const studentStats = [
@@ -699,25 +726,33 @@ export default function Courses({
               gap-5
             "
           >
-            {enrolledCourses.map(
+            {courses.map(
               (course) => (
                 <CourseCard
                   key={course.id}
-                  course={course}
-                  role={role}
-                  showProgress={
-                    role ===
-                    "student"
-                  }
-                  buttonText={
-                    role ===
-                    "student"
-                      ? "Continue Learning"
-                      : "Manage Class"
-                  }
-                />
-              )
-            )}
+                  course={{
+                  course,
+        instructor:
+          course.mentor_name ||
+          "Programming Classes",
+        students: 0,
+        image:
+          course.thumbnail ||
+          "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+        progress: 0,
+      }}
+      role={role}
+      showProgress={
+        role === "student"
+      }
+      buttonText={
+        role === "student"
+          ? "Continue Learning"
+          : "Manage Class"
+      }
+    />
+  )
+)}
           </div>
         </section>
       </div>

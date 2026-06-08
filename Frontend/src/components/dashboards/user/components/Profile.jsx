@@ -15,12 +15,30 @@ import {
   Users,
   Video,
 } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 import { motion } from "framer-motion";
 
 export default function Profile({
   role = "student",
 }) {
+const [loggedInUser, setLoggedInUser] = useState(null);
+
+useEffect(() => {
+  fetchUser();
+}, []);
+
+const fetchUser = async () => {
+  try {
+    const res = await api.get("/user");
+
+    console.log("Current User:", res.data);
+
+    setLoggedInUser(res.data.user);
+  } catch (error) {
+    console.log(error);
+  }
+};
   // ================= PROFILE DATA =================
 
   const profileData = {
@@ -130,6 +148,7 @@ export default function Profile({
         },
       ],
     },
+    
 
     // ================= TEACHER =================
 
@@ -252,6 +271,14 @@ export default function Profile({
 
   const user = profileData[role];
 
+  const displayUser = loggedInUser
+  ? {
+      ...user,
+      name: loggedInUser.name,
+      email:loggedInUser.email,
+      role: loggedInUser.role,
+    }
+  : user;
   // ================= ICON FUNCTION =================
 
   const getNotificationIcon = (
@@ -477,8 +504,8 @@ export default function Profile({
                 "
               >
                 <img
-                  src={user.image}
-                  alt={user.name}
+                  src={displayUser.image}
+                  alt={displayUser.name}
                   className="
                     w-32
                     h-32
@@ -513,7 +540,7 @@ export default function Profile({
                     mt-1
                   "
                 >
-                  {user.role}
+                  {displayUser.role}
                 </p>
 
                 <div
@@ -544,14 +571,14 @@ export default function Profile({
                     icon: Mail,
                     label: "Email",
 
-                    value: user.email,
+                    value: displayUser.email,
                   },
 
                   {
                     icon: Phone,
                     label: "Phone",
 
-                    value: user.phone,
+                    value: displayUser.phone,
                   },
 
                   {
