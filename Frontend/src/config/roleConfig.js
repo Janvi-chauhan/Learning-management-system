@@ -5,6 +5,18 @@ import Projects from "../components/dashboards/user/components/Projects";
 import Fees from "../components/dashboards/user/components/Fees";
 import Profile from "../components/dashboards/user/components/Profile";
 
+import AdminDashboard from "../components/dashboards/admin/DashboardHome";
+import StudentManager from "../components/dashboards/admin/student/StudentManager";
+import TeacherManager from "../components/dashboards/admin/teacher/TeacherManager";
+import CourseManager from "../components/dashboards/admin/CourseManager";
+import PaymentsManager from "../components/dashboards/admin/PaymentsManager";
+import Placements from "../components/dashboards/admin/Placements";
+import ContactUs from "../components/dashboards/admin/ContactUs";
+import ContactQueries from "../components/dashboards/admin/ContactQueries";
+
+
+
+
 export const roleConfig = {
   
   // ================= STUDENT =================
@@ -17,6 +29,7 @@ export const roleConfig = {
       "projects",
       "payments",
       "profile",
+      
     ],
 
     componentMap: {
@@ -57,4 +70,29 @@ export const roleConfig = {
       profile: Profile,
     },
   },
+
+  // ADMIN //
+
+  admin: {
+  sidebarItems: [
+    "dashboard",
+    "students",
+    "teachers",
+    "courses",
+    "payments",
+    "placements",
+    "contactUs",
+  ],
+
+  componentMap: {
+    dashboard: AdminDashboard,
+    students: StudentManager,
+    teachers: TeacherManager,
+    courses: CourseManager,
+    payments: PaymentsManager,
+    placements: Placements,
+    contactUs: ContactUs,
+
+  },
+},
 };

@@ -13,25 +13,60 @@ import {
 
 import { motion } from "framer-motion";
 
-const DashboardCharts = ({ role }) => {
+const DashboardCharts = ({
+  role,
+  stats,
+}) => {
   const studentData = [
-    { name: "Mon", progress: 60 },
-    { name: "Tue", progress: 75 },
-    { name: "Wed", progress: 68 },
-    { name: "Thu", progress: 90 },
-    { name: "Fri", progress: 85 },
-    { name: "Sat", progress: 95 },
-  ];
+  {
+    name: "Courses",
+    progress: stats.totalCourses || 0,
+  },
 
-  const teacherData = [
-    { name: "Mon", attendance: 40 },
-    { name: "Tue", attendance: 55 },
-    { name: "Wed", attendance: 48 },
-    { name: "Thu", attendance: 70 },
-    { name: "Fri", attendance: 65 },
-    { name: "Sat", attendance: 80 },
-  ];
+  {
+    name: "Assignments",
+    progress:
+      stats.completedAssignments || 0,
+  },
 
+  {
+    name: "Projects",
+    progress:
+      stats.totalProjects || 0,
+  },
+
+  {
+    name: "Payments",
+    progress:
+      stats.totalPayments || 0,
+  },
+];
+
+const teacherData = [
+  {
+    name: "Courses",
+    attendance:
+      stats.totalCourses || 0,
+  },
+
+  {
+    name: "Assignments",
+    attendance:
+      stats.totalAssignments || 0,
+  },
+
+  {
+    name: "Students",
+    attendance:
+      stats.totalStudents || 0,
+  },
+
+  {
+    name: "Performance",
+    attendance:
+      stats.performance || 0,
+  },
+];
   const chartData =
     role === "student"
       ? studentData

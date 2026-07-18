@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
+
 import DashboardCards from "./DashboardCard";
 import DashboardCharts from "./DashboardCharts";
 import ActivityPanel from "./ActivityPanel";
 
+import api from "../../../../services/api";
 import {
   BookOpen,
   ClipboardList,
@@ -16,6 +19,72 @@ import { motion } from "framer-motion";
 export default function DashboardHome({
   role = "student",
 }) {
+
+  const [stats, setStats] = useState({
+    // Student
+  totalCourses: 0,
+
+  completedAssignments: 0,
+
+  totalProjects: 0,
+
+  totalPayments: 0,
+
+  // Teacher
+
+  totalAssignments: 0,
+
+  totalStudents: 0,
+
+  performance: 0,
+});
+
+  const fetchDashboardStats = async () => {
+  try {
+    const response = await api.get(
+      "/student/dashboard"
+    );
+    const courseResponse = await api.get("/student/courses/stats");
+
+    console.log(
+      "Dashboard Stats:",
+      response.data
+    );
+    console.log("Course Stats:", courseResponse.data);
+
+    setStats({...response.data.data,
+      totalCourses: courseResponse.data.data.enrolled,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const fetchTeacherDashboardStats =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/teacher/dashboard"
+        );
+
+      setStats(
+        response.data.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+useEffect(() => {
+  if (role === "student") {
+    fetchDashboardStats();
+  }
+
+  if (role === "teacher") {
+    fetchTeacherDashboardStats();
+  }
+}, [role]);
+
   const dashboardConfig = {
     student: {
       title: "Student Dashboard",
@@ -24,73 +93,81 @@ export default function DashboardHome({
         "Track your learning progress and activities.",
 
       cards: [
-        {
-          title: "Enrolled Courses",
-          value: "08",
-          icon: BookOpen,
-          color: "#FF0000",
-        },
+{
+  title: "Enrolled Courses",
+  value: stats.totalCourses,
+  progress: stats.courseProgress,
+  icon: BookOpen,
+  color: "#FF0000",
+},
 
-        {
-          title: "Assignments",
-          value: "12",
-          icon: ClipboardList,
-          color: "#000000",
-        },
+{
+  title: "Assignments",
+  value: stats.completedAssignments,
+  progress: stats.assignmentProgress,
+  icon: ClipboardList,
+  color: "#000000",
+},
 
-        {
-          title: "Attendance",
-          value: "92%",
-          icon: CalendarCheck,
-          color: "#FF0000",
-        },
+{
+  title: "Projects",
+  value: stats.totalProjects,
+  progress: stats.projectProgress,
+  icon: CalendarCheck,
+  color: "#FF0000",
+},
 
-        {
-          title: "Pending Fees",
-          value: "₹12K",
-          icon: IndianRupee,
-          color: "#000000",
-        },
-      ],
-    },
+{
+  title: "Payments",
+  value: `₹${stats.totalPayments}`,
+  progress: stats.paymentProgress,
+  icon: IndianRupee,
+  color: "#000000",
+},
+]
+},
 
     teacher: {
-      title: "Teacher Dashboard",
+  title: "Teacher Dashboard",
 
-      subtitle:
-        "Manage students, classes, and analytics.",
+  subtitle:
+    "Manage students, classes, and analytics.",
 
-      cards: [
-        {
-          title: "Active Courses",
-          value: "05",
-          icon: BookOpen,
-          color: "#FF0000",
-        },
+  cards: [
+{
+  title: "Active Courses",
+  value: stats.totalCourses,
+  progress: stats.courseProgress,
+  icon: BookOpen,
+  color: "#FF0000",
+},
 
-        {
-          title: "Assignments",
-          value: "18",
-          icon: ClipboardList,
-          color: "#000000",
-        },
+{
+  title: "Assignments",
+  value: stats.totalAssignments,
+  progress: stats.assignmentProgress,
+  icon: ClipboardList,
+  color: "#000000",
+},
 
-        {
-          title: "Students",
-          value: "320",
-          icon: Users,
-          color: "#FF0000",
-        },
+{
+  title: "Students",
+  value: stats.totalStudents,
+  progress: stats.studentProgress,
+  icon: Users,
+  color: "#FF0000",
+},
 
-        {
-          title: "Performance",
-          value: "+18%",
-          icon: TrendingUp,
-          color: "#000000",
-        },
-      ],
-    },
-  };
+{
+  title: "Performance",
+  value: `${stats.performance}%`,
+  progress: stats.performanceProgress,
+  icon: TrendingUp,
+  color: "#000000",
+},
+]
+},
+};
 
   const config =
     dashboardConfig[role] ||
@@ -225,7 +302,10 @@ export default function DashboardHome({
           }}
           className="mb-8"
         >
-          <DashboardCharts role={role} />
+          <DashboardCharts
+            role={role}
+            stats={stats}
+          />
         </motion.div>
 
         {/* ACTIVITY PANEL */}

@@ -6,11 +6,9 @@ import {
 export default function CourseMentor({
   formData,
   setFormData,
+  goToNextTab,
+  goToPreviousTab,
 }) {
-
-  // =====================================================
-  // HANDLE CHANGE
-  // =====================================================
 
   const handleChange = (
     e
@@ -26,63 +24,84 @@ export default function CourseMentor({
     });
   };
 
-  // =====================================================
-  // REVIEWS
-  // =====================================================
+const addProject = () => {
+  setFormData({
+    ...formData,
+    projects: [
+      ...formData.projects,
+      {
+        title: "",
+        description: "",
+      },
+    ],
+  });
+};
 
-  const updateReview = (
-    index,
-    field,
-    value
-  ) => {
+const removeProject = (index) => {
+  setFormData({
+    ...formData,
+    projects: formData.projects.filter(
+      (_, i) => i !== index
+    ),
+  });
+};
 
-    const updated = [
-      ...formData.reviews,
-    ];
+const updateProject = (
+  index,
+  field,
+  value
+) => {
+  const updated = [...formData.projects];
 
-    updated[index][field] =
-      value;
+  updated[index][field] = value;
 
-    setFormData({
-      ...formData,
+  setFormData({
+    ...formData,
+    projects: updated,
+  });
+};
 
-      reviews: updated,
-    });
-  };
+const addCertificate = () => {
+  setFormData({
+    ...formData,
+    certifications: [
+      ...formData.certifications,
+      {
+        title: "",
+        image: "",
+      },
+    ],
+  });
+};
 
-  const addReview = () => {
+const removeCertificate = (
+  index
+) => {
+  setFormData({
+    ...formData,
+    certifications:
+      formData.certifications.filter(
+        (_, i) => i !== index
+      ),
+  });
+};
 
-    setFormData({
-      ...formData,
+const updateCertificate = (
+  index,
+  field,
+  value
+) => {
+  const updated = [
+    ...formData.certifications,
+  ];
 
-      reviews: [
-        ...formData.reviews,
+  updated[index][field] = value;
 
-        {
-          student: "",
-          comment: "",
-        },
-      ],
-    });
-  };
-
-  const removeReview = (
-    index
-  ) => {
-
-    const updated =
-      formData.reviews.filter(
-        (_, i) =>
-          i !== index
-      );
-
-    setFormData({
-      ...formData,
-
-      reviews: updated,
-    });
-  };
-
+  setFormData({
+    ...formData,
+    certifications: updated,
+  });
+};
   return (
     <div>
 
@@ -93,11 +112,11 @@ export default function CourseMentor({
       <div className="mb-8">
 
         <h2 className="text-3xl font-black">
-          Mentor & Reviews
+          Mentor, Projects & Certification
         </h2>
 
         <p className="text-gray-500 mt-2">
-          Add mentor details and student reviews
+          Add mentor details 
         </p>
 
       </div>
@@ -229,161 +248,272 @@ export default function CourseMentor({
         </div>
 
       </div>
-
-      {/* =====================================================
-      REVIEWS
-      ===================================================== */}
-
       <div className="border-t pt-10">
 
-        <div className="flex items-center justify-between mb-6">
+  <div className="flex justify-between mb-6">
 
-          <div>
+    <div>
+      <h3 className="text-2xl font-bold">
+        Industry Projects
+      </h3>
 
-            <h3 className="text-2xl font-bold">
-              Student Reviews
-            </h3>
+      <p className="text-gray-500 mt-1">
+        Add real-world projects.
+      </p>
+    </div>
 
-            <p className="text-gray-500 mt-1">
-              Add student testimonials
-            </p>
+    <button
+      onClick={addProject}
+      className="
+        bg-red-600
+        hover:bg-red-700
+        text-white
+        px-5 py-3
+        rounded-2xl
+        flex items-center gap-2
+      "
+    >
+      <Plus size={18}/>
+      Add Project
+    </button>
 
-          </div>
+  </div>
+
+  <div className="space-y-5">
+
+    {(formData.projects || []).map(
+      (project, index) => (
+      
+      <div
+        key={index}
+        className="
+          border
+          rounded-3xl
+          p-6
+          bg-gray-50
+        "
+      >
+
+        <div className="flex justify-between mb-4">
+
+          <h4 className="font-bold">
+            Project {index + 1}
+          </h4>
 
           <button
-            type="button"
-            onClick={
-              addReview
+            onClick={() =>
+              removeProject(index)
             }
             className="
-              flex items-center gap-2
-              bg-red-600
-              hover:bg-red-700
-              text-white
-              px-5 py-3
-              rounded-2xl
+              bg-red-100
+              text-red-600
+              w-10 h-10
+              rounded-xl
+              flex items-center justify-center
             "
           >
-            <Plus size={18} />
-            Add Review
+            <Trash2 size={18}/>
           </button>
 
         </div>
 
-        <div className="space-y-5">
-
-          {formData.reviews.map(
-            (
-              item,
-              index
-            ) => (
-
-              <div
-                key={index}
-                className="
-                  border
-                  rounded-3xl
-                  p-6
-                  bg-gray-50
-                "
-              >
-
-                <div className="flex items-center justify-between mb-5">
-
-                  <h4 className="font-bold text-lg">
-                    Review{" "}
-                    {index + 1}
-                  </h4>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      removeReview(
-                        index
-                      )
-                    }
-                    className="
-                      w-10 h-10
-                      rounded-xl
-                      bg-red-100
-                      text-red-600
-                      flex items-center justify-center
-                    "
-                  >
-                    <Trash2
-                      size={18}
-                    />
-                  </button>
-
-                </div>
-
-                <div className="space-y-4">
-
-                  {/* STUDENT */}
-
-                  <input
-                    type="text"
-                    placeholder="Student Name"
-                    value={
-                      item.student
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      updateReview(
-                        index,
-                        "student",
-                        e.target
-                          .value
-                      )
-                    }
-                    className="
-                      w-full
-                      border
-                      rounded-2xl
-                      px-5 py-4
-                      outline-none
-                      focus:border-red-500
-                    "
-                  />
-
-                  {/* COMMENT */}
-
-                  <textarea
-                    rows={4}
-                    placeholder="Write review..."
-                    value={
-                      item.comment
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      updateReview(
-                        index,
-                        "comment",
-                        e.target
-                          .value
-                      )
-                    }
-                    className="
-                      w-full
-                      border
-                      rounded-2xl
-                      px-5 py-4
-                      outline-none
-                      focus:border-red-500
-                    "
-                  />
-
-                </div>
-
-              </div>
+        <input
+          type="text"
+          placeholder="Project Title"
+          value={project.title}
+          onChange={(e)=>
+            updateProject(
+              index,
+              "title",
+              e.target.value
             )
-          )}
+          }
+          className="
+            w-full
+            border
+            rounded-2xl
+            px-5 py-4
+            mb-4
+          "
+        />
+
+        <textarea
+          rows={4}
+          placeholder="Project Description"
+          value={project.description}
+          onChange={(e)=>
+            updateProject(
+              index,
+              "description",
+              e.target.value
+            )
+          }
+          className="
+            w-full
+            border
+            rounded-2xl
+            px-5 py-4
+          "
+        />
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+
+<div className="border-t pt-10">
+
+  <div className="flex justify-between mb-6">
+
+    <div>
+
+      <h3 className="text-2xl font-bold">
+        Certification
+      </h3>
+
+      <p className="text-gray-500 mt-1">
+        Add certificate details.
+      </p>
+
+    </div>
+
+    <button
+      onClick={addCertificate}
+      className="
+        bg-red-600
+        hover:bg-red-700
+        text-white
+        px-5 py-3
+        rounded-2xl
+        flex items-center gap-2
+      "
+    >
+      <Plus size={18}/>
+      Add Certificate
+    </button>
+
+  </div>
+
+  <div className="space-y-5">
+    
+
+    {(formData.certifications || []).map(
+      (cert, index) => (
+
+      <div
+        key={index}
+        className="
+          border
+          rounded-3xl
+          p-6
+          bg-gray-50
+        "
+      >
+
+        <div className="flex justify-between mb-4">
+
+          <h4 className="font-bold">
+            Certificate {index + 1}
+          </h4>
+
+          <button
+            onClick={() =>
+              removeCertificate(index)
+            }
+            className="
+              bg-red-100
+              text-red-600
+              w-10 h-10
+              rounded-xl
+              flex items-center justify-center
+            "
+          >
+            <Trash2 size={18}/>
+          </button>
 
         </div>
 
+        <input
+          type="text"
+          placeholder="Certificate Title"
+          value={cert.title}
+          onChange={(e)=>
+            updateCertificate(
+              index,
+              "title",
+              e.target.value
+            )
+          }
+          className="
+            w-full
+            border
+            rounded-2xl
+            px-5 py-4
+            mb-4
+          "
+        />
+
+        <input
+          type="text"
+          placeholder="Certificate Image / Drive Link"
+          value={cert.image}
+          onChange={(e)=>
+            updateCertificate(
+              index,
+              "image",
+              e.target.value
+            )
+          }
+          className="
+            w-full
+            border
+            rounded-2xl
+            px-5 py-4
+          "
+        />
+
       </div>
+
+    ))}
+
+  </div>
+
+</div>
+      <div className="mt-10 flex justify-between">
+
+  <button
+    onClick={goToPreviousTab}
+    className="
+      bg-gray-200
+      hover:bg-gray-300
+      px-8
+      py-4
+      rounded-2xl
+      font-semibold
+    "
+  >
+    ← Previous
+  </button>
+
+  <button
+    onClick={goToNextTab}
+    className="
+      bg-red-600
+      hover:bg-red-700
+      text-white
+      px-8
+      py-4
+      rounded-2xl
+      font-semibold
+    "
+  >
+    Save & Next →
+  </button>
+
+</div>
 
     </div>
   );

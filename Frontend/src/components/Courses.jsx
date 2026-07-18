@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../services/api";
+import api from "../services/api.js";
 import {
   BookOpen,
   Clock,
@@ -11,30 +11,38 @@ export default function Courses() {
   console.log("NEW COURSES FILE LOADED");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+//   const [teacherStatsData, setTeacherStatsData] = useState({
+//   liveClasses: 0,
+//   assignments: 0,
+//   questions: 0,
+//   schedules: 0,
+// });
 
   const fetchCourses = async () => {
-    try {
-      const response = await api.get("/admin/courses");
+  try {
+    const response = await api.get(
+  role === "student"
+    ? "/student/courses"
+    : "/teacher/courses"
+);
+    const formattedCourses =
+      response.data.map((course) => ({
+        ...course,
 
-      console.log(
-        "Courses API Response:",
-        response.data
-      );
+        description:
+          course.category ||
+          "No description available",
+      }));
 
-      setCourses(response.data);
-    } catch (error) {
-      console.error(
-        "Error fetching courses:",
-        error
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setCourses(formattedCourses);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+useEffect(() => {
+  fetchCourses();
+}, []);
 
   if (loading) {
     return (
@@ -76,12 +84,22 @@ export default function Courses() {
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
               {/* Thumbnail Placeholder */}
-              <div className="h-48 bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center">
-                <BookOpen
-                  size={60}
-                  className="text-white"
-                />
-              </div>
+              <div className="h-48 overflow-hidden">
+                {course.thumbnail ? (
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                 />
+         ) : (
+           <div className="h-full bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center">
+             <BookOpen
+               size={60}
+               className="text-white"
+             />
+           </div>
+         )}
+       </div>
 
               <div className="p-5">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">

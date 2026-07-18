@@ -1,6 +1,7 @@
 export default function CourseBasics({
   formData,
   setFormData,
+  goToNextTab,
 }) {
 
   // =====================================================
@@ -70,15 +71,57 @@ export default function CourseBasics({
               focus:border-red-500
             "
           />
+          <textarea
+           name="what_you_learn"
+           placeholder="What you learn (comma separated)"
+           value={formData.what_you_learn || ""}
+           onChange={handleChange}
+           className="
+             w-full
+             rounded-2xl
+             border
+             border-slate-200
+             bg-white
+             px-4
+             py-3
+             outline-none
+            "
+            />
 
         </div>
+
+        {/* COURSE DESCRIPTION */}
+
+<div className="mt-5">
+  <label className="block mb-2 font-semibold text-gray-700">
+    Course Description
+  </label>
+
+  <textarea
+    name="description"
+    placeholder="Enter course description"
+    value={formData.description || ""}
+    onChange={handleChange}
+    rows={4}
+    className="
+      w-full
+      border
+      rounded-2xl
+      px-5
+      py-4
+      outline-none
+      focus:border-red-500
+      resize-none
+    "
+  />
+</div>
 
         {/* SLUG */}
 
         <div>
 
           <label className="block mb-2 font-semibold text-gray-700">
-            Course Slug
+            Course URL
           </label>
 
           <input
@@ -356,7 +399,28 @@ export default function CourseBasics({
         </div>
 
       </div>
+      {/* BUTTONS */}
 
+<div className="mt-10 flex justify-end">
+
+  <button
+    onClick={goToNextTab}
+    className="
+      bg-red-600
+      hover:bg-red-700
+      text-white
+      px-8
+      py-4
+      rounded-2xl
+      font-semibold
+      shadow-lg
+      transition-all
+    "
+  >
+    Save & Next →
+  </button>
+
+</div>
     </div>
   );
 }

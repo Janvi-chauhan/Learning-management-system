@@ -1,11 +1,8 @@
-import React, {
-  useMemo,
-  useState,
-} from "react";
+import React, {useMemo,useState,useEffect} from "react";
+import api from "../../../services/api.js";
 
 import {
   Search,
-  Plus,
   Eye,
   Pencil,
   Trash2,
@@ -22,74 +19,15 @@ import { motion } from "framer-motion";
 // ================= INITIAL FORM =================
 
 const initialForm = {
-  studentName: "",
-  course: "",
+  title: "",
   amount: "",
-  paymentMethod: "UPI",
-  status: "Paid",
-  transactionId: "",
-  paymentDate:
-    new Date()
-      .toISOString()
-      .split("T")[0],
+  dueDate: "",
+  status: "Pending",
+  category: "",
+  paid: "",
+  remaining: "",
 };
 
-// ================= SAMPLE DATA =================
-
-const samplePayments = [
-  {
-    id: 1,
-    studentName:
-      "Aarav Sharma",
-    course:
-      "Java Full Stack Development",
-    amount: 25000,
-    paymentMethod: "UPI",
-    status: "Paid",
-    transactionId: "TXN894512",
-    paymentDate: "2026-05-08",
-  },
-
-  {
-    id: 2,
-    studentName:
-      "Priya Verma",
-    course:
-      "MERN Stack Development",
-    amount: 18000,
-    paymentMethod: "Card",
-    status: "Pending",
-    transactionId: "TXN894513",
-    paymentDate: "2026-05-09",
-  },
-
-  {
-    id: 3,
-    studentName:
-      "Rohan Mehta",
-    course:
-      "Python with Data Science",
-    amount: 22000,
-    paymentMethod:
-      "Bank Transfer",
-    status: "Paid",
-    transactionId: "TXN894514",
-    paymentDate: "2026-05-10",
-  },
-
-  {
-    id: 4,
-    studentName:
-      "Ananya Kulkarni",
-    course:
-      "UI/UX Design",
-    amount: 15000,
-    paymentMethod: "Cash",
-    status: "Failed",
-    transactionId: "TXN894515",
-    paymentDate: "2026-05-11",
-  },
-];
 
 // ================= HELPERS =================
 
@@ -130,7 +68,7 @@ const statusIcons = {
 
 export default function ManagePayments() {
   const [payments, setPayments] =
-    useState(samplePayments);
+    useState([]);
 
   const [search, setSearch] =
     useState("");
@@ -146,6 +84,31 @@ export default function ManagePayments() {
 
   const [formData, setFormData] =
     useState(initialForm);
+
+
+  const fetchPayments = async () => {
+  try {
+    const response =
+      await api.get(
+        "/admin/payments"
+      );
+
+    console.log(
+      "Payments API:",
+      response.data
+    );
+
+    setPayments(
+      response.data.data
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+useEffect(() => {
+  fetchPayments();
+}, []);
 
   // ================= HANDLE CHANGE =================
 
@@ -167,162 +130,147 @@ export default function ManagePayments() {
 
   // ================= MODAL =================
 
-  const openModal = (
-    payment = null
-  ) => {
-    setEditId(
-      payment?.id || null
-    );
+  const openModal = (payment = null) => {
+  if (payment) {
+    setEditId(payment.id);
 
-    setFormData(
-      payment || initialForm
-    );
-
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-
+    setFormData({
+      title: payment.title,
+      amount: payment.amount,
+      dueDate: payment.due_date,
+      status: payment.status,
+      category: payment.category,
+      paid: payment.paid,
+      remaining: payment.remaining,
+});
+  } else {
     setEditId(null);
-
     setFormData(initialForm);
-  };
+  }
+
+  setShowModal(true);
+};
+
+const closeModal = () => {
+  setShowModal(false);
+
+  setEditId(null);
+
+  setFormData(initialForm);
+};
 
   // ================= SUBMIT =================
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (editId) {
-      setPayments((prev) =>
-        prev.map((payment) =>
-          payment.id === editId
-            ? {
-                ...payment,
-                ...formData,
-              }
-            : payment
-        )
-      );
-    } else {
-      setPayments((prev) => [
-        {
-          id: Date.now(),
-          ...formData,
-        },
+  const payload = {
+     title: formData.title,
+     amount: Number(formData.amount),
+     due_date: formData.dueDate,
+     status: formData.status,
+     category: formData.category,
+     paid: Number(formData.paid),
+     remaining: Number(formData.remaining),
+};
 
-        ...prev,
-      ]);
-    }
+  await api.put(
+  `/admin/payments/${editId}`,
+  payload
+);
 
-    closeModal();
-  };
+alert("Payment Updated Successfully");
+
+fetchPayments();
+closeModal();
+};
 
   // ================= DELETE =================
 
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Delete this payment record?"
-      )
-    ) {
-      setPayments((prev) =>
-        prev.filter(
-          (payment) =>
-            payment.id !== id
-        )
-      );
-    }
-  };
+  const handleDelete = async (id) => {
+  const confirmDelete =
+    window.confirm(
+      "Delete this payment?"
+    );
+
+  if (!confirmDelete) return;
+
+  try {
+    await api.delete(
+      `/admin/payments/${id}`
+    );
+
+    fetchPayments();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // ================= FILTER =================
 
-  const filteredPayments =
-    useMemo(() => {
-      return payments.filter(
-        (payment) => {
-          const matchesSearch =
-            payment.studentName
-              .toLowerCase()
-              .includes(
-                search.toLowerCase()
-              ) ||
-            payment.course
-              .toLowerCase()
-              .includes(
-                search.toLowerCase()
-              ) ||
-            payment.transactionId
-              .toLowerCase()
-              .includes(
-                search.toLowerCase()
-              );
+  const filteredPayments = useMemo(() => {
+  return payments.filter((payment) => {
+    const matchesSearch =
+      payment.title
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
 
-          const matchesStatus =
-            statusFilter ===
-              "All" ||
-            payment.status ===
-              statusFilter;
+      payment.category
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
 
-          return (
-            matchesSearch &&
-            matchesStatus
-          );
-        }
-      );
-    }, [
-      payments,
-      search,
-      statusFilter,
-    ]);
+    const matchesStatus =
+      statusFilter === "All" ||
+      payment.status === statusFilter;
+
+    return (
+      matchesSearch &&
+      matchesStatus
+    );
+  });
+}, [
+  payments,
+  search,
+  statusFilter,
+]);
 
   // ================= SUMMARY =================
 
   const summary = useMemo(() => {
-    const total =
-      payments.reduce(
-        (sum, payment) =>
-          sum + payment.amount,
-        0
-      );
 
-    const paid = payments
-      .filter(
-        (payment) =>
-          payment.status ===
-          "Paid"
-      )
-      .reduce(
-        (sum, payment) =>
-          sum + payment.amount,
-        0
-      );
+  const total =
+    payments.reduce(
+      (sum, payment) =>
+        sum +
+        Number(payment.amount || 0),
+      0
+    );
 
-    const pending =
-      payments
-        .filter(
-          (payment) =>
-            payment.status ===
-            "Pending"
-        )
-        .reduce(
-          (
-            sum,
-            payment
-          ) =>
-            sum +
-            payment.amount,
-          0
-        );
+  const paid =
+    payments.reduce(
+      (sum, payment) =>
+        sum +
+        Number(payment.paid || 0),
+      0
+    );
 
-    return {
-      total,
-      paid,
-      pending,
-    };
-  }, [payments]);
+  const pending =
+    payments.reduce(
+      (sum, payment) =>
+        sum +
+        Number(
+          payment.remaining || 0
+        ),
+      0
+    );
 
+  return {
+    total,
+    paid,
+    pending,
+  };
+
+}, [payments]);
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] md:p-6">
       
@@ -357,37 +305,15 @@ export default function ManagePayments() {
         {/* BUTTONS */}
 
         <div className="flex flex-wrap gap-3">
-          
-          <motion.button
-            whileHover={{
-              scale: 1.03,
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl text-slate-700 font-medium shadow-sm hover:bg-white transition-all"
-          >
-            <Download size={18} />
-            Export
-          </motion.button>
-
-          <motion.button
-            whileHover={{
-              scale: 1.03,
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
-            onClick={() =>
-              openModal()
-            }
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-red-600 text-white font-semibold shadow-lg transition-all"
-          >
-            <Plus size={18} />
-            Add Payment
-          </motion.button>
-
-        </div>
+  <motion.button
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+    className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl text-slate-700 font-medium shadow-sm hover:bg-white transition-all"
+  >
+    <Download size={18} />
+    Export
+  </motion.button>
+</div>
 
       </div>
 
@@ -475,7 +401,7 @@ export default function ManagePayments() {
 
             <input
               type="text"
-              placeholder="Search by student, course or transaction ID..."
+              placeholder="Search by course title, category or batch type..."
               className="w-full bg-transparent outline-none text-slate-700"
               value={search}
               onChange={(e) =>
@@ -528,12 +454,12 @@ export default function ManagePayments() {
     
     <thead className="bg-gradient-to-r from-red-600 to-red-500 text-white">
       <tr className="text-left text-sm font-semibold">
-        <th className="px-6 py-5">Student</th>
-        <th className="px-6 py-5">Course</th>
-        <th className="px-6 py-5">Amount</th>
-        <th className="px-6 py-5">Method</th>
-        <th className="px-6 py-5">Transaction ID</th>
-        <th className="px-6 py-5">Date</th>
+        <th className="px-6 py-5">Course Title</th>
+        <th className="px-6 py-5">Batch Type</th>
+        <th className="px-6 py-5">Total Fees</th>
+        <th className="px-6 py-5">Paid Amount</th>
+        <th className="px-6 py-5">Remaining Amount</th>
+        <th className="px-6 py-5">Due Date</th>
         <th className="px-6 py-5">Status</th>
         <th className="px-6 py-5">Actions</th>
       </tr>
@@ -550,11 +476,11 @@ export default function ManagePayments() {
             className="border-t border-slate-100 hover:bg-slate-50 transition"
           >
             <td className="px-6 py-5 font-semibold">
-              {payment.studentName}
+              {payment.title}
             </td>
 
             <td className="px-6 py-5">
-              {payment.course}
+              {payment.category}
             </td>
 
             <td className="px-6 py-5 font-bold">
@@ -562,15 +488,15 @@ export default function ManagePayments() {
             </td>
 
             <td className="px-6 py-5">
-              {payment.paymentMethod}
+              {payment.paid}
             </td>
 
             <td className="px-6 py-5 font-mono text-sm">
-              {payment.transactionId}
+              {payment.remaining}
             </td>
 
             <td className="px-6 py-5">
-              {payment.paymentDate}
+              {payment.due_date}
             </td>
 
             <td className="px-6 py-5">
@@ -640,11 +566,11 @@ export default function ManagePayments() {
 
             <div>
               <h3 className="font-bold text-lg text-slate-800">
-                {payment.studentName}
+                {payment.title}
               </h3>
 
               <p className="text-sm text-slate-500">
-                {payment.course}
+                {payment.category}
               </p>
             </div>
 
@@ -677,7 +603,7 @@ export default function ManagePayments() {
               </span>
 
               <span>
-                {payment.paymentMethod}
+                {payment.paid}
               </span>
             </div>
 
@@ -687,7 +613,7 @@ export default function ManagePayments() {
               </span>
 
               <span className="font-mono text-xs">
-                {payment.transactionId}
+                {payment.remaining}
               </span>
             </div>
 
@@ -697,7 +623,7 @@ export default function ManagePayments() {
               </span>
 
               <span>
-                {payment.paymentDate}
+                {payment.due_ate}
               </span>
             </div>
 
@@ -764,9 +690,7 @@ export default function ManagePayments() {
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
               
               <h2 className="text-3xl font-bold text-slate-800">
-                {editId
-                  ? "Edit Payment"
-                  : "Add Payment"}
+                  Edit Payment
               </h2>
 
               <button
@@ -793,24 +717,29 @@ export default function ManagePayments() {
                 
                 {[
                   [
-                    "studentName",
-                    "Student Name",
+                    "title",
+                     "Course Title"
                   ],
 
                   [
-                    "course",
-                    "Course",
+                    "category",
+                    "Batch Type",
                   ],
 
                   [
                     "amount",
-                    "Amount",
+                    "Total Fees",
                   ],
 
                   [
-                    "transactionId",
-                    "Transaction ID",
+                    "paid",
+                    "Paid Amount",
                   ],
+
+                  [
+                    "remaining",
+                    "Remaining Amount",
+                  ]
                 ].map(
                   ([
                     name,
@@ -819,8 +748,7 @@ export default function ManagePayments() {
                     <input
                       key={name}
                       type={
-                        name ===
-                        "amount"
+                        ["amount", "paid", "remaining"].includes(name)
                           ? "number"
                           : "text"
                       }
@@ -841,35 +769,14 @@ export default function ManagePayments() {
                     />
                   )
                 )}
-
-                <select
-                  name="paymentMethod"
-                  value={
-                    formData.paymentMethod
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-orange-300"
-                >
-                  <option>
-                    UPI
-                  </option>
-
-                  <option>
-                    Card
-                  </option>
-
-                  <option>
-                    Cash
-                  </option>
-
-                  <option>
-                    Bank Transfer
-                  </option>
-
-                </select>
-
+                <input
+                   type="date"
+                   name="dueDate"
+                   value={formData.dueDate}
+                   onChange={handleChange}
+                   required
+                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-orange-300"
+/>
                 <select
                   name="status"
                   value={
@@ -926,9 +833,7 @@ export default function ManagePayments() {
                   type="submit"
                   className="px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff6b3d] to-[#ff9f43] text-white font-semibold shadow-lg shadow-orange-200 transition-all"
                 >
-                  {editId
-                    ? "Update Payment"
-                    : "Add Payment"}
+                    Update Payment
                 </button>
 
               </div>

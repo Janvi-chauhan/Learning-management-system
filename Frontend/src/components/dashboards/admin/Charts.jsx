@@ -13,36 +13,30 @@ import {
 } from "recharts";
 
 import { motion } from "framer-motion";
-
-// ================= DATA =================
-
-const studentData = [
-  { month: "Jan", students: 40 },
-  { month: "Feb", students: 55 },
-  { month: "Mar", students: 70 },
-  { month: "Apr", students: 90 },
-  { month: "May", students: 120 },
-  { month: "Jun", students: 145 },
-];
-
-const courseData = [
-  { name: "Web Dev", value: 40 },
-  { name: "UI/UX", value: 25 },
-  { name: "AI/ML", value: 20 },
-  { name: "Data Science", value: 15 },
-];
+import { useEffect, useState } from "react";
+import api from "../../../services/api";
 
 // ================= COLORS =================
 
 const COLORS = [
-  "#FFB26B", 
-  "#FF914D", 
-  "#FF6B6B", 
-  "#E85D75", 
+  "#FFB26B",
+  "#FF914D",
+  "#FF6B6B",
+  "#E85D75",
 ];
+
 // ================= CUSTOM TOOLTIP =================
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}) => {
+  if (
+    active &&
+    payload &&
+    payload.length
+  ) {
     return (
       <div className="rounded-2xl border border-red-900/40 bg-[#18181b] backdrop-blur-xl shadow-xl px-4 py-3">
         <p className="text-sm font-semibold text-white">
@@ -59,9 +53,70 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-// ================= CHARTS =================
-
 export default function Charts() {
+
+  const [chartData, setChartData] =
+    useState([]);
+
+  const [distributionData,
+    setDistributionData] =
+    useState([]);
+
+  const fetchChartData =
+    async () => {
+
+      try {
+
+        const response =
+          await api.get(
+            "/admin/chart-data"
+          );
+
+        setChartData(
+          response.data.data
+            .studentGrowth
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+    };
+
+  const fetchDistribution =
+    async () => {
+
+      try {
+
+        const response =
+          await api.get(
+            "/admin/course-distribution"
+          );
+
+        setDistributionData(
+          response.data.data
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+    };
+
+  useEffect(() => {
+
+    fetchChartData();
+
+    fetchDistribution();
+
+  }, []);
+
+  const studentData = chartData || [];
+
+  const courseData = distributionData || [];
+
   return (
     <div className="grid grid-cols-2 2xl:grid-cols-2 gap-6">
       
@@ -250,7 +305,7 @@ export default function Charts() {
                 innerRadius="52%"
                 paddingAngle={4}
               >
-                {courseData.map(
+                {(courseData || []).map(
                   (entry, index) => (
                     <Cell
                       key={`cell-${index}`}

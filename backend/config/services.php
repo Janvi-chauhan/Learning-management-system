@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'imagekit' => [
+    'public_key' => env('public_pBgE5K1/1C4msx8BAT8JAjpx/k0='),
+    'private_key' => env('private_BN3Tr5m9kizX8NfA/soGGwOW85c='),
+    'url_endpoint' => env('https://ik.imagekit.io/janvichauhan'),
+],
+
 ];

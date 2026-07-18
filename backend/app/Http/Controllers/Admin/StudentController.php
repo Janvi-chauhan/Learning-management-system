@@ -6,34 +6,57 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
+    // ================= GET ALL STUDENTS =================
+
     public function index()
     {
-        return User::where('role', 'student')->get();
+        return response()->json(
+            User::where('role', 'student')->latest()->get()
+        );
     }
+
+    // ================= GET SINGLE STUDENT =================
 
     public function show($id)
     {
-        return User::findOrFail($id);
+        $student = User::where('role', 'student')
+            ->findOrFail($id);
+
+        return response()->json($student);
     }
+
+    // ================= CREATE STUDENT =================
 
     public function store(Request $request)
     {
-        return User::create([
+         
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+        $student = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password ?? '123456'),
+            'phone' => $request->phone,
 
+            'password' => Hash::make(
+    filled($request->password)
+        ? $request->password
+        : '123456'
+),
             'role' => 'student',
-
-            'course' => $request->course,
+            
+            'courses' => $request->courses,
             'year' => $request->year,
-            'batch_type' => $request->batchType,
-            'status' => $request->status,
+            'batch_type' => $request->batch_type,
+            'status' => $request->status ?? 'active',
 
-            'attendance' => $request->attendance,
+            'attendance' => $request->attendance ?? 0,
 
             'assignments_completed' =>
                 $request->assignmentsCompleted ?? 0,
@@ -47,19 +70,48 @@ class StudentController extends Controller
             'total_tests' =>
                 $request->totalTests ?? 5,
         ]);
+        Student::create([
+    'user_id' => $student->id,
+    'phone' => $student->phone,
+    'courses' => $student->courses,
+    'year' => $student->year,
+    'batch_type' => $student->batch_type,
+    'address' => $student->location,
+    'image' => $student->image,
+    'attendance' => $student->attendance ?? 0,
+    'assignments_completed' => $student->assignments_completed ?? 0,
+    'total_assignments' => $student->total_assignments ?? 20,
+    'tests_completed' => $student->tests_completed ?? 0,
+     'total_tests' => $student->total_tests ?? 5,
+]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student created successfully',
+            'data' => $student
+        ], 201);
     }
+
+    // ================= UPDATE STUDENT =================
 
     public function update(Request $request, $id)
     {
-        $student = User::findOrFail($id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+
+        $student = User::where('role', 'student')
+            ->findOrFail($id);
 
         $student->update([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
 
-            'course' => $request->course,
+            'courses' => $request->courses,
             'year' => $request->year,
-            'batch_type' => $request->batchType,
+            'batch_type' => $request->batch_type,
             'status' => $request->status,
 
             'attendance' => $request->attendance,
@@ -76,17 +128,56 @@ class StudentController extends Controller
             'total_tests' =>
                 $request->totalTests,
         ]);
+        $studentRecord = Student::where('user_id', $student->id)->first();
+
+if ($studentRecord) {
+
+    $studentRecord->update([
+
+        'phone' => $student->phone,
+
+        'courses' => $student->courses,
+
+        'year' => $student->year,
+
+        'batch_type' => $student->batch_type,
+
+        'address' => $student->location,
+
+        'image' => $student->image,
+
+        'attendance' => $student->attendance ?? 0,
+
+        'assignments_completed' => $student->assignments_completed ?? 0,
+
+        'total_assignments' => $student->total_assignments ?? 20,
+
+        'tests_completed' => $student->tests_completed ?? 0,
+
+        'total_tests' => $student->total_tests ?? 5,
+
+    ]);
+
+}
 
         return response()->json([
-            'message' => 'Student updated successfully'
+            'success' => true,
+            'message' => 'Student updated successfully',
+            'data' => $student
         ]);
     }
 
+    // ================= DELETE STUDENT =================
+
     public function destroy($id)
     {
-        User::findOrFail($id)->delete();
+        $student = User::where('role', 'student')
+            ->findOrFail($id);
+
+        $student->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'Student deleted successfully'
         ]);
     }

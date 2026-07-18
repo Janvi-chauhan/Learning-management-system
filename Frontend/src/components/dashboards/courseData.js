@@ -1,341 +1,341 @@
-// src/data/coursesData.js
+// // src/data/coursesData.js
 
-const coursesData = [
-  {
-    id: 1,
+// const coursesData = [
+//   {
+//     id: 1,
 
-    slug: "dsa-with-python",
+//     slug: "dsa-with-python",
 
-    category:
-      "IT & Software / Other IT & Software / DSA",
+//     category:
+//       "IT & Software / Other IT & Software / DSA",
 
-    title: "DSA with Python",
+//     title: "DSA with Python",
 
-    shortDesc:
-      "Master Data Structures & Algorithms with Python through real projects and placement focused training.",
+//     shortDesc:
+//       "Master Data Structures & Algorithms with Python through real projects and placement focused training.",
 
-    createdBy: "Programming Classes",
+//     createdBy: "Programming Classes",
 
-    updatedAt: "2026-02-01",
+//     updatedAt: "2026-02-01",
 
-    language: ["English", "Hindi"],
+//     language: ["English", "Hindi"],
 
-    rating: 4.8,
+//     rating: 4.8,
 
-    students: "1200+ Students",
+//     students: "1200+ Students",
 
-    duration: "6 Months",
+//     duration: "6 Months",
 
-    level: "Intermediate",
+//     level: "Intermediate",
 
-    status: "Active",
+//     status: "Active",
 
-    latest: true,
+//     latest: true,
 
-    thumbnail:
-      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4",
+//     thumbnail:
+//       "https://images.unsplash.com/photo-1515879218367-8466d910aaa4",
 
-    previewVideo:
-      "https://youtube.com",
+//     previewVideo:
+//       "https://youtube.com",
 
-    brochure:
-      "/brochures/dsa-python.pdf",
+//     brochure:
+//       "/brochures/dsa-python.pdf",
 
-    // ================= LEARNINGS =================
+//     // ================= LEARNINGS =================
 
-    learnings: [
-      "Live project based learning",
+//     learnings: [
+//       "Live project based learning",
 
-      "DSA from basics to advanced",
+//       "DSA from basics to advanced",
 
-      "Resume & LinkedIn optimization",
+//       "Resume & LinkedIn optimization",
 
-      "Mock interviews with feedback",
+//       "Mock interviews with feedback",
 
-      "Placement assistance & referrals",
+//       "Placement assistance & referrals",
 
-      "Problem solving & coding mindset",
+//       "Problem solving & coding mindset",
 
-      "Interview-focused preparation",
+//       "Interview-focused preparation",
 
-      "Real-world industry examples",
-    ],
+//       "Real-world industry examples",
+//     ],
 
-    // ================= ROADMAP =================
+//     // ================= ROADMAP =================
 
-    roadmap: [
-      {
-        step: 1,
+//     roadmap: [
+//       {
+//         step: 1,
 
-        title: "Python Basics",
+//         title: "Python Basics",
 
-        desc:
-          "Syntax, variables, loops, functions and foundations",
-      },
+//         desc:
+//           "Syntax, variables, loops, functions and foundations",
+//       },
 
-      {
-        step: 2,
+//       {
+//         step: 2,
 
-        title: "DSA Core",
+//         title: "DSA Core",
 
-        desc:
-          "Arrays, strings, linked list, stack, queue & recursion",
-      },
+//         desc:
+//           "Arrays, strings, linked list, stack, queue & recursion",
+//       },
 
-      {
-        step: 3,
+//       {
+//         step: 3,
 
-        title: "Advanced Algorithms",
+//         title: "Advanced Algorithms",
 
-        desc:
-          "Trees, graphs, hashing, dynamic programming",
-      },
+//         desc:
+//           "Trees, graphs, hashing, dynamic programming",
+//       },
 
-      {
-        step: 4,
+//       {
+//         step: 4,
 
-        title: "Real Projects",
+//         title: "Real Projects",
 
-        desc:
-          "Industry-level practical implementation",
-      },
+//         desc:
+//           "Industry-level practical implementation",
+//       },
 
-      {
-        step: 5,
+//       {
+//         step: 5,
 
-        title: "Placement Preparation",
+//         title: "Placement Preparation",
 
-        desc:
-          "Mock interviews, resume & aptitude",
-      },
-    ],
+//         desc:
+//           "Mock interviews, resume & aptitude",
+//       },
+//     ],
 
-    // ================= CURRICULUM =================
+//     // ================= CURRICULUM =================
 
-    curriculum: [
-      "Python Basics",
+//     curriculum: [
+//       "Python Basics",
 
-      "Functions & OOP",
+//       "Functions & OOP",
 
-      "Arrays & Strings",
+//       "Arrays & Strings",
 
-      "Linked List",
+//       "Linked List",
 
-      "Stack & Queue",
+//       "Stack & Queue",
 
-      "Trees & Graphs",
+//       "Trees & Graphs",
 
-      "Dynamic Programming",
+//       "Dynamic Programming",
 
-      "Industry Projects",
-    ],
+//       "Industry Projects",
+//     ],
 
-    // ================= MENTOR =================
+//     // ================= MENTOR =================
 
-    mentor: {
-      name: "Industry Expert",
+//     mentor: {
+//       name: "Industry Expert",
 
-      experience:
-        "10+ Years Experience",
+//       experience:
+//         "10+ Years Experience",
 
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-    },
+//       image:
+//         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+//     },
 
-    // ================= CERTIFICATION =================
+//     // ================= CERTIFICATION =================
 
-    certification:
-      "Globally recognized certification with internship letter.",
+//     certification:
+//       "Globally recognized certification with internship letter.",
 
-    // ================= REVIEWS =================
+//     // ================= REVIEWS =================
 
-    reviews: [
-      {
-        student:
-          "Rahul Sharma",
+//     reviews: [
+//       {
+//         student:
+//           "Rahul Sharma",
 
-        rating: 5,
+//         rating: 5,
 
-        comment:
-          "Best course for placements",
-      },
+//         comment:
+//           "Best course for placements",
+//       },
 
-      {
-        student:
-          "Priya Verma",
+//       {
+//         student:
+//           "Priya Verma",
 
-        rating: 5,
+//         rating: 5,
 
-        comment:
-          "Very practical learning experience",
-      },
-    ],
-  },
+//         comment:
+//           "Very practical learning experience",
+//       },
+//     ],
+//   },
 
-  // ======================================================
-  // SECOND COURSE
-  // ======================================================
+//   // ======================================================
+//   // SECOND COURSE
+//   // ======================================================
 
-  {
-    id: 2,
+//   {
+//     id: 2,
 
-    slug: "mern-stack-development",
+//     slug: "mern-stack-development",
 
-    category:
-      "Web Development / Full Stack",
+//     category:
+//       "Web Development / Full Stack",
 
-    title: "MERN Stack Development",
+//     title: "MERN Stack Development",
 
-    shortDesc:
-      "Become a complete full stack developer using MongoDB, Express, React and Node.js.",
+//     shortDesc:
+//       "Become a complete full stack developer using MongoDB, Express, React and Node.js.",
 
-    createdBy: "Programming Classes",
+//     createdBy: "Programming Classes",
 
-    updatedAt: "2026-01-15",
+//     updatedAt: "2026-01-15",
 
-    language: ["English", "Hindi"],
+//     language: ["English", "Hindi"],
 
-    rating: 4.9,
+//     rating: 4.9,
 
-    students: "1800+ Students",
+//     students: "1800+ Students",
 
-    duration: "8 Months",
+//     duration: "8 Months",
 
-    level: "Advanced",
+//     level: "Advanced",
 
-    status: "Active",
+//     status: "Active",
 
-    latest: true,
+//     latest: true,
 
-    thumbnail:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+//     thumbnail:
+//       "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
 
-    previewVideo:
-      "https://youtube.com",
+//     previewVideo:
+//       "https://youtube.com",
 
-    brochure:
-      "/brochures/mern.pdf",
+//     brochure:
+//       "/brochures/mern.pdf",
 
-    learnings: [
-      "Frontend + Backend mastery",
+//     learnings: [
+//       "Frontend + Backend mastery",
 
-      "Authentication systems",
+//       "Authentication systems",
 
-      "REST APIs",
+//       "REST APIs",
 
-      "MongoDB integration",
+//       "MongoDB integration",
 
-      "Deployment",
+//       "Deployment",
 
-      "Real-world projects",
+//       "Real-world projects",
 
-      "Resume building",
+//       "Resume building",
 
-      "Placement support",
-    ],
+//       "Placement support",
+//     ],
 
-    roadmap: [
-      {
-        step: 1,
+//     roadmap: [
+//       {
+//         step: 1,
 
-        title: "Frontend Basics",
+//         title: "Frontend Basics",
 
-        desc:
-          "HTML, CSS, JavaScript foundations",
-      },
+//         desc:
+//           "HTML, CSS, JavaScript foundations",
+//       },
 
-      {
-        step: 2,
+//       {
+//         step: 2,
 
-        title: "React.js",
+//         title: "React.js",
 
-        desc:
-          "Hooks, routing, API handling",
-      },
+//         desc:
+//           "Hooks, routing, API handling",
+//       },
 
-      {
-        step: 3,
+//       {
+//         step: 3,
 
-        title: "Backend Development",
+//         title: "Backend Development",
 
-        desc:
-          "Node.js & Express APIs",
-      },
+//         desc:
+//           "Node.js & Express APIs",
+//       },
 
-      {
-        step: 4,
+//       {
+//         step: 4,
 
-        title: "MongoDB",
+//         title: "MongoDB",
 
-        desc:
-          "Database design & integration",
-      },
+//         desc:
+//           "Database design & integration",
+//       },
 
-      {
-        step: 5,
+//       {
+//         step: 5,
 
-        title: "Deployment",
+//         title: "Deployment",
 
-        desc:
-          "Deploy full applications",
-      },
-    ],
+//         desc:
+//           "Deploy full applications",
+//       },
+//     ],
 
-    curriculum: [
-      "HTML & CSS",
+//     curriculum: [
+//       "HTML & CSS",
 
-      "JavaScript",
+//       "JavaScript",
 
-      "React",
+//       "React",
 
-      "Node.js",
+//       "Node.js",
 
-      "Express",
+//       "Express",
 
-      "MongoDB",
+//       "MongoDB",
 
-      "Authentication",
+//       "Authentication",
 
-      "Deployment",
-    ],
+//       "Deployment",
+//     ],
 
-    mentor: {
-      name: "Senior MERN Developer",
+//     mentor: {
+//       name: "Senior MERN Developer",
 
-      experience:
-        "8+ Years Experience",
+//       experience:
+//         "8+ Years Experience",
 
-      image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
-    },
+//       image:
+//         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
+//     },
 
-    certification:
-      "Industry-recognized MERN certification.",
+//     certification:
+//       "Industry-recognized MERN certification.",
 
-    reviews: [
-      {
-        student:
-          "Aditya",
+//     reviews: [
+//       {
+//         student:
+//           "Aditya",
 
-        rating: 5,
+//         rating: 5,
 
-        comment:
-          "Got placed after completing this course",
-      },
-    ],
-  },
-];
+//         comment:
+//           "Got placed after completing this course",
+//       },
+//     ],
+//   },
+// ];
 
-// ======================================================
-// ONLY SHOW LATEST 7 COURSES
-// ======================================================
+// // ======================================================
+// // ONLY SHOW LATEST 7 COURSES
+// // ======================================================
 
-export const latestCourses = [...coursesData]
-  .sort(
-    (a, b) =>
-      new Date(b.updatedAt) -
-      new Date(a.updatedAt)
-  )
-  .slice(0, 7);
+// export const latestCourses = [...coursesData]
+//   .sort(
+//     (a, b) =>
+//       new Date(b.updatedAt) -
+//       new Date(a.updatedAt)
+//   )
+//   .slice(0, 7);
 
-export default coursesData;
+// export default coursesData;

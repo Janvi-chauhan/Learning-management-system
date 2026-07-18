@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 import {
   IndianRupee,
   CheckCircle2,
@@ -11,126 +13,127 @@ import {
 
 import { motion } from "framer-motion";
 
-// ================= PAYMENTS DATA =================
-
-const payments = [
-  {
-    id: 1,
-
-    title: "Full Stack Development",
-
-    amount: "₹45,000",
-
-    dueDate: "25 Aug 2025",
-
-    status: "Pending",
-
-    category: "Premium Cohort",
-
-    paid: "₹15,000",
-
-    remaining: "₹30,000",
-  },
-
-  {
-    id: 2,
-
-    title: "Data Analytics + AI",
-
-    amount: "₹22,000",
-
-    dueDate: "15 Jul 2025",
-
-    status: "Paid",
-
-    category: "Recorded + Live",
-
-    paid: "₹22,000",
-
-    remaining: "₹0",
-  },
-
-  {
-    id: 3,
-
-    title: "Java Backend Bootcamp",
-
-    amount: "₹18,500",
-
-    dueDate: "10 Sep 2025",
-
-    status: "Upcoming",
-
-    category: "Weekend Live Batch",
-
-    paid: "₹0",
-
-    remaining: "₹18,500",
-  },
-
-  {
-    id: 4,
-
-    title: "DevOps Engineering",
-
-    amount: "₹30,000",
-
-    dueDate: "05 Oct 2025",
-
-    status: "Pending",
-
-    category: "Job Ready Program",
-
-    paid: "₹10,000",
-
-    remaining: "₹20,000",
-  },
-];
 
 export default function Fees() {
+
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [stats, setStats] =
+  useState({
+    totalPayments: 0,
+    paidAmount: 0,
+    pendingAmount: 0,
+    liveCohorts: 0,
+  });
+
+  const fetchPayments = async () => {
+  try {
+    const response = await api.get(
+  "/student/payments"
+);
+
+    console.log(
+      "Payments API Response:",
+      response.data
+    );
+
+    setPayments(
+      response.data.data || []
+    );
+  } catch (error) {
+    console.error(
+      "Error fetching payments:",
+      error
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchPayments();
+  fetchStats();
+}, []);
+
+const fetchStats =
+  async () => {
+
+    try {
+
+      const response =
+  await api.get(
+    "/student/payments/stats"
+  );
+
+      setStats(
+        response.data.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+};
   // ================= STATS =================
 
-  const stats = [
-    {
-      title: "Total Payments",
-      value: "₹1.15L",
+  const statsData = [
+  {
+    title: "Total Payments",
 
-      icon: Wallet,
+    value: `₹${stats.totalPayments}`,
 
-      bg: "bg-orange-100",
-      text: "text-orange-600",
-    },
+    icon: Wallet,
 
-    {
-      title: "Paid",
-      value: "₹47K",
+    bg: "bg-orange-100",
 
-      icon: CheckCircle2,
+    text: "text-orange-600",
+  },
 
-      bg: "bg-emerald-100",
-      text: "text-emerald-600",
-    },
+  {
+    title: "Paid",
 
-    {
-      title: "Pending",
-      value: "₹68K",
+    value: `₹${stats.paidAmount}`,
 
-      icon: AlertCircle,
+    icon: CheckCircle2,
 
-      bg: "bg-rose-100",
-      text: "text-rose-600",
-    },
+    bg: "bg-emerald-100",
 
-    {
-      title: "Live Cohorts",
-      value: "04",
+    text: "text-emerald-600",
+  },
 
-      icon: Video,
+  {
+    title: "Pending",
 
-      bg: "bg-sky-100",
-      text: "text-sky-600",
-    },
-  ];
+    value: `₹${stats.pendingAmount}`,
+
+    icon: AlertCircle,
+
+    bg: "bg-rose-100",
+
+    text: "text-rose-600",
+  },
+
+  {
+    title: "Live Cohorts",
+
+    value: stats.liveCohorts,
+
+    icon: Video,
+
+    bg: "bg-sky-100",
+
+    text: "text-sky-600",
+  },
+];
+const handlePayment = (payment) => {
+  console.log("Payment clicked:", payment);
+
+  // Later you'll integrate Razorpay or Stripe here.
+
+  alert(`Proceeding to payment for ${payment.course}`);
+};
 
   return (
     <div
@@ -249,7 +252,7 @@ export default function Fees() {
             mb-10
           "
         >
-          {stats.map((item, index) => {
+          {statsData.map((item, index) => {
             const Icon = item.icon;
 
             return (
@@ -581,7 +584,7 @@ export default function Fees() {
                     />
 
                     <span>
-                      {payment.dueDate}
+                      {payment.due_date}
                     </span>
                   </div>
 
@@ -621,6 +624,11 @@ export default function Fees() {
                         payment.status ===
                         "Paid"
                       }
+                      onClick={() => {
+    if (payment.status !== "Paid") {
+      handlePayment(payment);
+    }
+  }}
                       className={`
                         px-5
                         py-2.5

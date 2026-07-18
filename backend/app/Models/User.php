@@ -15,19 +15,38 @@ class User extends Authenticatable
     protected $fillable = [
     'name',
     'email',
+    'phone',
+    'courses',
     'password',
-    'role',
-    'subject',
-    'experience',
-    'status',
-    'course',
     'year',
     'batch_type',
-    'attendance',
-    'assignments_completed',
-    'total_assignments',
-    'tests_completed',
-    'total_tests',
+    'role',
+    'image',
+    'otp',
+    'otp_expiry',
+    'is_verified',
+   
+
+    //Teacher Fields
+    'subject',
+    'experience',
+    'courses',
+    'status',
+    'phone',
+    'location',
+
+    //Students Fields
+    // 'course',
+    // 'year',
+    // 'batch_type',
+    // 'attendance',
+
+    // 'assignment_completed',
+    // 'toatl_assignments',
+
+    // 'tests_completed',
+    // 'toatl_tests',
+    
 ];
 
 
@@ -35,4 +54,19 @@ class User extends Authenticatable
         'password',
         'remember_token'
     ];
+    protected $casts = [
+    'courses' => 'array',
+    'is_verified' => 'boolean',
+    'otp_expiry' => 'datetime',
+];
+ /*
+    |--------------------------------------------------------------------------
+    | Student Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 }

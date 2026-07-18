@@ -117,10 +117,10 @@ const TeacherProgress = () => {
               {/* Specialization */}
               <div className="mb-4">
                 <p className="text-sm text-gray-500">
-                  Specialization
+                  Subject
                 </p>
                 <p className="font-medium text-gray-900">
-                  {teacher.specialization}
+                  {teacher.subject}
                 </p>
               </div>
 
@@ -269,13 +269,13 @@ const TeacherProgress = () => {
               </p>
             </div>
 
-            {/* Specialization */}
+            {/* Subject */}
             <div className="mb-6">
               <p className="text-sm text-gray-500 mb-1">
-                Specialization
+                Subject
               </p>
               <p className="font-medium">
-                {selectedTeacher.specialization}
+                {selectedTeacher.subject}
               </p>
             </div>
 

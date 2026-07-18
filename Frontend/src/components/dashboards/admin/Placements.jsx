@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../../services/api.js";
 
 import {
   Plus,
@@ -25,43 +26,8 @@ const initialForm = {
   image: "",
 };
 
-// ================= DEFAULT DATA =================
-
-const demoStudents = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    company: "TCS",
-    batch: "2025",
-    domain: "Full Stack Development",
-    linkedin:
-      "https://linkedin.com/in/rahul",
-    social:
-      "https://instagram.com/rahul",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-  },
-
-  {
-    id: 2,
-    name: "Priya Verma",
-    company: "Infosys",
-    batch: "2024",
-    domain: "Data Science",
-    linkedin:
-      "https://linkedin.com/in/priya",
-    social:
-      "https://instagram.com/priya",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-  },
-];
 
 export default function Placements() {
-  // ================= STATES =================
-
-  const [students, setStudents] =
-    useState(demoStudents);
 
   const [showModal, setShowModal] =
     useState(false);
@@ -74,6 +40,32 @@ export default function Placements() {
 
   const [formData, setFormData] =
     useState(initialForm);
+
+    const fetchPlacements = async () => {
+  try {
+    const response =
+      await api.get(
+        "/admin/placements"
+      );
+
+    console.log(
+      "Placements API:",
+      response.data.data
+    );
+
+    setStudents(
+      response.data.data
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+    const [students, setStudents] =
+     useState([]);
+
+useEffect(() => {
+  fetchPlacements();
+}, []);
 
   // ================= HANDLE CHANGE =================
 
@@ -106,49 +98,83 @@ export default function Placements() {
 
   // ================= SUBMIT =================
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (editId) {
-      setStudents(
-        students.map((student) =>
-          student.id === editId
-            ? {
-                ...student,
-                ...formData,
-              }
-            : student
-        )
-      );
-    } else {
-      setStudents([
-        {
-          id: Date.now(),
-          ...formData,
-        },
-        ...students,
-      ]);
+  try {
+    const data = new FormData();
+
+    data.append("name", formData.name);
+    data.append("company", formData.company);
+    data.append("batch", formData.batch);
+    data.append("domain", formData.domain);
+    data.append("linkedin", formData.linkedin);
+    data.append("social", formData.social);
+
+    if (formData.image instanceof File) {
+      data.append("image", formData.image);
     }
 
+    if (editId) {
+
+      // UPDATE
+      await api.post(
+        `/admin/placements/${editId}?_method=PUT`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert("Placement Updated Successfully");
+
+    } else {
+
+      // CREATE
+      await api.post(
+        "/admin/placements",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert("Placement Added Successfully");
+    }
+
+    fetchPlacements();
     closeModal();
-  };
+
+  } catch (error) {
+    console.log(error);
+    console.log(error.response?.data);
+  }
+};
 
   // ================= DELETE =================
 
-  const handleDelete = (id) => {
-    const confirmDelete =
-      window.confirm(
-        "Delete this placement?"
-      );
+  const handleDelete = async (id) => {
+  const confirmDelete =
+    window.confirm(
+      "Delete this placement?"
+    );
 
-    if (confirmDelete) {
-      setStudents(
-        students.filter(
-          (student) => student.id !== id
-        )
-      );
-    }
-  };
+  if (!confirmDelete) return;
+
+  try {
+    await api.delete(
+      `/admin/placements/${id}`
+    );
+
+    fetchPlacements();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // ================= SEARCH FILTER =================
 
@@ -569,12 +595,15 @@ export default function Placements() {
               />
 
               <input
-                type="url"
+                type="file"
                 name="image"
-                placeholder="Image URL"
-                value={formData.image}
-                onChange={handleChange}
-                required
+                placeholder="image/*"
+                onChange={(e) =>
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
+    })
+  }
                 className="border rounded-xl px-4 py-3 outline-none focus:border-red-500 sm:col-span-2"
               />
 

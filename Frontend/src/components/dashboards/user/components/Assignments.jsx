@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 import {
   CalendarDays,
   Clock3,
@@ -11,93 +13,361 @@ import {
 
 import { motion } from "framer-motion";
 
-// ================= ASSIGNMENTS DATA =================
-
-const assignmentsData = [
-  {
-    id: 1,
-
-    title: "React Dashboard UI",
-
-    course:
-      "Full Stack Development",
-
-    dueDate: "25 Aug 2025",
-
-    status: "Pending",
-
-    progress: 65,
-
-    submissions: 48,
-
-    doubts: 12,
-  },
-
-  {
-    id: 2,
-
-    title: "Database Schema Design",
-
-    course: "MongoDB",
-
-    dueDate: "28 Aug 2025",
-
-    status: "Submitted",
-
-    progress: 100,
-
-    submissions: 72,
-
-    doubts: 5,
-  },
-
-  {
-    id: 3,
-
-    title: "Authentication System",
-
-    course:
-      "Backend Development",
-
-    dueDate: "30 Aug 2025",
-
-    status: "In Review",
-
-    progress: 85,
-
-    submissions: 56,
-
-    doubts: 8,
-  },
-
-  {
-    id: 4,
-
-    title: "REST API Integration",
-
-    course: "API Development",
-
-    dueDate: "02 Sep 2025",
-
-    status: "Pending",
-
-    progress: 40,
-
-    submissions: 35,
-
-    doubts: 18,
-  },
-];
-
 export default function Assignments({
   role = "student",
 }) {
+  const [assignments, setAssignments] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+
+  // const [file, setFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  useEffect(() => {
+  console.log(
+    "selectedFile changed:",
+    selectedFile
+  );
+}, [selectedFile]);
+
+const [teacherStatsData, setTeacherStatsData] =
+useState({
+  assignments: 0,
+  submissions: 0,
+  questions: 0,
+  students: 0,
+});
+const [studentStatsData, setStudentStatsData] =
+useState({
+    assignments:0,
+    pending:0,
+    completed:0,
+    upcoming:0
+});
+
+  const [assignmentForm, setAssignmentForm] =
+    useState({
+      title: "",
+      course: "",
+      due_date: "",
+  });
+
+  const createAssignment = async () => {
+  console.log("SAVE CLICKED");
+
+  console.log("FORM DATA:", assignmentForm);
+
+  try {
+    const response = await api.post(
+      "/teacher/assignments",
+      {
+        title: assignmentForm.title,
+        course: assignmentForm.course,
+        due_date: assignmentForm.due_date,
+      }
+    );
+
+    console.log(
+      "ASSIGNMENT CREATED:",
+      response.data
+    );
+
+    fetchAssignments();
+
+    setShowModal(false);
+
+    setAssignmentForm({
+      title: "",
+      course: "",
+      due_date: "",
+    });
+
+  } catch (error) {
+
+    console.log("FULL ERROR:", error);
+
+    console.log(
+      "SERVER RESPONSE:",
+      error.response?.data
+    );
+  }
+};
+
+const uploadAssignment = async () => {
+
+  console.log(
+    "selectedAssignment:",
+    selectedAssignment
+  );
+
+  console.log(
+    "selectedFile:",
+    selectedFile
+  );
+
+  if (!selectedFile) {
+
+    alert(
+      "Please select a file first"
+    );
+
+    return;
+  }
+
+  const formData =
+    new FormData();
+
+  const userString = localStorage.getItem("user");
+
+if (!userString) {
+    alert("Please login again.");
+    return;
+}
+
+const user = JSON.parse(userString);
+
+formData.append(
+  "assignment_id",
+  selectedAssignment.id
+);
+// console.log(user);
+// formData.append(
+//   "student_id",
+//   user.id
+// );
+
+formData.append(
+  "file",
+  selectedFile
+);
+
+  console.log(
+    "FormData Contents:"
+  );
+
+  for (
+    let pair of formData.entries()
+  ) {
+    console.log(
+      pair[0],
+      pair[1]
+    );
+  }
+
+  try {
+
+    const response =
+      await api.post(
+        "/student/assignment-submissions",
+        formData,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data",
+          },
+        }
+      );
+
+    console.log(
+      "UPLOAD SUCCESS:",
+      response.data
+    );
+
+    alert(
+      "Assignment Uploaded Successfully"
+    );
+
+    setShowUploadModal(
+      false
+    );
+
+    setSelectedFile(
+      null
+    );
+
+  } catch (error) {
+
+    console.log(
+      "UPLOAD ERROR:",
+      error.response?.data
+    );
+
+    console.log(error);
+
+  }
+};
+// console.log(
+//   "CURRENT selectedFile:",
+//   selectedFile
+// );
+// console.log(
+//   "file =",
+//   file
+// );
+
+
+  const fetchAssignments = async () => {
+  try {
+
+    const endpoint =
+      role === "teacher"
+        ? "/teacher/assignments"
+        : "/student/assignments";
+
+    const response =
+      await api.get(endpoint);
+
+    console.log(
+      "Assignments API Response:",
+      response.data
+    );
+
+    setAssignments(
+      (response.data.data || []).map(
+        (assignment) => ({
+          id: assignment.id,
+
+          title: assignment.title,
+
+          course:
+            assignment.course ||
+            "General Assignment",
+
+          dueDate:
+            assignment.due_date,
+
+          status:
+            assignment.submission_status ||
+            "Not Submitted",
+
+          progress:
+            assignment.progress || 0,
+
+          submissions:
+            assignment.submissions_count || 0,
+
+          doubts:
+            assignment.questions || 0,
+        })
+      )
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Error fetching assignments:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
+  useEffect(() => {
+
+    fetchAssignments();
+
+    if(role==="teacher"){
+
+        fetchTeacherStats();
+
+    }
+
+    if(role==="student"){
+
+        fetchStudentStats();
+
+    }
+
+},[]);
+
+  console.log(
+  "selectedFile =",
+  selectedFile
+);
+const fetchTeacherStats = async () => {
+
+  try {
+
+    const response =
+      await api.get(
+        "/teacher/assignment-stats"
+      );
+
+    console.log(
+      "Teacher Stats:",
+      response.data
+    );
+
+    setTeacherStatsData(
+      response.data.data
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+const fetchStudentStats = async () => {
+
+    try {
+
+        const response =
+        await api.get(
+            "/student/assignment-stats"
+        );
+
+        console.log(
+            "Student Stats:",
+            response.data
+        );
+
+        setStudentStatsData(
+            response.data.data
+        );
+
+    } catch(error){
+
+        console.log(error);
+
+    }
+
+};
+const fetchSubmissions = async (assignmentId) => {
+
+  try {
+
+    const response = await api.get(
+      `/teacher/assignments/${assignmentId}/submissions`
+    );
+
+    console.log(response.data);
+
+    setSubmissions(response.data.data);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
   // ================= STATS =================
 
   const studentStats = [
     {
       title: "Assignments",
-      value: "24",
+      value: studentStatsData.assignments,
 
       icon: CalendarDays,
 
@@ -107,7 +377,7 @@ export default function Assignments({
 
     {
       title: "Pending",
-      value: "05",
+      value: studentStatsData.pending,
 
       icon: AlertCircle,
 
@@ -117,7 +387,7 @@ export default function Assignments({
 
     {
       title: "Completed",
-      value: "18",
+      value: studentStatsData.completed,
 
       icon: CheckCircle2,
 
@@ -127,7 +397,7 @@ export default function Assignments({
 
     {
       title: "Upcoming",
-      value: "03",
+      value: studentStatsData.upcoming,
 
       icon: Clock3,
 
@@ -139,7 +409,7 @@ export default function Assignments({
   const teacherStats = [
     {
       title: "Assignments",
-      value: "42",
+      value: teacherStatsData.assignments,
 
       icon: BookOpen,
 
@@ -149,7 +419,7 @@ export default function Assignments({
 
     {
       title: "Submissions",
-      value: "211",
+      value: teacherStatsData.submissions, 
 
       icon: FileCheck2,
 
@@ -159,7 +429,7 @@ export default function Assignments({
 
     {
       title: "Questions",
-      value: "36",
+      value: teacherStatsData.questions,
 
       icon:
         MessageCircleQuestion,
@@ -170,7 +440,7 @@ export default function Assignments({
 
     {
       title: "Students",
-      value: "320",
+      value: teacherStatsData.students,
 
       icon: Users,
 
@@ -183,7 +453,48 @@ export default function Assignments({
     role === "student"
       ? studentStats
       : teacherStats;
+const approveSubmission = async (submissionId) => {
 
+  try {
+
+    await api.put(
+      `/teacher/assignment-submissions/${submissionId}/approve`
+    );
+
+    alert("Submission Approved");
+
+    fetchSubmissions(
+      selectedAssignment.id
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+const rejectSubmission = async (submissionId) => {
+
+  try {
+
+    await api.put(
+      `/teacher/assignment-submissions/${submissionId}/reject`
+    );
+
+    alert("Submission Rejected");
+
+    fetchSubmissions(
+      selectedAssignment.id
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
   return (
     <div
       className="
@@ -462,79 +773,79 @@ export default function Assignments({
               </p>
             </div>
 
-            <button
-              className="
-                px-5
-                py-2.5
+            {role === "teacher" && (
 
-                rounded-2xl
+<button
+  onClick={() =>
+    setShowModal(true)
+  }
 
-                bg-slate-900
-                hover:bg-black
+  className="
+    px-5
+    py-2.5
+    rounded-2xl
+    bg-slate-900
+    hover:bg-black
+    text-white
+    text-sm
+    font-semibold
+  "
+>
+  Create Assignment
+</button>
 
-                text-white
-                text-sm
-                font-semibold
-
-                transition-all
-              "
-            >
-              {role === "student"
-                ? "View Calendar"
-                : "Create Assignment"}
-            </button>
+)}
           </div>
 
           {/* TABLE HEADER */}
 
-          <div
-            className="
-              hidden
-              xl:grid
+         <div
+  className={`
+    hidden
+    xl:grid
 
-              grid-cols-8
+    ${
+      role === "teacher"
+        ? "xl:grid-cols-[2fr_1.3fr_1.5fr_1.2fr_1.5fr_1fr_1fr]"
+        : "xl:grid-cols-[2fr_1.3fr_1.5fr_1.2fr_1.5fr_1fr]"
+    }
 
-              gap-4
+    gap-4
+    px-6
+    py-4
+    bg-slate-50/70
 
-              px-6
-              py-4
+    border-b
+    border-slate-100
 
-              bg-slate-50/70
+    text-sm
+    font-semibold
+    text-slate-500
+  `}
+>
+  <p>Assignment</p>
 
-              border-b
-              border-slate-100
+  <p>Course</p>
 
-              text-sm
-              font-semibold
+  <p>Due Date</p>
 
-              text-slate-500
-            "
-          >
-            <p>Assignment</p>
+  {role === "student" && (
+    <p>Status</p>
+)}
 
-            <p>Course</p>
+  <p>Progress</p>
 
-            <p>Due Date</p>
+  {role === "teacher" && (
+    <p>Submissions</p>
+  )}
 
-            <p>Status</p>
-
-            <p>Progress</p>
-
-            {role === "teacher" && (
-              <>
-                <p>Submissions</p>
-
-                <p>Questions</p>
-              </>
-            )}
-
-            <p>Action</p>
-          </div>
+  <p>Action</p>
+</div>
 
           {/* ROWS */}
 
           <div className="divide-y divide-slate-100">
-            {assignmentsData.map(
+            {assignments.map(
               (assignment, index) => (
                 <motion.div
                   key={assignment.id}
@@ -554,31 +865,30 @@ export default function Assignments({
                     backgroundColor:
                       "rgba(248,250,252,0.7)",
                   }}
-                  className={`
-                    grid
-                    ${
-                      role ===
-                      "teacher"
-                        ? "xl:grid-cols-8"
-                        : "xl:grid-cols-6"
+                 className={`
+                   grid
+                   ${
+                    role === "teacher"
+                    ? "xl:grid-cols-[2fr_1.3fr_1.5fr_1.2fr_1.5fr_1fr_1fr]"
+                    : "xl:grid-cols-[2fr_1.3fr_1.5fr_1.2fr_1.5fr_1fr]"
                     }
-
-                    grid-cols-1
-
-                    gap-4
-
-                    px-6
-                    py-5
-
-                    items-center
-
-                    transition-all
-                    duration-200
-                  `}
+                   
+                   grid-cols-1
+                   
+                   gap-4
+                   
+                   px-6
+                   py-5
+                   
+                   items-center
+                   
+                   transition-all
+                   duration-200
+                   `}
                 >
                   {/* Assignment */}
 
-                  <div>
+                  <div className="flex items-center">
                     <h3
                       className="
                         font-semibold
@@ -593,10 +903,13 @@ export default function Assignments({
 
                   <div
                     className="
-                      text-slate-500
-                      font-medium
+                    flex
+                    items-center
+                    
+                    text-slate-500
+                    font-medium
                     "
-                  >
+                    >
                     {assignment.course}
                   </div>
 
@@ -606,7 +919,7 @@ export default function Assignments({
                     className="
                       flex
                       items-center
-                      gap-2
+                      gap-1
 
                       text-slate-500
                     "
@@ -624,35 +937,25 @@ export default function Assignments({
 
                   {/* Status */}
 
-                  <div>
-                    <span
-                      className={`
-                        px-4
-                        py-2
+                 {role === "student" && (
 
-                        rounded-full
-
-                        text-sm
-                        font-semibold
-
-                        ${
-                          assignment.status ===
-                          "Pending"
-                            ? "bg-rose-100 text-rose-600"
-                            : assignment.status ===
-                              "Submitted"
-                            ? "bg-emerald-100 text-emerald-600"
-                            : "bg-orange-100 text-orange-600"
-                        }
-                      `}
-                    >
-                      {assignment.status}
-                    </span>
-                  </div>
+                   <div className="flex items-center">
+                   
+                   <span
+                   className={`
+                   ...
+                   `}
+                   >
+                   {assignment.status}
+                   </span>
+                   
+                   </div>
+                   
+                   )}
 
                   {/* Progress */}
 
-                  <div>
+                  <div className="w-full">
                     <div
                       className="
                         w-full
@@ -702,68 +1005,374 @@ export default function Assignments({
                   </div>
 
                   {/* Teacher Extra */}
+{role === "teacher" && (
+  <div
+    className="
+      flex
+      items-center
 
-                  {role ===
-                    "teacher" && (
-                    <>
-                      {/* Submissions */}
-
-                      <div
-                        className="
-                          text-slate-600
-                          font-medium
-                        "
-                      >
-                        {
-                          assignment.submissions
-                        }
-                      </div>
-
-                      {/* Questions */}
-
-                      <div
-                        className="
-                          text-slate-600
-                          font-medium
-                        "
-                      >
-                        {assignment.doubts}
-                      </div>
-                    </>
-                  )}
+      text-slate-600
+      font-medium
+    "
+  >
+    {assignment.submissions}
+  </div>
+)}
 
                   {/* Action */}
 
-                  <div>
-                    <button
-                      className="
-                        px-5
-                        py-2.5
+                  <div className="flex justify-start">
+                  <button
+  onClick={() => {
 
-                        rounded-2xl
+    setSelectedAssignment(
+      assignment
+    );
 
-                        bg-slate-900
-                        hover:bg-black
+    if (role === "student") {
 
-                        text-white
-                        text-sm
-                        font-medium
+      setShowUploadModal(true);
 
-                        transition-all
-                      "
-                    >
-                      {role ===
-                      "student"
-                        ? "Open"
-                        : "Review"}
-                    </button>
+    } else {
+      fetchSubmissions(
+        assignment.id
+      );
+
+      setShowReviewModal(true);
+
+    }
+
+  }}
+
+  className="
+    px-5
+    py-2.5
+    rounded-2xl
+    bg-slate-900
+    hover:bg-black
+    text-white
+    text-sm
+    font-medium
+    transition-all
+  "
+>
+  {role === "student"
+    ? "Open"
+    : "Review"}
+</button>
                   </div>
                 </motion.div>
               )
             )}
           </div>
         </motion.div>
+
+        
+
+      {showModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-2xl w-[500px]">
+
+      <h2 className="text-2xl font-bold mb-5">
+        Create Assignment
+      </h2>
+
+      <input
+        type="text"
+        placeholder="Assignment Title"
+        value={assignmentForm.title}
+        onChange={(e) =>
+          setAssignmentForm({
+            ...assignmentForm,
+            title: e.target.value,
+          })
+        }
+        className="w-full border p-3 rounded-xl mb-4"
+      />
+
+      <input
+        type="text"
+        placeholder="Course"
+        value={assignmentForm.course}
+        onChange={(e) =>
+          setAssignmentForm({
+            ...assignmentForm,
+            course: e.target.value,
+          })
+        }
+        className="w-full border p-3 rounded-xl mb-4"
+      />
+
+      <input
+        type="date"
+        value={assignmentForm.due_date}
+        onChange={(e) =>
+          setAssignmentForm({
+            ...assignmentForm,
+            due_date: e.target.value,
+          })
+        }
+        className="w-full border p-3 rounded-xl mb-4"
+      />
+
+      <div className="flex gap-3 justify-end">
+
+        <button
+          onClick={() => setShowModal(false)}
+          className="px-4 py-2 border rounded-xl"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={createAssignment}
+          className="px-4 py-2 bg-black text-white rounded-xl"
+        >
+          Save Assignment
+        </button>
+
       </div>
+
     </div>
-  );
+  </div>
+)} 
+
+
+{showReviewModal && selectedAssignment && (
+  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+
+    <div className="bg-white p-6 rounded-2xl w-[900px]">
+
+      <h2 className="text-2xl font-bold mb-6">
+        Assignment Submissions
+      </h2>
+
+      <div className="overflow-x-auto">
+
+        <table className="w-full border border-gray-200 rounded-xl">
+
+          <thead className="bg-gray-100">
+
+            <tr>
+
+              <th className="border p-3">
+                Student ID
+              </th>
+
+              <th className="border p-3">
+                Name
+              </th>
+
+              <th className="border p-3">
+                Email
+              </th>
+
+              <th className="border p-3">
+                File
+              </th>
+
+              <th className="border p-3">
+                Status
+              </th>
+
+              <th className="border p-3">
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {submissions.length > 0 ? (
+
+              submissions.map(
+                (submission) => (
+
+                  <tr
+                    key={submission.id}
+                    className="text-center"
+                  >
+
+                    <td className="border p-3">
+                      {submission.student.id}
+                    </td>
+
+                    <td className="border p-3">
+                      {submission.student.name}
+                    </td>
+
+                    <td className="border p-3">
+                      {submission.student.email}
+                    </td>
+
+                    <td className="border p-3">
+
+                      <a
+                        href={`http://127.0.0.1:8000/storage/${submission.file}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        View / Download
+                      </a>
+
+                    </td>
+
+                    <td className="border p-3">
+
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium
+                        ${
+                          submission.status === "Approved"
+                            ? "bg-green-100 text-green-700"
+                            : submission.status === "Rejected"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {submission.status}
+                      </span>
+
+                    </td>
+
+                    <td className="border p-3">
+
+                      <div className="flex justify-center gap-2">
+
+                        <button
+                    onClick={() =>
+                    approveSubmission(
+                    submission.id
+                    )
+                    }
+                    className="bg-green-600 text-white px-3 py-2 rounded-xl hover:bg-green-700"
+                    >
+                    Approve
+                    </button>
+
+                        <button
+                    onClick={() =>
+                    rejectSubmission(
+                    submission.id
+                    )
+                    }
+                    className="bg-red-600 text-white px-3 py-2 rounded-xl hover:bg-red-700"
+                    >
+                    Reject
+                    </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )
+              )
+
+            ) : (
+
+              <tr>
+
+                <td
+                  colSpan="6"
+                  className="p-6 text-center text-gray-500"
+                >
+                  No submissions found for this assignment.
+                </td>
+
+              </tr>
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div className="flex justify-end mt-6">
+
+        <button
+          onClick={() =>
+            setShowReviewModal(false)
+          }
+          className="border px-5 py-2 rounded-xl hover:bg-gray-100"
+        >
+          Close
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
+
+{showUploadModal &&
+ selectedAssignment && (
+
+<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+  <div className="bg-white p-6 rounded-2xl w-[500px]">
+
+    <h2 className="text-2xl font-bold mb-4">
+      Upload Assignment
+    </h2>
+
+    <p>
+      {selectedAssignment.title}
+    </p>
+    <input
+  type="file"
+  onChange={(e) => {
+    console.log("INPUT CHANGED");
+
+    const file = e.target.files[0];
+
+    console.log("Picked File:", file);
+
+    setSelectedFile(file);
+  }}
+  style={{
+    display: "block",
+    border: "1px solid black",
+    padding: "10px",
+    marginTop: "20px"
+  }}
+/>
+    <p className="mt-3">
+       Selected File:
+       {selectedFile
+        ? selectedFile.name
+        : "No file selected"}
+     </p>
+     
+    <div className="flex gap-3 mt-5">
+      {/* <p>Current selectedFile: {selectedFile?.name}</p> */}
+
+      <button
+        onClick={uploadAssignment}
+        className="bg-black text-white px-4 py-2 rounded-xl"
+      >
+        Upload
+      </button>
+
+      <button
+        onClick={() =>
+          setShowUploadModal(false)
+        }
+        className="border px-4 py-2 rounded-xl"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+)}
+</div>
+</div>
+);
 }

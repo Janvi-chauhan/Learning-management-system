@@ -6,89 +6,48 @@ import {
   CalendarDays,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import api from "../../../../services/api";
+
 import { motion } from "framer-motion";
 
-const ActivityPanel = ({ role }) => {
-  // ================= STUDENT ACTIVITIES =================
+  const ActivityPanel = ({ role }) => {
+  const navigate = useNavigate();
+  const [activities, setActivities] = useState([]);
+  
 
-  const studentActivities = [
-    {
-      title: "React Assignment Submitted",
-      time: "2 hours ago",
-      icon: ClipboardCheck,
+  const fetchActivities = async () => {
 
-      iconBg:
-        "bg-emerald-100 text-emerald-600",
+    try {
 
-      status: "Completed",
-    },
+      const response =
+        await api.get(
+          role === "student"
+            ? "/student/activities"
+            : "/teacher/activities"
+        );
 
-    {
-      title: "New Course Added",
-      time: "5 hours ago",
-      icon: BookOpen,
+      setActivities(
+        response.data.data || []
+      );
 
-      iconBg:
-        "bg-orange-100 text-orange-600",
+    } catch (error) {
 
-      status: "New",
-    },
+      console.log(
+        "Activity Error:",
+        error
+      );
 
-    {
-      title: "Project Evaluation Pending",
-      time: "1 day ago",
-      icon: Clock,
+    }
+  };
 
-      iconBg:
-        "bg-rose-100 text-rose-600",
+  useEffect(() => {
 
-      status: "Pending",
-    },
-  ];
+    fetchActivities();
 
-  // ================= TEACHER ACTIVITIES =================
-
-  const teacherActivities = [
-    {
-      title: "Attendance Updated",
-      time: "1 hour ago",
-      icon: CalendarDays,
-
-      iconBg:
-        "bg-red-100 text-red-600",
-
-      status: "Updated",
-    },
-
-    {
-      title: "Assignment Reviewed",
-      time: "3 hours ago",
-      icon: ClipboardCheck,
-
-      iconBg:
-        "bg-gray-300 text-gray-800",
-
-      status: "Reviewed",
-    },
-
-    {
-      title: "120 Students Active",
-      time: "Today",
-      icon: Users,
-
-      iconBg:
-        "bg-pink-100 text-pink-600",
-
-      status: "Live",
-    },
-  ];
-
-  // ================= ACTIVE DATA =================
-
-  const activities =
-    role === "student"
-      ? studentActivities
-      : teacherActivities;
+  }, [role]);
 
   return (
     <motion.div
@@ -177,7 +136,7 @@ const ActivityPanel = ({ role }) => {
 
                 rounded-full
 
-                bg-slate-500
+                bg-red-500
               "
             />
 
@@ -223,33 +182,25 @@ const ActivityPanel = ({ role }) => {
         {/* Button */}
 
         <motion.button
-          whileHover={{
-            scale: 1.04,
-          }}
-          whileTap={{
-            scale: 0.96,
-          }}
-          className="
-            px-5
-            py-2.5
-
-            rounded-2xl
-
-            bg-slate-900
-            text-white
-
-            text-sm
-            font-medium
-
-            shadow-lg
-            shadow-slate-900/10
-
-            transition-all
-            duration-200
-          "
-        >
-          View All
-        </motion.button>
+  whileHover={{ scale: 1.04 }}
+  whileTap={{ scale: 0.96 }}
+  onClick={() => navigate("/teacher/queries")}
+  className="
+    px-5
+    py-2.5
+    rounded-2xl
+    bg-slate-900
+    text-white
+    text-sm
+    font-medium
+    shadow-lg
+    shadow-slate-900/10
+    transition-all
+    duration-200
+  "
+>
+  View All
+</motion.button>
       </div>
 
       {/* ================= ACTIVITY LIST ================= */}
@@ -262,12 +213,33 @@ const ActivityPanel = ({ role }) => {
           space-y-4
         "
       >
-        {activities.map(
-          (activity, index) => {
-            const Icon =
-              activity.icon;
+        {activities.length === 0 ? (
 
-            return (
+  <div
+    className="
+      text-center
+      py-10
+      text-slate-500
+    "
+  >
+    No Recent Activities Found
+  </div>
+
+) : activities.map(
+  (activity, index) => {
+
+    const Icon =
+      activity.type === "assignment"
+        ? ClipboardCheck
+        : activity.type === "course"
+        ? BookOpen
+        : activity.type === "project"
+        ? Clock
+        : activity.type === "student"
+        ? Users
+        : CalendarDays;
+
+    return (
               <motion.div
                 key={index}
                 initial={{
@@ -321,18 +293,19 @@ const ActivityPanel = ({ role }) => {
                     transition={{
                       duration: 0.18,
                     }}
-                    className={`
-                      w-14
-                      h-14
+                    className="
+                    w-14
+                    h-14
 
-                      rounded-2xl
-
-                      flex
-                      items-center
-                      justify-center
-
-                      ${activity.iconBg}
-                    `}
+                     rounded-2xl
+                   
+                     flex
+                     items-center
+                     justify-center
+                   
+                   bg-red-100
+                   text-red-600
+                   "
                   >
                     <Icon size={24} />
                   </motion.div>
@@ -396,9 +369,9 @@ const ActivityPanel = ({ role }) => {
                     {activity.status}
                   </span>
 
-                  {/* Dot */}
+                  
 
-                  <motion.div
+                  {/* <motion.div
                     animate={{
                       scale: [
                         1,
@@ -418,7 +391,7 @@ const ActivityPanel = ({ role }) => {
 
                       bg-emerald-500
                     "
-                  />
+                  /> */}
                 </div>
               </motion.div>
             );

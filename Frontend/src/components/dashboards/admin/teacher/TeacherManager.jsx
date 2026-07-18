@@ -1,6 +1,7 @@
 // ManageTeacher.jsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../../../services/api.js";
 
 import {
   Plus,
@@ -17,17 +18,18 @@ import {
 
 import { motion } from "framer-motion";
 
-import teachersData from "../../teachersData";
+//import teachersData from "../../teachersData";
 
 // ================= INITIAL FORM =================
 
 const initialForm = {
   name: "",
   email: "",
-  specialization: "",
+  subject: "",
+  // specialization: "",
   courses: "",
   experience: "",
-  batchType: "Online",
+  batch_type: "Online",
   password: "",
   status: "Active",
 
@@ -38,28 +40,43 @@ const initialForm = {
 };
 
 const ManageTeacher = () => {
-  const [teachers, setTeachers] =
-    useState(teachersData);
+  const [loading, setLoading] = useState(true);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [formData, setFormData] = useState(initialForm);
+  const [showPerformanceModal,setShowPerformanceModal,] = useState(false);
+  
+  const [teachers, setTeachers] = useState([]);
+  const fetchTeachers = async () => {
 
-  const [showModal, setShowModal] =
-    useState(false);
+  try {
 
-  const [editId, setEditId] =
-    useState(null);
+    setLoading(true);
 
-  const [formData, setFormData] =
-    useState(initialForm);
+    const response =
+      await api.get(
+        "/admin/teachers"
+      );
 
-  const [selectedTeacher, setSelectedTeacher] =
-    useState(null);
+    setTeachers(
+      response.data.data
+    );
 
-  const [
-    showPerformanceModal,
-    setShowPerformanceModal,
-  ] = useState(false);
+  } catch (error) {
+
+    console.log(error);
+
+  } finally {
+
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchTeachers();
+}, []);
 
   // ================= HANDLE CHANGE =================
 
@@ -76,18 +93,38 @@ const ManageTeacher = () => {
 
   // ================= OPEN MODAL =================
 
-  const openModal = (
-    teacher = null
-  ) => {
-    setEditId(teacher?.id || null);
+  const openModal = (teacher = null) => {
 
-    setFormData({
-      ...initialForm,
-      ...teacher,
-    });
+  setEditId(teacher?.id || null);
 
-    setShowModal(true);
-  };
+  setFormData(
+    teacher
+      ? {
+          name: teacher.name || "",
+          email: teacher.email || "",
+          subject: teacher.subject || "",
+          courses: teacher.courses || "",
+          experience: teacher.experience || "",
+          password: "",
+          status: teacher.status || "Active",
+
+          coursesAssigned:
+            teacher.coursesAssigned || 0,
+
+          totalCourses:
+            teacher.totalCourses || 5,
+
+          studentsHandled:
+            teacher.studentsHandled || 0,
+
+          attendance:
+            teacher.attendance || 0,
+        }
+      : initialForm
+  );
+
+  setShowModal(true);
+};
 
   // ================= CLOSE MODAL =================
 
@@ -101,66 +138,69 @@ const ManageTeacher = () => {
 
   // ================= SUBMIT =================
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
 
-    const teacherData = {
-      ...formData,
+  e.preventDefault();
 
-      courses: Array.isArray(
-        formData.courses
-      )
-        ? formData.courses
-        : formData.courses
-            .split(",")
-            .map((course) =>
-              course.trim()
-            )
-            .filter(Boolean),
-    };
+  try {
 
     if (editId) {
-      setTeachers((prev) =>
-        prev.map((teacher) =>
-          teacher.id === editId
-            ? {
-                ...teacher,
-                ...teacherData,
-              }
-            : teacher
-        )
-      );
-    } else {
-      setTeachers((prev) => [
-        ...prev,
 
-        {
-          id: Date.now(),
-          ...teacherData,
-        },
-      ]);
+      await api.put(
+        `/admin/teachers/${editId}`,
+        formData
+      );
+
+    } else {
+
+      await api.post(
+        "/admin/teachers",
+        formData
+      );
+
     }
 
+    fetchTeachers();
     closeModal();
-  };
 
+  } catch (error) {
+
+    console.log(error.response?.data);
+
+    alert(
+      error.response?.data?.message ||
+      "Something went wrong"
+    );
+  }
+};
   // ================= DELETE =================
 
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Delete this teacher?"
-      )
-    ) {
-      setTeachers((prev) =>
-        prev.filter(
-          (teacher) =>
-            teacher.id !== id
-        )
-      );
-    }
-  };
+  const handleDelete = async (id) => {
 
+  const confirmDelete =
+    window.confirm(
+      "Delete this teacher?"
+    );
+
+  if (!confirmDelete) return;
+
+  try {
+
+    await api.delete(
+      `/admin/teachers/${id}`
+    );
+
+    fetchTeachers();
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert(
+      "Unable to delete teacher"
+    );
+  }
+};
   // ================= PERFORMANCE =================
 
   const calculateOverallPerformance =
@@ -238,6 +278,9 @@ const ManageTeacher = () => {
       />
     </div>
   );
+
+  console.log("Teachers State:", teachers);
+  console.log("Filtered Teachers:", filteredTeachers);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-4 sm:p-5 lg:p-6">
@@ -329,7 +372,7 @@ const ManageTeacher = () => {
         </th>
 
         <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
-          Specialization
+          Subject
         </th>
 
         <th className="w-[8%] px-4 py-4 text-left text-sm font-semibold">
@@ -393,12 +436,12 @@ const ManageTeacher = () => {
 
               </td>
 
-              {/* SPECIALIZATION */}
+              {/* SUBJECT */}
 
               <td className="px-4 py-5">
                 
                 <p className="font-medium text-gray-700 truncate">
-                  {teacher.specialization}
+                  {teacher.subject}
                 </p>
 
               </td>
@@ -420,21 +463,22 @@ const ManageTeacher = () => {
                 <div className="flex flex-wrap gap-2">
                   
                   {teacher.courses
-                    ?.slice(0, 2)
-                    .map(
-                      (
-                        course,
-                        index
-                      ) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100 truncate"
-                        >
-                          {course}
-                        </span>
-                      )
-                    )}
-
+  ?.split(",")
+  .slice(0, 2)
+  .map((course, index) => (
+    <span
+      key={index}
+      className="
+        px-3 py-1
+        bg-red-100
+        text-red-600
+        rounded-full
+        text-xs
+      "
+    >
+      {course.trim()}
+    </span>
+))}
                   {teacher.courses
                     ?.length > 2 && (
                     <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
@@ -574,7 +618,7 @@ const ManageTeacher = () => {
 
                 <p className="text-sm text-red-100 truncate">
                   {
-                    teacher.specialization
+                    teacher.subject
                   }
                 </p>
 
@@ -608,26 +652,36 @@ const ManageTeacher = () => {
 
                 <div className="flex flex-wrap gap-2">
                   
-                  {teacher.courses
-                    ?.length > 0 ? (
-                    teacher.courses.map(
-                      (
-                        course,
-                        index
-                      ) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
-                        >
-                          {course}
-                        </span>
-                      )
-                    )
-                  ) : (
-                    <span className="text-xs text-gray-400">
-                      No Courses
-                    </span>
-                  )}
+                 {
+  teacher.courses
+    ? teacher.courses
+        .split(",")
+        .map((course) => course.trim())
+        .filter(Boolean)
+        .map((course, index) => (
+          <span
+            key={index}
+            className="
+              px-2
+              py-1
+              rounded-full
+              text-xs
+              font-medium
+              bg-red-50
+              text-red-700
+              border
+              border-red-100
+            "
+          >
+            {course}
+          </span>
+        ))
+    : (
+      <span className="text-xs text-gray-400">
+        No Courses
+      </span>
+    )
+}
 
                 </div>
 
@@ -772,7 +826,7 @@ const ManageTeacher = () => {
 
                       <p className="text-sm text-red-100 truncate">
                         {
-                          teacher.specialization
+                          teacher.subject
                         }
                       </p>
 
@@ -831,31 +885,36 @@ const ManageTeacher = () => {
 
                       <div className="flex flex-wrap gap-2">
                         
-                        {teacher.courses
-                          ?.length >
-                        0 ? (
-                          teacher.courses.map(
-                            (
-                              course,
-                              index
-                            ) => (
-                              <span
-                                key={
-                                  index
-                                }
-                                className="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100"
-                              >
-                                {
-                                  course
-                                }
-                              </span>
-                            )
-                          )
-                        ) : (
-                          <span className="text-xs text-gray-400">
-                            No Courses
-                          </span>
-                        )}
+                        {
+  teacher.courses
+    ? teacher.courses
+        .split(",")
+        .map((course) => course.trim())
+        .filter(Boolean)
+        .map((course, index) => (
+          <span
+            key={index}
+            className="
+              px-2
+              py-1
+              rounded-full
+              text-xs
+              font-medium
+              bg-red-50
+              text-red-700
+              border
+              border-red-100
+            "
+          >
+            {course}
+          </span>
+        ))
+    : (
+      <span className="text-xs text-gray-400">
+        No Courses
+      </span>
+    )
+}
 
                       </div>
 
@@ -1006,7 +1065,7 @@ const ManageTeacher = () => {
               {[
                 "name",
                 "email",
-                "specialization",
+                "subject",
                 "courses",
                 "experience",
                 "password",
@@ -1058,9 +1117,9 @@ const ManageTeacher = () => {
               ))}
 
               <select
-                name="batchType"
+                name="batch_type"
                 value={
-                  formData.batchType
+                  formData.batch_type
                 }
                 onChange={
                   handleChange
@@ -1224,12 +1283,12 @@ const ManageTeacher = () => {
                 <div>
                   
                   <p className="text-sm text-gray-500">
-                    Specialization
+                    Subject
                   </p>
 
                   <p className="font-medium text-gray-800">
                     {
-                      selectedTeacher.specialization
+                      selectedTeacher.subject
                     }
                   </p>
 

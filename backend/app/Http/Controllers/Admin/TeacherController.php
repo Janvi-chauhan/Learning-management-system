@@ -33,32 +33,40 @@ class TeacherController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6'],
-            'subject' => ['required', 'string', 'max:255'],
-            'experience' => ['required', 'string', 'max:255'],
-            'status' => ['required', Rule::in(['Active', 'Inactive'])],
-        ]);
+{
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+        'password' => ['required', 'string', 'min:6'],
+        'subject' => ['required', 'string', 'max:255'],
+        'experience' => ['required', 'string', 'max:255'],
+        'courses' => ['nullable', 'string'],
+        'status' => ['required', Rule::in(['Active', 'Inactive'])],
+    ]);
 
-        $teacher = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'teacher',
-            'subject' => $validated['subject'],
-            'experience' => $validated['experience'],
-            'status' => $validated['status'],
-        ]);
+    $teacher = User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => Hash::make($validated['password']),
+        'role' => 'teacher',
+        'is_verified' => true,
+        'subject' => $validated['subject'],
+        'experience' => $validated['experience'],
+        // Convert comma separated string to array and store as JSON
+        'courses' => $validated['courses']
+            ? json_encode(
+                array_map('trim', explode(',', $validated['courses']))
+              )
+            : null,
+        'status' => $validated['status'],
+    ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Teacher created successfully',
-            'data' => $teacher,
-        ], 201);
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Teacher created successfully',
+        'data' => $teacher,
+    ], 201);
+}
 
     public function update(Request $request, $id)
     {
@@ -75,12 +83,14 @@ class TeacherController extends Controller
             'subject' => ['required', 'string', 'max:255'],
             'experience' => ['required', 'string', 'max:255'],
             'status' => ['required', Rule::in(['Active', 'Inactive'])],
+            'courses' => ['nullable', 'string'],
         ]);
 
         $teacher->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'subject' => $validated['subject'],
+            'courses' => $validated['courses'],
             'experience' => $validated['experience'],
             'status' => $validated['status'],
         ]);

@@ -12,8 +12,8 @@ export default function Footer() {
           {/* LOGO + ADDRESS */}
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <img src={logo} alt="Programming Classes" className="w-14 h-14" />
-              <h3 className="text-xl font-bold">Programming Classes</h3>
+              <img src={logo} alt="Creative Programming Classes" className="w-14 h-14" />
+              <h3 className="text-xl font-bold">Creative Programming Classes</h3>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -100,7 +100,7 @@ export default function Footer() {
 
         {/* BOTTOM BAR */}
         <div className="py-6 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} Programming Classes. All Rights Reserved.
+          © {new Date().getFullYear()} Creative Programming Classes. All Rights Reserved.
         </div>
 
       </div>

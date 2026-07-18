@@ -28,8 +28,9 @@ const StudentAccounts = () => {
     useState({
       name: "",
       email: "",
-      course: "",
-      batchType: "Online",
+      phone: "",
+      courses: "",
+      batch_type: "Online",
       password: "",
       status: "Active",
     });
@@ -63,8 +64,9 @@ const StudentAccounts = () => {
     setFormData({
       name: "",
       email: "",
-      course: "",
-      batchType: "Online",
+      phone: "",
+      courses: "",
+      batch_type: "Online",
       password: "",
       status: "Active",
     });
@@ -232,6 +234,21 @@ const StudentAccounts = () => {
               />
 
             </div>
+            {/* PHONE */}
+
+              <div className="relative">
+
+               <input
+                 type="tel"
+                 name="phone"
+                 placeholder="Phone Number"
+                 value={formData.phone}
+                 onChange={handleChange}
+                 required
+                 className="w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 py-3 outline-none focus:ring-2 focus:ring-orange-300"
+               />
+
+                </div>
 
             {/* COURSE */}
 
@@ -244,7 +261,7 @@ const StudentAccounts = () => {
 
               <input
                 type="text"
-                name="course"
+                name="courses"
                 placeholder="Course Name"
                 value={
                   formData.course
@@ -262,7 +279,7 @@ const StudentAccounts = () => {
 
             <div className="relative">
               
-              {formData.batchType ===
+              {formData.batch_type ===
               "Online" ? (
                 <Monitor
                   size={18}
@@ -276,9 +293,9 @@ const StudentAccounts = () => {
               )}
 
               <select
-                name="batchType"
+                name="batch_type"
                 value={
-                  formData.batchType
+                  formData.batch_type
                 }
                 onChange={
                   handleChange
@@ -434,7 +451,7 @@ const StudentAccounts = () => {
 
                           <p className="text-sm text-orange-100 truncate mt-1">
                             {
-                              student.course
+                              student.courses
                             }
                           </p>
 
@@ -476,14 +493,14 @@ const StudentAccounts = () => {
 
                           <span
                             className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                              student.batchType ===
+                              student.batch_type ===
                               "Online"
                                 ? "bg-sky-100 text-sky-600"
                                 : "bg-violet-100 text-violet-600"
                             }`}
                           >
                             {
-                              student.batchType
+                              student.batch_type
                             }
                           </span>
 

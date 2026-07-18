@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import Sidebar from "../components/dashboards/admin/Sidebar";
 
+import Sidebar from "../components/dashboards/admin/Sidebar";
 import DashboardHome from "../components/dashboards/admin/DashboardHome";
 import StudentManager from "../components/dashboards/admin/student/StudentManager";
 import PaymentsManager from "../components/dashboards/admin/PaymentsManager";
 import Charts from "../components/dashboards/admin/Charts";
-import ManageTeacher from "../components/dashboards/admin/teacher/teacherManager";
+import ManageTeacher from "../components/dashboards/admin/teacher/TeacherManager";
 import Placement from "../components/dashboards/admin/Placements";
 import CourseManager from "../components/dashboards/admin/CourseManager";
+import ContactUs from "../components/dashboards/admin/ContactUs";
+import Settings from "../components/dashboards/admin/Settings";
+
+import AdminHeader from "../components/dashboards/admin/AdminHeader";
 
 const componentMap = {
   dashboard: DashboardHome,
@@ -17,25 +21,42 @@ const componentMap = {
   payments: PaymentsManager,
   charts: Charts,
   placements: Placement,
+  contactUs: ContactUs,
+  settings: Settings,
 };
 
 const AdminLayout = () => {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] =
+    useState("dashboard");
 
   const ActiveComponent =
-    componentMap[activeSection] || componentMap.dashboard;
+    componentMap[activeSection] ||
+    DashboardHome;
 
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
+
+      {/* SIDEBAR */}
+
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
 
-      <div className="flex-1 min-w-0">
-        <main className="p-4 sm:p-6 lg:p-8 pt-10 lg:pt-6">
+      {/* RIGHT SIDE */}
+
+      <div className="flex-1 flex flex-col min-w-0">
+
+        {/* HEADER */}
+
+        <AdminHeader />
+
+        {/* PAGE CONTENT */}
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <ActiveComponent />
         </main>
+
       </div>
     </div>
   );

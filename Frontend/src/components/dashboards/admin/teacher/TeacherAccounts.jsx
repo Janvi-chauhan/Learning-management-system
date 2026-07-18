@@ -6,8 +6,8 @@ const TeacherAccounts = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    specialization: "",
-    batchType: "Online",
+    //specialization: "",
+    batch_type: "Online",
     password: "",
     status: "Active",
   });
@@ -35,8 +35,8 @@ const TeacherAccounts = () => {
     setFormData({
       name: "",
       email: "",
-      specialization: "",
-      batchType: "Online",
+      subject: "",
+      batch_type: "Online",
       password: "",
       status: "Active",
     });
@@ -79,7 +79,7 @@ const TeacherAccounts = () => {
           />
         </div>
 
-        {/* Specialization */}
+        {/* Subject */}
         <div className="relative">
           <BookOpen
             className="absolute left-3 top-3.5 text-gray-400"
@@ -87,9 +87,9 @@ const TeacherAccounts = () => {
           />
           <input
             type="text"
-            name="specialization"
-            placeholder="Specialization (e.g. MERN Stack)"
-            value={formData.specialization}
+            name="subject"
+            placeholder="Subject (e.g. MERN Stack)"
+            value={formData.subject}
             onChange={handleChange}
             required
             className="w-full border pl-10 pr-4 py-3 rounded-xl"
@@ -103,8 +103,8 @@ const TeacherAccounts = () => {
             size={20}
           />
           <select
-            name="batchType"
-            value={formData.batchType}
+            name="batch_type"
+            value={formData.batch_type}
             onChange={handleChange}
             className="w-full border pl-10 pr-4 py-3 rounded-xl"
           >
@@ -147,12 +147,12 @@ const TeacherAccounts = () => {
             <h3 className="font-bold text-lg">{teacher.name}</h3>
             <p className="text-gray-600">{teacher.email}</p>
             <p className="text-gray-700">
-              <span className="font-semibold">Specialization:</span>{" "}
-              {teacher.specialization}
+              <span className="font-semibold">Subject:</span>{" "}
+              {teacher.subject}
             </p>
             <p className="text-gray-700">
               <span className="font-semibold">Batch Type:</span>{" "}
-              {teacher.batchType}
+              {teacher.batch_type}
             </p>
             <span
               className={`inline-block mt-3 px-3 py-1 rounded-full text-sm font-medium ${

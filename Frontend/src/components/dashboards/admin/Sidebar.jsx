@@ -13,9 +13,11 @@ import {
   LogOut,
   ChevronRight,
   Briefcase,
+  
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom"; 
 
 import { useState } from "react";
 
@@ -59,7 +61,11 @@ const adminMenu = {
       key: "placements",
     },
 
-   
+    {
+      name: "Contact Us",
+      icon: MessageSquare,
+      key: "contactUs",
+    },
   ],
 
   desktopPages: [
@@ -98,7 +104,10 @@ function NavItem({ item, activeSection, setActiveSection, collapsed }) {
       whileTap={{
         scale: 0.96,
       }}
-      onClick={() => setActiveSection(item.key)}
+     onClick={() => {
+  console.log(item.key);
+  setActiveSection(item.key);
+}}
       className={`
         relative
 
@@ -212,6 +221,9 @@ function NavItem({ item, activeSection, setActiveSection, collapsed }) {
 export default function Sidebar({ activeSection, setActiveSection }) {
   const [collapsed, setCollapsed] = useState(false);
 
+console.log("Sidebar Loaded");
+console.log(adminMenu.desktopMain);
+
   return (
     <>
       {/* DESKTOP SIDEBAR */}
@@ -241,6 +253,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
           z-50
         "
       >
+        
         {/* Ambient Glow */}
 
         <div
@@ -295,7 +308,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
               shadow-orange-500/20
             "
           >
-            P
+            A
           </motion.div>
 
           {/* Expanded */}
@@ -328,7 +341,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
                     tracking-wide
                   "
                 >
-                  Programming
+                 Creative Programming
                 </h1>
 
                 <p
@@ -398,7 +411,7 @@ export default function Sidebar({ activeSection, setActiveSection }) {
 
         {/* ================= MAIN MENU ================= */}
 
-        <div className="mt-12">
+        <div className="mt-12 h-[calc(100vh-250px)] overflow-y-auto pr-1">
           {!collapsed && (
             <p
               className="
@@ -420,12 +433,14 @@ export default function Sidebar({ activeSection, setActiveSection }) {
           )}
 
           <div
-            className="
-              flex
-              flex-col
-              gap-3
-            "
-          >
+  className="
+    flex
+    flex-col
+    gap-3
+    pb-4
+  "
+>
+            {console.log(adminMenu.desktopMain)}
             {adminMenu.desktopMain.map((item) => (
               <NavItem
                 key={item.key}
@@ -441,117 +456,11 @@ export default function Sidebar({ activeSection, setActiveSection }) {
         
         {/* Spacer */}
 
-        <div className="flex-1" />
+        {/* <div className="flex-1" /> */}
 
         {/* ================= ADMIN PROFILE ================= */}
 
-        <motion.div
-          whileHover={{
-            scale: 1.03,
-          }}
-          className={`
-            flex
-            items-center
-
-            ${collapsed ? "justify-center" : "justify-between"}
-
-            rounded-2xl
-
-            bg-white/5
-
-            border
-            border-white/5
-
-            p-3
-          `}
-        >
-          {/* Left */}
-
-          <div className="flex items-center">
-            <img
-              src="https://i.pravatar.cc/100"
-              alt="admin"
-              className="
-                w-11
-                h-11
-
-                rounded-full
-
-                object-cover
-
-                border-2
-                border-white/10
-              "
-            />
-
-            <AnimatePresence>
-              {!collapsed && (
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    x: -10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    x: -10,
-                  }}
-                  className="ml-3"
-                >
-                  <h3
-                    className="
-                      text-sm
-                      font-semibold
-
-                      text-white
-                    "
-                  >
-                    Admin
-                  </h3>
-
-                  <p
-                    className="
-                      text-xs
-                      text-slate-400
-                    "
-                  >
-                    Super Admin
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Logout */}
-
-          {!collapsed && (
-            <motion.button
-              whileHover={{
-                scale: 1.08,
-              }}
-              whileTap={{
-                scale: 0.95,
-              }}
-              className="
-                w-10
-                h-10
-                rounded-xl
-                bg-white/5
-                flex
-                items-center
-                justify-center
-                text-slate-400
-                hover:text-white
-                transition-all
-              "
-            >
-              <LogOut size={18} />
-            </motion.button>
-          )}
-        </motion.div>
+        
       </motion.aside>
     </>
   );

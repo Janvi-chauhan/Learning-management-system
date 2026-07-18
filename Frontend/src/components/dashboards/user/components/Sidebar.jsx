@@ -32,7 +32,7 @@ const Sidebar = ({
     assignments: ClipboardList,
     projects: FolderKanban,
     profile: User,
-    payments:MdPayment
+    payments:MdPayment,
 
   };
 

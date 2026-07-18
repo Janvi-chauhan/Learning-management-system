@@ -2,6 +2,7 @@ export default function CoursePublish({
   formData,
   setFormData,
   handleSubmit,
+  goToPreviousTab,
 }) {
 
   // =====================================================
@@ -99,6 +100,88 @@ export default function CoursePublish({
         </select>
 
       </div>
+
+      <div className="mt-8">
+
+    <h3 className="text-2xl font-bold mb-6">
+
+        Course Header
+
+    </h3>
+
+    <div className="space-y-5">
+
+        <div>
+
+            <label className="font-medium">
+
+                Course Progress
+
+            </label>
+
+            <input
+                type="number"
+                min="0"
+                max="100"
+                value={formData.progress}
+                onChange={(e)=>
+                    setFormData({
+                        ...formData,
+                        progress:Number(e.target.value)
+                    })
+                }
+                className="w-full border rounded-xl px-5 py-4 mt-2"
+            />
+
+        </div>
+
+        <div>
+
+            <label className="font-medium">
+
+                Estimated Time
+
+            </label>
+
+            <input
+                type="text"
+                placeholder="Example : 8 Weeks"
+                value={formData.estimatedTime}
+                onChange={(e)=>
+                    setFormData({
+                        ...formData,
+                        estimatedTime:e.target.value
+                    })
+                }
+                className="w-full border rounded-xl px-5 py-4 mt-2"
+            />
+
+        </div>
+
+        <div className="flex items-center gap-3">
+
+            <input
+                type="checkbox"
+                checked={formData.certificate}
+                onChange={(e)=>
+                    setFormData({
+                        ...formData,
+                        certificate:e.target.checked
+                    })
+                }
+            />
+
+            <label>
+
+                Certificate Available
+
+            </label>
+
+        </div>
+
+    </div>
+
+</div>
 
       {/* =====================================================
       SETTINGS
@@ -298,28 +381,38 @@ export default function CoursePublish({
       BUTTON
       ===================================================== */}
 
-      <div className="pt-10">
+      <div className="mt-10 flex justify-between">
 
-        <button
-          type="button"
-          onClick={
-            handleSubmit
-          }
-          className="
-            bg-red-600
-            hover:bg-red-700
-            text-white
-            px-8 py-4
-            rounded-2xl
-            font-semibold
-            shadow-lg
-            transition
-          "
-        >
-          Create Course
-        </button>
+  <button
+    onClick={goToPreviousTab}
+    className="
+      bg-gray-200
+      hover:bg-gray-300
+      px-8
+      py-4
+      rounded-2xl
+      font-semibold
+    "
+  >
+    ← Previous
+  </button>
 
-      </div>
+  <button
+    onClick={handleSubmit}
+    className="
+      bg-green-600
+      hover:bg-green-700
+      text-white
+      px-8
+      py-4
+      rounded-2xl
+      font-semibold
+    "
+  >
+    Create Course
+  </button>
+
+</div>
 
     </div>
   );

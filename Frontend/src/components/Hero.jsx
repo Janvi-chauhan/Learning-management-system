@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
 import sir from "../assets/sir.png";
-import vector from "../assets/vector.png";
+import logo from "../assets/logo.png"
+// import vector from "../assets/vector.png";
 
 const courses = [
   "C For Your Core Foundation",
@@ -47,32 +48,35 @@ export default function Hero() {
       <div className="hidden lg:block relative h-[calc(100vh-90px)]">
 
         {/* RIGHT FIXED BANNER AREA */}
-<div className="absolute top-0 right-0 h-full w-[45vw] min-w-[520px] max-w-[760px]">
+<div className="absolute top-0 right-0 h-full w-[55vw] min-w-[620px] max-w-[900px]">
   {/* Background Vector */}
-  <img
+  {/* <img
     src={vector}
     alt="vector"
     className="absolute inset-0 w-full h-full object-cover"
-  />
+  /> */}
 
-  {/* Instructor Image */}
+  {/* Banner Image */}
   <img
-    src={sir}
-    alt="Instructor"
-    className="
-      absolute bottom-0 right-0
-      h-[90%] w-auto
-      object-contain
-      drop-shadow-2xl
-      pointer-events-none
-    "
-  />
+  src={logo}
+  alt="Banner"
+  className="
+  absolute
+  bottom-0
+  right-[0]
+  h-[112%]
+  w-auto
+  object-contain
+  drop-shadow-2xl
+  pointer-events-none
+"
+/>
 </div>
 
         {/* LEFT CONTENT SAFE ZONE */}
         <div className="relative z-10 h-full">
-          <div className="max-w-[1200px] mx-auto px-1 h-full flex items-center">
-            <div className="max-w-xl">
+          <div className="max-w-[1200px] mx-auto px-1 h-full flex items-start pt-28">
+           <div className="max-w-xl ">
               <h1 className="text-[56px] font-bold leading-tight text-black">
                 Not Just Learning, <br />
                 Building Skills
@@ -102,16 +106,16 @@ export default function Hero() {
         <div className="relative w-full h-[440px] overflow-hidden">
 
           {/* RED VECTOR – FULL STRETCH */}
-          <img
+          {/* <img
             src={vector}
             alt="vector"
             className="absolute inset-0 w-full h-full object-cover"
-          />
+          /> */}
 
-          {/* PERSON IMAGE – BOTTOM RIGHT */}
+          {/* BANNER IMAGE – BOTTOM RIGHT */}
           <img
-            src={sir}
-            alt="Instructor"
+            src={logo}
+            alt="Banner"
             className="
               absolute bottom-0 right-0
               h-[85%] w-auto
@@ -123,7 +127,7 @@ export default function Hero() {
 
         {/* TEXT CONTENT */}
         <div className="px-5 text-center mt-8">
-          <h1 className="text-[28px] sm:text-[34px] font-bold leading-tight text-black">
+         <h1 className="-mt-1 text-[28px] sm:text-[34px] font-bold leading-tight text-black">
             Not Just Learning, <br />
             Building Skills
           </h1>
@@ -149,7 +153,7 @@ export default function Hero() {
 
           {/* LEFT – TEXT */}
           <div className="px-8">
-            <h1 className="text-[34px] font-bold leading-tight text-black">
+            <h1 className="-mt-2 text-[34px] font-bold leading-tight text-black">
               Not Just Learning, <br />
               Building Skills
             </h1>
@@ -172,16 +176,16 @@ export default function Hero() {
           <div className="relative h-full overflow-hidden">
 
             {/* RED VECTOR */}
-            <img
+            {/* <img
               src={vector}
               alt="vector"
               className="absolute inset-0 w-full h-full object-cover"
-            />
+            /> */}
 
-            {/* PERSON IMAGE */}
+            {/* BANNER IMAGE*/}
             <img
-              src={sir}
-              alt="Instructor"
+              src={logo}
+              alt="Banner"
               className="
                 absolute bottom-0 right-0
                 h-[85%] w-auto

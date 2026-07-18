@@ -5,9 +5,15 @@ import Sidebar from "../components/dashboards/user/components/Sidebar";
 import Dashboard from "../components/dashboards/user/Dashboard";
 import { roleConfig } from "../config/roleConfig";
 
-export default function DashboardLayout({
-  role = "student",
-}) {
+export default function DashboardLayout() {
+  const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+const role = user?.role || "student";
+
+console.log("Logged User:", user);
+console.log("Role:", role);
   
 
   const [activeSection, setActiveSection] =

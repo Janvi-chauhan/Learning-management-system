@@ -24,34 +24,80 @@ export default function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [role, setRole] = useState("");
   
-  const handleRegister = async (e) => {
-    e.preventDefault();
+ const [otpSent, setOtpSent] = useState(false);
+const [otp, setOtp] = useState("");
 
-    try {
-      const response = await api.post("/register", {
+const handleRegister = async (e) => {
+
+  e.preventDefault();
+
+  try {
+
+    const response = await api.post(
+      "/send-otp",
+      {
         name,
         email,
+        phone,
         password,
-        password_confirmation: confirmPassword,
-        role: "student",
-      });
+        password_confirmation:
+          confirmPassword,
+        role,
+      }
+    );
 
-      alert("Registration Successful");
+    alert(response.data.message);
 
-      console.log(response.data);
+    setOtpSent(true);
 
-      navigate("/login");
+  } catch (error) {
 
-    } catch (error) {
-      console.error(error);
+    console.error(error);
 
-      alert(
-        error.response?.data?.message ||
-        "Registration Failed"
-      );
-    }
-  };
+    alert(
+      error.response?.data?.message ||
+      "Failed to send OTP"
+    );
+  }
+};
+const handleVerifyOtp = async () => {
+
+  try {
+
+    const response = await api.post(
+      "/verify-otp",
+      {
+        email: email,
+        otp: otp,
+      }
+    );
+
+    alert(response.data.message);
+
+    localStorage.setItem(
+      "token",
+      response.data.token
+    );
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(response.data.user)
+    );
+
+    navigate("/login");
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Invalid OTP"
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-white flex overflow-hidden">
@@ -304,6 +350,37 @@ export default function RegisterPage() {
                 </div>
               </div>
 
+            <div>
+               <label className="text-sm font-semibold text-gray-700 block mb-3">
+                   Select Role
+                 </label>
+               
+                 <select
+                   value={role}
+                   onChange={(e) =>
+                     setRole(e.target.value)
+                   }
+                   className="w-full bg-gray-100 border rounded-2xl px-5 py-4"
+                 >
+                  <option value="" disabled >
+                     Select Role
+                   </option>
+
+                   <option value="student">
+                     Student
+                   </option>
+               
+                   {/* <option value="teacher">
+                     Teacher
+                   </option> */}
+                   
+                   {/* <option value="admin">
+                     Admin
+                   </option> */}
+
+                 </select>
+               </div>
+
               {/* TERMS */}
               <div className="flex items-start gap-3">
                 <input
@@ -324,16 +401,56 @@ export default function RegisterPage() {
               </div>
 
               {/* BUTTON */}
-              <button 
-              type="submit"
-              className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30 mt-2">
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  Create Account
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
-                </span>
+              {
+  otpSent && (
+    <div>
+      <label className="text-sm font-semibold text-gray-700 block mb-3">
+        Enter OTP
+      </label>
 
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-700 opacity-0 group-hover:opacity-100 transition duration-300" />
-              </button>
+      <div className="group flex items-center bg-gray-100 border border-transparent focus-within:border-red-500 rounded-2xl px-5 py-4">
+
+        <input
+          type="text"
+          placeholder="Enter 6-digit OTP"
+          value={otp}
+          onChange={(e) =>
+            setOtp(e.target.value)
+          }
+          className="bg-transparent outline-none border-none w-full text-black placeholder-gray-400"
+        />
+
+      </div>
+    </div>
+  )
+}
+              <button
+  type="button"
+  onClick={() => {
+
+    if (!otpSent) {
+
+      handleRegister(new Event("submit"));
+
+    } else {
+
+      handleVerifyOtp();
+
+    }
+
+  }}
+  className="group relative w-full overflow-hidden bg-red-600 hover:bg-red-700 transition-all duration-300 text-white py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-red-500/30 mt-2"
+>
+  <span className="relative z-10 flex items-center justify-center gap-2">
+
+    {otpSent
+      ? "Verify OTP"
+      : "Send OTP"}
+
+    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
+
+  </span>
+</button>
             </form>
 
             {/* DIVIDER */}

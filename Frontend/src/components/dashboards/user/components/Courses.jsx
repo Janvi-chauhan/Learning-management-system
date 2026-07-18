@@ -4,7 +4,6 @@ import {
   BookOpen,
   Clock3,
   Users,
-  Sparkles,
   GraduationCap,
   Video,
   ClipboardCheck,
@@ -13,58 +12,12 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 
 // ================= STUDENT COURSES =================
 
-const enrolledCourses = [
-  {
-    id: 1,
-    title: "Full Stack Development",
-    instructor: "Rahul Sharma",
-    duration: "6 Months",
-    students: 120,
-    progress: 75,
-
-    image:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-  },
-
-  {
-    id: 2,
-    title: "Data Analysis with AI",
-    instructor: "Priya Verma",
-    duration: "4 Months",
-    students: 80,
-    progress: 45,
-
-    image:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
-  },
-
-  {
-    id: 3,
-    title: "Java Backend Development",
-    instructor: "Aman Gupta",
-    duration: "5 Months",
-    students: 95,
-    progress: 90,
-
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-  },
-
-  {
-    id: 4,
-    title: "Cloud Computing",
-    instructor: "Neha Patil",
-    duration: "3 Months",
-    students: 110,
-    progress: 62,
-
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-  },
-];
+const enrolledCourses = [];
 
 // ================= COURSE CARD =================
 
@@ -74,6 +27,7 @@ function CourseCard({
   showProgress = false,
   buttonText,
 }) {
+  const navigate = useNavigate();
   return (
     <motion.div
       whileHover={{
@@ -316,34 +270,18 @@ function CourseCard({
 
         {/* BUTTON */}
 
-        <motion.button
-          whileHover={{
-            scale: 1.01,
-          }}
-          whileTap={{
-            scale: 0.97,
-          }}
-          className="
-            w-full
-            mt-5
-
-            py-2.5
-
-            rounded-2xl
-
-            bg-slate-900
-            hover:bg-black
-
-            text-white
-            text-sm
-            font-semibold
-
-            transition-all
-            duration-200
-          "
-        >
-          {buttonText}
-        </motion.button>
+       <button
+  onClick={() =>
+  navigate(
+    role === "teacher"
+      ? `/teacher/course/${course.id}`
+      : `/student/course/${course.id}`
+  )
+}
+  className="w-full mt-5 py-2.5 rounded-2xl bg-slate-900 hover:bg-black text-white text-sm font-semibold"
+>
+  {buttonText}
+</button>
       </div>
     </motion.div>
   );
@@ -354,114 +292,276 @@ function CourseCard({
 export default function Courses({
   role = "student",
 }) {
-
+  
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  //const [courseStats, setCourseStats] = useState(null);
+  const [coursesStats, setCoursesStats] = useState({
+  enrolled: 0,
+  completed: 0,
+  liveClasses: 0,
+  mentors: 0,
+});
+const [teacherStatsData, setTeacherStatsData] = useState({
+  liveClasses: 0,
+  assignments: 0,
+  questions: 0,
+  schedules: 0,
+});
 
   const fetchCourses = async () => {
-    try{
-        const response = await api.get("/admin/courses");
+  try {
+    const endpoint =
+      role === "student"
+        ? "/student/courses/enrolled"
+        : "/teacher/courses";
 
-        console.log("Courses API Response:", response.data);
+    const response = await api.get(endpoint);
 
+    const courseData = response.data.data;
 
-      setCourses(response.data);
-    } catch (error) {
-      console.error(
-        "Error fetching courses:",
-        error
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setCourses(
+      courseData.map((course) => ({
+        id: course.id,
+        title: course.title,
+        instructor: course.mentor_name,
+        duration: course.duration,
+        students: course.students || 0,
+        progress: course.progress || 0,
+        image:
+          course.thumbnail ||
+          "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
-    fetchCourses();
-  }, []);
-  // ================= STATS =================
 
-  const studentStats = [
-    {
-      title: "Enrolled",
-      value: "12",
-      icon: BookOpen,
+  setLoading(true);
 
-      bg: "bg-orange-100",
-      text: "text-orange-600",
-    },
+  fetchCourses();
 
-    {
-      title: "Completed",
-      value: "08",
-      icon: GraduationCap,
+  if (role === "student") {
 
-      bg: "bg-emerald-100",
-      text: "text-emerald-600",
-    },
+    fetchStats();
 
-    {
-      title: "Live Classes",
-      value: "04",
-      icon: Video,
+  } else {
 
-      bg: "bg-rose-100",
-      text: "text-rose-600",
-    },
+    fetchTeacherStats();
 
-    {
-      title: "Mentors",
-      value: "15",
-      icon: Users,
+  }
 
-      bg: "bg-sky-100",
-      text: "text-sky-600",
-    },
-  ];
+}, [role]);
+
+  const fetchStats = async () => {
+  try {
+    const response =
+      await api.get(
+        "/student/courses/stats"
+      );
+
+    console.log(
+      "Course Stats API:",
+      response.data
+    );
+
+    setCoursesStats(
+      response.data.data
+    );
+
+  } catch (error) {
+    console.error(
+      "Error fetching stats:",
+      error
+    );
+  }
+  // setCoursesStats({
+  //     enrolled: 0,
+  //     completed: 0,
+  //     liveClasses: 0,
+  //     mentors: 0,
+  //   });
+  // }
+};
+const fetchTeacherStats =
+async () => {
+
+  try {
+
+    const response =
+      await api.get(
+        "/teacher/courses/stats"
+      );
+
+    console.log(
+      "Teacher Stats API:",
+      response.data
+    );
+
+    setTeacherStatsData(
+      response.data.data
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Error fetching teacher stats:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
+  // ================= STATS =================//
+ const studentStats = [
+  {
+    title: "Enrolled",
+
+    value:
+      coursesStats.enrolled,
+
+    icon: BookOpen,
+
+    bg: "bg-orange-100",
+
+    text:
+      "text-orange-600",
+  },
+
+  {
+    title: "Completed",
+
+    value:
+      coursesStats.completed,
+
+    icon:
+      GraduationCap,
+
+    bg:
+      "bg-emerald-100",
+
+    text:
+      "text-emerald-600",
+  },
+
+  {
+    title: "Live Classes",
+
+    value:
+      coursesStats.liveClasses,
+
+    icon: Video,
+
+    bg:
+      "bg-rose-100",
+
+    text:
+      "text-rose-600",
+  },
+
+  {
+    title: "Mentors",
+
+    value:
+      coursesStats.mentors,
+
+    icon: Users,
+
+    bg:
+      "bg-sky-100",
+
+    text:
+      "text-sky-600",
+  },
+];
 
   const teacherStats = [
-    {
-      title: "Live Classes",
-      value: "06",
-      icon: Video,
 
-      bg: "bg-rose-100",
-      text: "text-rose-600",
-    },
+  {
+    title: "Live Classes",
 
-    {
-      title: "Assignments",
-      value: "42",
-      icon: ClipboardCheck,
+    value:
+      teacherStatsData.liveClasses,
 
-      bg: "bg-emerald-100",
-      text: "text-emerald-600",
-    },
+    icon: Video,
 
-    {
-      title: "Questions",
-      value: "18",
-      icon: MessageCircleMore,
+    bg: "bg-rose-100",
 
-      bg: "bg-violet-100",
-      text: "text-violet-600",
-    },
+    text:
+      "text-rose-600",
+  },
 
-    {
-      title: "Schedules",
-      value: "09",
-      icon: CalendarDays,
+  {
+    title: "Assignments",
 
-      bg: "bg-orange-100",
-      text: "text-orange-600",
-    },
-  ];
+    value:
+      teacherStatsData.assignments,
+
+    icon:
+      ClipboardCheck,
+
+    bg:
+      "bg-emerald-100",
+
+    text:
+      "text-emerald-600",
+  },
+
+  {
+    title: "Questions",
+
+    value:
+      teacherStatsData.questions,
+
+    icon:
+      MessageCircleMore,
+
+    bg:
+      "bg-violet-100",
+
+    text:
+      "text-violet-600",
+  },
+
+  {
+    title: "Schedules",
+
+    value:
+      teacherStatsData.schedules,
+
+    icon:
+      CalendarDays,
+
+    bg:
+      "bg-orange-100",
+
+    text:
+      "text-orange-600",
+  },
+
+];
 
   const stats =
     role === "student"
       ? studentStats
       : teacherStats;
-
+  
+      if (loading && role === "student") {
+  return (
+    <div className="p-10 text-center">
+      Loading Courses...
+    </div>
+  );
+}
+console.log("Courses State:", courses);
   return (
     <div
       className="
@@ -675,7 +775,7 @@ export default function Courses({
         </div>
 
         {/* ================= COURSES ================= */}
-
+        
         <section>
           <div
             className="
@@ -726,33 +826,20 @@ export default function Courses({
               gap-5
             "
           >
-            {courses.map(
-              (course) => (
-                <CourseCard
-                  key={course.id}
-                  course={{
-                  course,
-        instructor:
-          course.mentor_name ||
-          "Programming Classes",
-        students: 0,
-        image:
-          course.thumbnail ||
-          "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        progress: 0,
-      }}
-      role={role}
-      showProgress={
-        role === "student"
-      }
-      buttonText={
-        role === "student"
-          ? "Continue Learning"
-          : "Manage Class"
-      }
-    />
-  )
-)}
+            
+{courses.map((course) => (
+  <CourseCard
+    key={course.id}
+    course={course}
+    role={role}
+    showProgress={false}
+    buttonText={
+      role === "student"
+        ? "Start Learning"
+        : "Manage Class"
+    }
+  />
+))}
           </div>
         </section>
       </div>

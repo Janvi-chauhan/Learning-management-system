@@ -32,9 +32,12 @@ return new class extends Migration
             $table->text('mentor_image')->nullable()->after('mentor_experience');
 
             $table->json('reviews')->nullable()->after('mentor_image');
+            $table->json('projects')->nullable();
+            $table->json('certifications')->nullable();
 
             $table->boolean('featured')->default(false)->after('status');
             $table->boolean('latest')->default(true)->after('featured');
+
         });
     }
 

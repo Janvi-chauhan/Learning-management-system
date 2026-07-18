@@ -1,4 +1,3 @@
-
 import {
   Users,
   GraduationCap,
@@ -6,37 +5,11 @@ import {
   IndianRupee,
 } from "lucide-react";
 
-const stats = [
-  {
-    title: "Total Students",
-    value: "1,248",
-    change: "+12% this month",
-    color: "red",
-  },
-  {
-    title: "Total Teachers",
-    value: "86",
-    change: "+4 new",
-    color: "yellow",
-  },
-  {
-    title: "Courses",
-    value: "42",
-    change: "+3 added",
-    color: "orange",
-  },
-  {
-    title: "Revenue",
-    value: "₹2,45,000",
-    change: "+18% this month",
-    color: "green",
-  },
-];
-
 const iconMap = {
-  "Total Students": Users,
-  "Total Teachers": GraduationCap,
-  Courses: BookOpen,
+  "Total Courses": BookOpen,
+  // "Completed Assignments":
+  //   GraduationCap,
+  "Total Projects": Users,
   Revenue: IndianRupee,
 };
 
@@ -46,11 +19,11 @@ const colorMap = {
     iconText: "text-red-600",
     changeText: "text-red-600",
   },
-  yellow: {
-    iconBg: "bg-yellow-100",
-    iconText: "text-yellow-600",
-    changeText: "text-yellow-600",
-  },
+  // yellow: {
+  //   iconBg: "bg-yellow-100",
+  //   iconText: "text-yellow-600",
+  //   changeText: "text-yellow-600",
+  // },
   orange: {
     iconBg: "bg-orange-100",
     iconText: "text-orange-600",
@@ -63,7 +36,45 @@ const colorMap = {
   },
 };
 
-export default function DashboardCards() {
+export default function DashboardCards({
+  dashboardStats,
+}) {
+   const stats = [
+    {
+      title: "Total Courses",
+      value:
+        dashboardStats?.totalCourses ||
+        0,
+      // change: "From Database",
+      // color: "red",
+    },
+    // {
+    //   title:
+    //     "Completed Assignments",
+    //   value:
+    //     dashboardStats?.completedAssignments ||
+    //     0,
+    //   change: "From Database",
+    //   color: "yellow",
+    // },
+    {
+      title: "Total Projects",
+      value:
+        dashboardStats?.totalProjects ||
+        0,
+      // change: "From Database",
+      // color: "orange",
+    },
+    {
+      title: "Revenue",
+      value: `₹${
+        dashboardStats?.totalPayments ||
+        0
+      }`,
+      // change: "From Database",
+      // color: "green",
+    },
+  ];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
       {stats.map((item) => {
@@ -77,7 +88,7 @@ export default function DashboardCards() {
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-sm font-medium text-black">
                   {item.title}
                 </p>
 

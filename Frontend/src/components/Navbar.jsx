@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo cpc.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
@@ -95,12 +95,12 @@ export default function Navbar() {
             <img
               src={logo}
               alt="Logo"
-              className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+              className="w-18 h-20 sm:w-16 sm:h-16 object-contain"
             />
 
             <div className="leading-tight">
               <h1 className="text-[18px] sm:text-[24px] font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text">
-                PROGRAMMING CLASSES
+               CREATIVE PROGRAMMING CLASSES
               </h1>
 
               <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium">
@@ -189,7 +189,7 @@ export default function Navbar() {
                         Dashboard
                       </span>
                     </NavLink>
-
+{/* 
                     <NavLink
                       to="/settings"
                       className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition"
@@ -202,7 +202,7 @@ export default function Navbar() {
                       <span className="font-medium">
                         Settings
                       </span>
-                    </NavLink>
+                    </NavLink> */}
 
                     <button 
                     onClick={handleLogout}
@@ -263,7 +263,7 @@ export default function Navbar() {
                 </h1>
 
                 <p className="text-xs text-gray-500">
-                  Programming Classes
+                  Creative Programming Classes
                 </p>
               </div>
             </div>

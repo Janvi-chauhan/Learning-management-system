@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function VideoMessage() {
   return (
     <section className="w-full bg-white py-20">
@@ -20,31 +22,34 @@ export default function VideoMessage() {
 
             <p className="mt-4 text-gray-600 text-lg leading-relaxed">
               Don’t miss out — start your coding journey with{" "}
-              <span className="font-semibold text-black">Programming Classes</span>{" "}
+              <span className="font-semibold text-black">
+               Creative Programming Classes
+              </span>{" "}
               and build a successful future.
             </p>
 
-            <button
-              className="
-                mt-8 px-8 py-4 rounded-xl
-                bg-red-600 text-white font-bold text-lg
-                shadow-lg shadow-red-300
-                hover:bg-red-700 hover:scale-105 transition-all
-              "
-            >
-              Join New Batch
-            </button>
+            <Link to="/register">
+              <button
+                className="
+                  mt-8 px-8 py-4 rounded-xl
+                  bg-red-600 text-white font-bold text-lg
+                  shadow-lg shadow-red-300
+                  hover:bg-red-700 hover:scale-105 transition-all
+                "
+              >
+                Join New Batch
+              </button>
+            </Link>
           </div>
 
           {/* ✅ RIGHT VIDEO */}
           <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl">
 
-            {/* 16:9 responsive video */}
             <div className="relative pb-[56.25%] h-0">
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
-                src="https://www.youtube.com/embed/T3Dz9VZ5rbY"
-                title="Programming Classes Message"
+                src="https://www.youtube.com/embed/xuuRNIbbMPY?start=51"
+                title="Creative Programming Classes"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -54,6 +59,7 @@ export default function VideoMessage() {
           </div>
 
         </div>
+
       </div>
     </section>
   );

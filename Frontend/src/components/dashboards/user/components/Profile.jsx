@@ -7,6 +7,7 @@ import {
   Pencil,
   BookOpen,
   Award,
+  Calendar,
   Clock3,
   Bell,
   MessageCircleMore,
@@ -19,10 +20,37 @@ import { useEffect, useState } from "react";
 import api from "../../../../services/api";
 import { motion } from "framer-motion";
 
+
 export default function Profile({
   role = "student",
 }) {
+const BACKEND_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 const [loggedInUser, setLoggedInUser] = useState(null);
+const [showEditModal, setShowEditModal] = useState(false);
+const [profilePic, setProfilePic] = useState(null);
+const [queries, setQueries] = useState([]);
+const [showAllQueries, setShowAllQueries] = useState(false);
+
+const [selectedQuery, setSelectedQuery] = useState(null);
+const [answerText, setAnswerText] = useState("");
+const [showAnswerModal, setShowAnswerModal] = useState(false);
+
+const [queryText, setQueryText] = useState("");
+const [notifications, setNotifications] = useState([]);
+const [showQueryModal, setShowQueryModal] = useState(false);
+const [user, setUser] = useState({});
+const [profileStats, setProfileStats] = useState({ courses: 0, certificates: 0, attendance: 0});
+
+const [editForm, setEditForm] =
+  useState({
+    name: "",
+    email: "",
+    phone: "",
+    image: null,
+    location: "",
+    subject: "",
+    experience: "",
+  });
 
 useEffect(() => {
   fetchUser();
@@ -34,37 +62,339 @@ const fetchUser = async () => {
 
     console.log("Current User:", res.data);
 
-    setLoggedInUser(res.data.user);
+     const userData = res.data.user;
+    //  if (userData.image) {
+    // setProfilePic(
+    //     `${BACKEND_URL}/storage/${userData.image}`
+    // );
+//}
+
+    // Student Stats
+    if (userData.role === "student") {
+  const coursesRes = await api.get("/student/courses");
+  const assignmentsRes = await api.get("/student/assignments");
+
+  userData.stats = [
+    {
+      title: "Courses",
+      value: coursesRes.data?.data?.length || 0,
+      icon: BookOpen,
+      color: "bg-orange-100 text-orange-600",
+    },
+    {
+      title: "Assignments",
+      value: assignmentsRes.data?.data?.length || 0,
+      icon: Award,
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      title: "Attendance",
+      value: `${userData.attendance || 0}%`,
+      icon: Calendar,
+      color: "bg-blue-100 text-blue-600",
+    },
+  ];
+}
+
+    // Teacher Stats
+    if (userData.role === "teacher") {
+  const coursesRes = await api.get("/teacher/courses");
+  const queriesRes = await api.get("/teacher/queries");
+
+  userData.stats = [
+    {
+      title: "Courses",
+      value: coursesRes.data?.data?.length || 0,
+      icon: BookOpen,
+      color: "bg-orange-100 text-orange-600",
+    },
+    {
+      title: "Queries",
+      value: queriesRes.data?.data?.length || 0,
+      icon: Award,
+      color: "bg-purple-100 text-purple-600",
+    },
+    {
+      title: "Live Classes",
+      value: userData.live_classes || 0,
+      icon: Calendar,
+      color: "bg-pink-100 text-pink-600",
+    },
+  ];
+}
+
+    setLoggedInUser(userData);
   } catch (error) {
     console.log(error);
   }
 };
+
+const openEditModal = () => {
+  setEditForm({
+    name: displayUser.name || "",
+    email: displayUser.email || "",
+    phone: displayUser.phone || "",
+    location: displayUser.location || "",
+    subject: displayUser.subject || "",
+    experience: displayUser.experience || "",
+    image: null,
+  });
+  setProfilePic(
+    displayUser.image
+      ? `${BACKEND_URL}/storage/${displayUser.image}`
+      : null
+  );
+
+  setShowEditModal(true);
+};
+
+const handleEditChange = (e) => {
+  setEditForm({
+    ...editForm,
+    [e.target.name]: e.target.value,
+  });
+};
+ const handleImageChange = (e) => {
+  const file = e.target.files[0];
+
+  if (file) {
+    setProfilePic(URL.createObjectURL(file));
+
+    setEditForm((prev) => ({
+      ...prev,
+      image: file,
+    }));
+  }
+};
+const updateProfile = async (e) => {
+  e.preventDefault();
+
+  try {
+
+    const formData = new FormData();
+
+    formData.append("name", editForm.name);
+    formData.append("email", editForm.email);
+    formData.append("phone", editForm.phone);
+    formData.append("location", editForm.location);
+
+    if (editForm.subject) {
+      formData.append("subject", editForm.subject);
+    }
+
+    if (editForm.experience) {
+      formData.append("experience", editForm.experience);
+    }
+
+    if (editForm.image) {
+      formData.append("image", editForm.image);
+    }
+
+    // If your Laravel route is PUT
+    formData.append("_method", "PUT");
+
+    const endpoint =
+      loggedInUser?.role === "teacher"
+        ? "/teacher/profile"
+        : "/student/profile";
+
+    const res = await api.post(endpoint, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(res.data);
+
+    alert("Profile Updated Successfully");
+
+   await fetchUser();
+
+setProfilePic(null);
+
+setShowEditModal(false);
+  } catch (error) {
+    console.log(error.response?.data || error);
+  }
+};
+const raiseQuery =
+async () => {
+
+  try {
+
+    await api.post(
+      "/student/queries",
+      {
+        query: queryText
+      }
+    );
+
+    alert(
+      "Query Raised Successfully"
+    );
+
+    setQueryText("");
+
+    setShowQueryModal(
+      false
+    );
+
+    fetchQueries();
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+
+
+const fetchQueries = async () => {
+  try {
+
+    console.log("Fetching Queries...");
+
+    const response = await api.get(
+      "/teacher/queries"
+    );
+
+    console.log(
+      "Teacher Queries API Response:",
+      response.data
+    );
+
+    console.log(
+      "Teacher Queries Data:",
+      response.data.data
+    );
+
+    setQueries(response.data.data);
+
+  } catch (error) {
+
+    console.log(
+      "Query Error:",
+      error
+    );
+
+  }
+};
+useEffect(() => {
+
+  if (role === "teacher") {
+    fetchQueries();
+  }
+
+}, [role]);
+
+const submitAnswer =
+  async () => {
+
+  try {
+
+    await api.put(
+      `/teacher/queries/${selectedQuery.id}/answer`,
+      {
+        answer: answerText,
+      }
+    );
+
+    await fetchQueries();
+
+    setShowAnswerModal(false);
+
+    setAnswerText("");
+
+    setSelectedQuery(null);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+
+const answerQuery =
+async (id) => {
+
+  const answer =
+    prompt(
+      "Enter Answer"
+    );
+
+  if (!answer) return;
+
+  try {
+
+    await api.put(
+      `/teacher/queries/${id}/answer`,
+      {
+        answer
+      }
+    );
+
+    fetchQueries();
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+
+const fetchNotifications =
+async () => {
+
+  try {
+
+    const response =
+      await api.get(
+        "/teacher/notifications"
+      );
+
+    setNotifications(
+      response.data.data
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+useEffect(() => {
+
+  fetchQueries();
+
+  fetchNotifications();
+
+}, []);
   // ================= PROFILE DATA =================
 
   const profileData = {
     student: {
-      name: "Tinkesh Deshmukh",
+      name: "",
 
       role: "Student",
 
       department:
         "Computer Science Engineering",
 
-      email: "tinkesh@example.com",
+      email: "",
 
-      phone: "+91 9876543210",
+      phone: "",
 
-      location: "Pune, Maharashtra",
+      location: "",
 
-      joined: "Aug 2023",
+      joined: "",
 
       image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+        null,
 
       stats: [
         {
           title: "Courses",
-          value: "08",
+          value: profileStats.courses,
 
           icon: BookOpen,
 
@@ -74,7 +404,7 @@ const fetchUser = async () => {
 
         {
           title: "Certificates",
-          value: "12",
+          value: profileStats.certificates,
 
           icon: Award,
 
@@ -84,7 +414,7 @@ const fetchUser = async () => {
 
         {
           title: "Attendance",
-          value: "92%",
+          value: profileStats.attendance ,
 
           icon: CalendarDays,
 
@@ -153,28 +483,28 @@ const fetchUser = async () => {
     // ================= TEACHER =================
 
     teacher: {
-      name: "Rahul Sharma",
+      name: "",
 
       role: "Teacher",
 
       department:
         "Full Stack Development",
 
-      email: "rahul@example.com",
+      email: "",
 
-      phone: "+91 9988776655",
+      phone: "",
 
-      location: "Mumbai, Maharashtra",
+      location: "",
 
-      joined: "Jan 2021",
+      joined: "",
 
       image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
+        null,
 
       stats: [
         {
           title: "Courses",
-          value: "05",
+          value: profileStats.courses,
 
           icon: BookOpen,
 
@@ -184,7 +514,7 @@ const fetchUser = async () => {
 
         {
           title: "Students",
-          value: "320",
+          value: profileStats.students,
 
           icon: GraduationCap,
 
@@ -194,7 +524,7 @@ const fetchUser = async () => {
 
         {
           title: "Live Classes",
-          value: "14",
+          value: profileStats.live_classes,
 
           icon: Video,
 
@@ -269,16 +599,39 @@ const fetchUser = async () => {
     },
   };
 
-  const user = profileData[role];
+  const users = profileData[role];
 
   const displayUser = loggedInUser
   ? {
-      ...user,
-      name: loggedInUser.name,
-      email:loggedInUser.email,
-      role: loggedInUser.role,
+      ...users,
+
+      name: loggedInUser.name || users.name,
+      email: loggedInUser.email || users.email,
+      role: loggedInUser.role || users.role,
+
+      phone: loggedInUser.phone || users.phone,
+      location: loggedInUser.location || users.location,
+
+      status: loggedInUser.status || "",
+
+      // Teacher fields
+      subject: loggedInUser.subject || "",
+      experience: loggedInUser.experience || "",
+
+      // Student fields (future use)
+      department:
+        loggedInUser.department ||
+        users.department,
+
+      joined:
+        loggedInUser.joined ||
+        users.joined,
+
+      image:
+        loggedInUser.image ||
+        users.image,
     }
-  : user;
+  : users;
   // ================= ICON FUNCTION =================
 
   const getNotificationIcon = (
@@ -314,6 +667,9 @@ const fetchUser = async () => {
 
     return "bg-orange-100 text-orange-600";
   };
+  console.log(displayUser);
+  console.log("Queries Count:", queries.length);
+  console.log("Queries Data:", queries);
 
   return (
     <div
@@ -433,6 +789,18 @@ const fetchUser = async () => {
             whileTap={{
               scale: 0.97,
             }}
+             onClick={() => {
+                setEditForm({
+                  name: displayUser.name || "",
+                  email: displayUser.email || "",
+                  image: displayUser.image || null,
+                  phone: displayUser.phone || "",
+                  location: displayUser.location || "",
+                  subject: displayUser.subject || "",
+                  experience: displayUser.experience || "",
+    });
+              setShowEditModal(true)
+             }}
             className="
               flex
               items-center
@@ -504,22 +872,22 @@ const fetchUser = async () => {
                 "
               >
                 <img
-                  src={displayUser.image}
-                  alt={displayUser.name}
-                  className="
-                    w-32
-                    h-32
-
-                    rounded-full
-
-                    object-cover
-
-                    border-4
-                    border-white
-
-                    shadow-lg
-                  "
-                />
+              src={
+              displayUser.image
+              ? `${BACKEND_URL}/storage/${displayUser.image}`
+              : "/default-avatar.png"
+              }
+              alt={displayUser.name}
+              className="
+              w-32
+              h-32
+              rounded-full
+              object-cover
+              border-4
+            border-white
+              shadow-lg
+              "
+              />
 
                 <h2
                   className="
@@ -531,7 +899,7 @@ const fetchUser = async () => {
                     mt-5
                   "
                 >
-                  {user.name}
+                  {displayUser.name}
                 </h2>
 
                 <p
@@ -541,6 +909,33 @@ const fetchUser = async () => {
                   "
                 >
                   {displayUser.role}
+                </p>
+
+                <p
+                  className="
+                  text-slate-500
+                    mt-1
+                    "
+                >
+                  {displayUser.subject}
+                </p>
+
+                <p
+                  className="
+                  text-slate-500
+                    mt-1
+                    "
+                >
+                  {displayUser.experience}
+                </p>
+
+                <p
+                  className="
+                  text-slate-500
+                    mt-1
+                    "
+                >
+                  {displayUser.status}
                 </p>
 
                 <div
@@ -559,7 +954,7 @@ const fetchUser = async () => {
                     font-semibold
                   "
                 >
-                  {user.department}
+                  {users.department}
                 </div>
               </div>
 
@@ -585,8 +980,7 @@ const fetchUser = async () => {
                     icon: MapPin,
                     label: "Location",
 
-                    value:
-                      user.location,
+                    value: displayUser.location,
                   },
                 ].map(
                   (
@@ -725,7 +1119,7 @@ const fetchUser = async () => {
               </div>
 
               <div className="space-y-4">
-                {user.notifications.map(
+                {notifications.map(
                   (
                     notification,
                     index
@@ -813,7 +1207,7 @@ const fetchUser = async () => {
                 gap-5
               "
             >
-              {user.stats.map(
+              {users.stats.map(
                 (stat, index) => {
                   const Icon =
                     stat.icon;
@@ -1001,35 +1395,52 @@ const fetchUser = async () => {
                 </div>
 
                 <button
-                  className="
-                    px-5
-                    py-2.5
+  onClick={() => {
 
-                    rounded-2xl
+    if (role === "student") {
 
-                    bg-slate-900
-                    hover:bg-black
+      setShowQueryModal(true);
 
-                    text-white
-                    text-sm
-                    font-medium
+    } else {
 
-                    transition-all
-                  "
-                >
-                  {role ===
-                  "student"
-                    ? "Raise Query"
-                    : "View All"}
-                </button>
+      console.log(" View All Clicked");
+
+      setShowAllQueries(true);
+
+    }
+
+  }}
+  className="
+    px-5
+    py-2.5
+
+    rounded-2xl
+
+    bg-slate-900
+    hover:bg-black
+
+    text-white
+    text-sm
+    font-medium
+
+    transition-all
+  "
+>
+  {role === "student"
+    ? "Raise Query"
+    : "View All"}
+</button>
               </div>
 
               <div className="space-y-4">
-                {user.queries.map(
-                  (
-                    query,
-                    index
-                  ) => (
+                {(showAllQueries
+                ?queries
+                :queries.slice(0,3)
+                ).map(
+                 (
+                   query,
+                   index
+                 ) => (
                     <motion.div
                       key={index}
                       whileHover={{
@@ -1083,9 +1494,7 @@ const fetchUser = async () => {
                                 text-sm
                               "
                             >
-                              {query.student.charAt(
-                                0
-                              )}
+                              {query.query?.charAt(0)}
                             </div>
 
                             <div>
@@ -1096,7 +1505,7 @@ const fetchUser = async () => {
                                 "
                               >
                                 {
-                                  query.student
+                                  query.student_name || "Student"
                                 }
                               </h3>
 
@@ -1120,7 +1529,7 @@ const fetchUser = async () => {
                             "
                           >
                             {
-                              query.message
+                              query.query
                             }
                           </p>
                         </div>
@@ -1147,6 +1556,28 @@ const fetchUser = async () => {
                         >
                           {query.status}
                         </span>
+                        {role === "teacher" &&
+    query.status === "Pending" && (
+      <button
+        onClick={() => {
+          setSelectedQuery(query);
+          setShowAnswerModal(true);
+        }}
+        className="
+          px-4
+          py-2
+
+          rounded-xl
+
+          bg-slate-900
+          text-white
+
+          text-sm
+        "
+      >
+        Answer
+      </button>
+    )}
                       </div>
                     </motion.div>
                   )
@@ -1156,6 +1587,349 @@ const fetchUser = async () => {
           </div>
         </div>
       </div>
+      {/* EDIT PROFILE MODAL */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl p-6 w-[500px]">
+            <h2 className="text-2xl font-bold mb-4">
+              Edit Profile
+            </h2>
+          {profilePic ? (
+              <img
+    src={
+        profilePic ||
+        (displayUser.image
+            ? `${BACKEND_URL}/storage/${displayUser.image}`
+            : "/default-avatar.png")
+    }
+    className="w-24 h-24 rounded-full object-cover"
+/>
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-5xl mb-2">
+    👤
+  </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="text-sm text-gray-300"
+            />
+            
+
+            <input
+              type="text"
+              name="name"
+              value={editForm.name}
+              onChange={handleEditChange}
+              placeholder="Name"
+              className="w-full border p-3 rounded-xl mb-3"
+            />
+
+            <input
+              type="email"
+              name="email"
+              value={editForm.email}
+              onChange={handleEditChange}
+              placeholder="Email"
+              className="w-full border p-3 rounded-xl mb-3"
+            />
+          
+            <input
+               type="text"
+               name="phone"
+               value={editForm.phone}
+               onChange={handleEditChange}
+               placeholder="Phone Number"
+               className="
+                 w-full
+                 border
+                 rounded-xl
+                 p-3
+                 mb-3" />
+             <input
+                type="text"
+                name="location"
+                value={editForm.location}
+                onChange={handleEditChange}
+                placeholder="Location"
+                className="
+                  w-full
+                  border
+                  rounded-xl
+                 p-3 
+                  mb-3"
+/>
+            {role === "teacher" && (
+  <>
+    <p>
+      <strong>Subject:</strong>{" "}
+      {displayUser.subject}
+    </p>
+
+    <p>
+      <strong>Experience:</strong>{" "}
+      {displayUser.experience}
+    </p>
+  </>
+)}
+
+            {/* <input
+              type="text"
+              name="subject"
+              value={editForm.subject}
+              onChange={handleEditChange}
+              placeholder="Subject"
+              className="w-full border p-3 rounded-xl mb-3"
+            />
+
+            <input
+              type="text"
+              name="experience"
+              value={editForm.experience}
+              onChange={handleEditChange}
+              placeholder="Experience"
+              className="w-full border p-3 rounded-xl mb-3"
+            /> */}
+
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={updateProfile}
+                className="bg-red-600 text-white px-5 py-2 rounded-xl"
+              >
+                Save
+              </button>
+
+              <button
+                onClick={() =>
+                  setShowEditModal(false)
+                }
+                className="bg-gray-200 px-5 py-2 rounded-xl"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {
+  showQueryModal && (
+
+    <div
+      className="
+        fixed
+        inset-0
+        bg-black/50
+
+        flex
+        items-center
+        justify-center
+
+        z-50
+      "
+    >
+
+      <div
+        className="
+          bg-white
+
+          rounded-3xl
+
+          p-6
+
+          w-full
+          max-w-md
+        "
+      >
+
+        <h2
+          className="
+            text-xl
+            font-bold
+            mb-4
+          "
+        >
+          Raise Query
+        </h2>
+
+        <textarea
+          value={queryText}
+          onChange={(e) =>
+            setQueryText(
+              e.target.value
+            )
+          }
+          rows={5}
+          placeholder="Enter your query..."
+          className="
+            w-full
+
+            border
+
+            rounded-xl
+
+            p-3
+          "
+        />
+
+        <div
+          className="
+            flex
+            justify-end
+            gap-3
+
+            mt-4
+          "
+        >
+
+          <button
+            onClick={() =>
+              setShowQueryModal(
+                false
+              )
+            }
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={
+              raiseQuery
+            }
+            className="
+              bg-black
+              text-white
+
+              px-4
+              py-2
+
+              rounded-xl
+            "
+          >
+            Submit
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
+
+  )
+}
+{showAnswerModal && (
+  <div
+    className="
+      fixed
+      inset-0
+      bg-black/40
+
+      flex
+      items-center
+      justify-center
+
+      z-50
+    "
+  >
+    <div
+      className="
+        bg-white
+
+        w-[500px]
+
+        rounded-3xl
+
+        p-6
+      "
+    >
+      <h2
+        className="
+          text-2xl
+          font-bold
+          mb-4
+        "
+      >
+        Answer Query
+      </h2>
+
+      <p
+        className="
+          mb-4
+          text-slate-600
+        "
+      >
+        {selectedQuery?.query}
+      </p>
+
+      <textarea
+        value={answerText}
+        onChange={(e) =>
+          setAnswerText(
+            e.target.value
+          )
+        }
+        rows={5}
+        className="
+          w-full
+
+          border
+
+          rounded-xl
+
+          p-3
+        "
+      />
+
+      <div
+        className="
+          flex
+          justify-end
+          gap-3
+
+          mt-4
+        "
+      >
+        <button
+          onClick={() =>
+            setShowAnswerModal(false)
+          }
+          className="
+            px-4
+            py-2
+
+            rounded-xl
+
+            border
+          "
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={submitAnswer}
+          className="
+            px-4
+            py-2
+
+            rounded-xl
+
+            bg-slate-900
+            text-white
+          "
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+        </div>
+
   );
 }
+      
+  
+    
+  

@@ -7,77 +7,52 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import api from "../../../services/api";
 
 const ActivityPanel = ({ role }) => {
-  // ================= STUDENT ACTIVITIES =================
 
-  const studentActivities = [
-    {
-      title: "React Assignment Submitted",
-      time: "2 hours ago",
-      icon: ClipboardCheck,
-      iconBg:
-        "bg-emerald-100 text-emerald-600",
-      status: "Completed",
-    },
+  const [activities, setActivities] =
+    useState([]);
 
-    {
-      title: "New Course Added",
-      time: "5 hours ago",
-      icon: BookOpen,
-      iconBg:
-        "bg-orange-100 text-orange-600",
-      status: "New",
-    },
+  const fetchActivities =
+    async () => {
 
-    {
-      title:
-        "Project Evaluation Pending",
-      time: "1 day ago",
-      icon: Clock,
-      iconBg:
-        "bg-rose-100 text-rose-600",
-      status: "Pending",
-    },
-  ];
+      try {
 
-  // ================= TEACHER ACTIVITIES =================
+        const response =
+          await api.get(
+            "/admin/activities"
+          );
 
-  const teacherActivities = [
-    {
-      title: "Attendance Updated",
-      time: "1 hour ago",
-      icon: CalendarDays,
-      iconBg:
-        "bg-sky-100 text-sky-600",
-      status: "Updated",
-    },
+        console.log(
+          "Activities:",
+          response.data
+        );
 
-    {
-      title: "Assignment Reviewed",
-      time: "3 hours ago",
-      icon: ClipboardCheck,
-      iconBg:
-        "bg-violet-100 text-violet-600",
-      status: "Reviewed",
-    },
+        setActivities(
+          response.data.data || []
+        );
 
-    {
-      title: "120 Students Active",
-      time: "Today",
-      icon: Users,
-      iconBg:
-        "bg-pink-100 text-pink-600",
-      status: "Live",
-    },
-  ];
+      } catch (error) {
 
-  // ================= ACTIVE DATA =================
+        console.log(error);
 
-  const activities =
-    role === "student"
-      ? studentActivities
-      : teacherActivities;
+      }
+    };
+
+  useEffect(() => {
+
+    fetchActivities();
+
+  }, []);
+
+  const iconMap = {
+    assignment: ClipboardCheck,
+    course: BookOpen,
+    student: Users,
+    attendance: CalendarDays,
+  };
 
   return (
     <motion.div
@@ -86,23 +61,15 @@ const ActivityPanel = ({ role }) => {
       transition={{ duration: 0.35 }}
       className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/75 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.05)] p-6"
     >
-      
-      {/* Ambient Glow */}
 
       <div className="absolute top-0 right-0 w-52 h-52 rounded-full bg-slate-200/20 blur-3xl" />
 
-      {/* ================= HEADER ================= */}
-
       <div className="relative z-10 flex items-center justify-between mb-8">
-        
-        {/* LEFT */}
 
         <div>
-          
-          {/* Label */}
 
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100">
-            
+
             <div className="w-2 h-2 rounded-full bg-slate-500" />
 
             <span className="text-xs font-semibold text-slate-600">
@@ -111,21 +78,15 @@ const ActivityPanel = ({ role }) => {
 
           </div>
 
-          {/* Title */}
-
           <h2 className="mt-4 text-3xl font-bold text-slate-800">
             Recent Activity
           </h2>
-
-          {/* Subtitle */}
 
           <p className="text-slate-500 mt-2">
             Latest dashboard updates
           </p>
 
         </div>
-
-        {/* BUTTON */}
 
         <motion.button
           whileHover={{ scale: 1.04 }}
@@ -137,14 +98,15 @@ const ActivityPanel = ({ role }) => {
 
       </div>
 
-      {/* ================= ACTIVITY LIST ================= */}
-
       <div className="relative z-10 space-y-4">
-        
+
         {activities.map(
           (activity, index) => {
+
             const Icon =
-              activity.icon;
+              iconMap[
+                activity.type
+              ] || Clock;
 
             return (
               <motion.div
@@ -168,12 +130,8 @@ const ActivityPanel = ({ role }) => {
                 }}
                 className="flex items-center justify-between rounded-3xl border border-white/70 bg-white/60 px-5 py-4 transition-all duration-200 hover:shadow-md"
               >
-                
-                {/* LEFT */}
 
                 <div className="flex items-center gap-4">
-                  
-                  {/* ICON */}
 
                   <motion.div
                     whileHover={{
@@ -183,40 +141,32 @@ const ActivityPanel = ({ role }) => {
                     transition={{
                       duration: 0.18,
                     }}
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center ${activity.iconBg}`}
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center bg-orange-100 text-orange-600"
                   >
                     <Icon size={24} />
                   </motion.div>
 
-                  {/* TEXT */}
-
                   <div>
-                    
+
                     <h3 className="text-[16px] font-semibold text-slate-800">
-                      {activity.title}
+                      {activity.message}
                     </h3>
 
                     <p className="text-sm text-slate-500 mt-1">
-                      {activity.time}
+                      {activity.created_at}
                     </p>
 
                   </div>
 
                 </div>
 
-                {/* RIGHT */}
-
                 <div className="flex items-center gap-3">
-                  
-                  {/* STATUS */}
 
                   <span className="hidden md:flex px-3 py-1.5 rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
-                    {activity.status}
+                    {activity.type}
                   </span>
 
-                  {/* LIVE DOT */}
-
-                  <motion.div
+                  {/* <motion.div
                     animate={{
                       scale: [
                         1,
@@ -229,7 +179,7 @@ const ActivityPanel = ({ role }) => {
                       duration: 2,
                     }}
                     className="w-3 h-3 rounded-full bg-emerald-500"
-                  />
+                  /> */}
 
                 </div>
 
@@ -239,6 +189,7 @@ const ActivityPanel = ({ role }) => {
         )}
 
       </div>
+
     </motion.div>
   );
 };

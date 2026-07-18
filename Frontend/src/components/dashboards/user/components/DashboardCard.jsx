@@ -119,7 +119,7 @@ const DashboardCards = ({ cards }) => {
                     }
                   `}
                 >
-                  +12%
+                  +{card.progress}%
                 </span>
               </div>
 
@@ -136,7 +136,7 @@ const DashboardCards = ({ cards }) => {
               >
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: "72%" }}
+                  animate={{ width: `${card.progress}%`,}}
                   transition={{
                     duration: 0.8,
                   }}

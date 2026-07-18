@@ -28,21 +28,49 @@ export default function PremiumSignInPage() {
         password,
       });
 
-       localStorage.setItem(
-      "token",
-      response.data.token
-    );
+      console.log(response.data);
+      console.log("TOKEN:", response.data.token);
+      console.log("USER:", response.data.user.role);
 
       localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
-      );
+  "token",
+  response.data.token
+);
 
-      alert("Login Successful");
+const loggedInUser = {
+  id: response.data.user.id,
+  name: response.data.user.name,
+  email: response.data.user.email,
+  role: response.data.user.role,
+  phone: response.data.user.phone,
+  image: response.data.user.image,
+};
 
-      navigate("/");
+localStorage.setItem(
+  "user",
+  JSON.stringify(loggedInUser)
+);
 
-    } catch (error) {
+console.log(
+  "Saved Token:",
+  localStorage.getItem("token")
+);
+
+console.log(
+  "Saved User:",
+  JSON.parse(localStorage.getItem("user"))
+);
+
+    if (loggedInUser.role === "admin") {
+
+        navigate("/adminDashboard");
+
+    } else {
+
+        navigate("/dashboard");
+    }
+    alert("Login Successful");
+  } catch (error) {
       console.error(error);
 
       alert(

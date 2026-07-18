@@ -1,4 +1,53 @@
+import { useState} from "react";
+import api from "../services/api";
+
 export default function ContactUs() {
+
+const [formData, setFormData] = useState({
+  name: "",
+  phone: "",
+  email: "",
+  message: "",
+});
+
+const handleChange = (e) => {
+
+  const { name, value } = e.target;
+
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+};
+
+const handleSubmit = async (e) => {
+
+  e.preventDefault();
+
+  try {
+
+    await api.post(
+      "/contact",
+      formData
+    );
+
+    alert("Message sent successfully");
+
+    setFormData({
+      name: "",
+      phone: "",
+      email: "",
+      message: "",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Something went wrong");
+  }
+};
+
   return (
     <section className="bg-[#fdfdfd] py-20">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
@@ -34,12 +83,17 @@ export default function ContactUs() {
               Send Us a Message
             </h3>
 
-            <form className="space-y-5">
+            <form
+             className="space-y-5"
+             onSubmit={handleSubmit}>
 
               <div>
                 <label className="text-sm font-semibold">Full Name</label>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Enter your name"
                   className="w-full mt-1 px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-500"
                 />
@@ -49,6 +103,9 @@ export default function ContactUs() {
                 <label className="text-sm font-semibold">Phone Number</label>
                 <input
                   type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="Enter phone number"
                   className="w-full mt-1 px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-500"
                 />
@@ -58,6 +115,9 @@ export default function ContactUs() {
                 <label className="text-sm font-semibold">Email</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter email"
                   className="w-full mt-1 px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-500"
                 />
@@ -67,6 +127,9 @@ export default function ContactUs() {
                 <label className="text-sm font-semibold">Message</label>
                 <textarea
                   rows="4"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Your message"
                   className="w-full mt-1 px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-500 resize-none"
                 ></textarea>
@@ -87,3 +150,4 @@ export default function ContactUs() {
     </section>
   );
 }
+

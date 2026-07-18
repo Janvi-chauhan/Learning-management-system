@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../../../services/api.js";
 
 import {
   Plus,
@@ -14,16 +15,16 @@ import {
 
 import { motion } from "framer-motion";
 
-import studentsData from "../../studentData";
 
 // ================= INITIAL FORM =================
 
 const initialForm = {
   name: "",
   email: "",
-  course: "",
+  phone: "",
+  courses: "",
   year: "",
-  batchType: "Online",
+  batch_type: "Online",
   password: "",
   status: "Active",
 
@@ -37,14 +38,20 @@ const initialForm = {
 };
 
 const ManageStudents = () => {
-  const [students, setStudents] =
-    useState(studentsData);
+ const [students, setStudents] = useState([]);
 
   const [search, setSearch] =
     useState("");
 
   const [showModal, setShowModal] =
     useState(false);
+  // const [
+  //   showProgressModal,
+  //   setShowProgressModal,
+  // ] = useState(false);
+  const [showStudentModal, setShowStudentModal] = useState(false);
+   const [selectedStudent, setSelectedStudent] =
+    useState(null);
 
   const [editId, setEditId] =
     useState(null);
@@ -52,18 +59,31 @@ const ManageStudents = () => {
   const [formData, setFormData] =
     useState(initialForm);
 
-  const [selectedStudent, setSelectedStudent] =
-    useState(null);
-
-  const [
-    showProgressModal,
-    setShowProgressModal,
-  ] = useState(false);
+ 
 
   // ================= RESPONSIVE TABLE =================
 
   const [showTable, setShowTable] =
     useState(false);
+
+    const fetchStudents = async () => {
+  try {
+    const response = await api.get(
+      "/admin/students"
+    );
+     console.log(
+      "Students API:",
+      response.data
+    );
+
+    setStudents(response.data);
+  } catch (error) {
+    console.log(
+      "Error fetching students:",
+      error
+    );
+  }
+};
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,6 +105,9 @@ const ManageStudents = () => {
         handleResize
       );
   }, []);
+  useEffect(() => {
+  fetchStudents();
+}, []);
 
   // ================= HANDLE CHANGE =================
 
@@ -121,121 +144,146 @@ const ManageStudents = () => {
     setFormData(initialForm);
   };
 
+  const openStudentModal = (student) => {
+  setSelectedStudent(student);
+  setShowStudentModal(true);
+};
+
+
   // ================= SUBMIT =================
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
 
     if (editId) {
-      setStudents((prev) =>
-        prev.map((student) =>
-          student.id === editId
-            ? {
-                ...student,
-                ...formData,
-              }
-            : student
-        )
+      // UPDATE STUDENT
+
+      await api.put(
+        `/admin/students/${editId}`,
+        formData
       );
+
+      alert("Student updated successfully");
+
     } else {
-      setStudents((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          ...formData,
-        },
-      ]);
+      // ADD STUDENT
+console.log("TOKEN:", localStorage.getItem("token"));
+      await api.post(
+        "/admin/students",
+        formData
+      );
+
+      alert("Student added successfully");
     }
 
+    fetchStudents(); // reload students
+
     closeModal();
-  };
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Something went wrong"
+    );
+  }
+};
 
   // ================= DELETE =================
 
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Delete this student?"
-      )
-    ) {
-      setStudents((prev) =>
-        prev.filter(
-          (student) =>
-            student.id !== id
-        )
-      );
-    }
-  };
+  const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "Delete this student?"
+  );
 
+  if (!confirmDelete) return;
+
+  try {
+    await api.delete(
+      `/admin/students/${id}`
+    );
+
+    fetchStudents();
+  } catch (error) {
+    console.log(error);
+  }
+};
   // ================= PROGRESS =================
 
-  const calculateOverallProgress = (
-    student
-  ) => {
-    const assignmentProgress =
-      (student.assignmentsCompleted /
-        student.totalAssignments) *
-      100;
+//   const calculateOverallProgress = (student) => {
+//   const assignmentCompleted = Number(student.assignment_completed ?? 0);
+//   const totalAssignments = Number(student.total_assignments ?? 20);
 
-    const testProgress =
-      (student.testsCompleted /
-        student.totalTests) *
-      100;
+//   const testsCompleted = Number(student.tests_completed ?? 0);
+//   const totalTests = Number(student.total_tests ?? 5);
 
-    return Math.round(
-      (assignmentProgress +
-        testProgress +
-        student.attendance) /
-        3
-    );
-  };
+//   const attendance = Number(student.attendance ?? 0);
 
-  const openProgressModal = (
-    student
-  ) => {
-    setSelectedStudent({
-      ...student,
+//   const assignmentProgress =
+//     totalAssignments > 0
+//       ? (assignmentCompleted / totalAssignments) * 100
+//       : 0;
 
-      overallProgress:
-        calculateOverallProgress(
-          student
-        ),
-    });
+//   const testProgress =
+//     totalTests > 0
+//       ? (testsCompleted / totalTests) * 100
+//       : 0;
 
-    setShowProgressModal(true);
-  };
+//   return Math.round(
+//     (assignmentProgress + testProgress + attendance) / 3
+//   );
+// };
 
-  const closeProgressModal = () => {
-    setSelectedStudent(null);
+  // const openProgressModal = (
+  //   student
+  // ) => {
+  //   setSelectedStudent({
+  //     ...student,
 
-    setShowProgressModal(false);
-  };
+  //     overallProgress:
+  //       calculateOverallProgress(
+  //         student
+  //       ),
+  //   });
+
+  //   setShowProgressModal(true);
+  // };
+
+  // const closeProgressModal = () => {
+  //   setSelectedStudent(null);
+
+  //   setShowProgressModal(false);
+  // };
+
 
   // ================= FILTER =================
 
   const filteredStudents =
-    students.filter((student) =>
-      student.name
-        .toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
-    );
+  students.filter((student) =>
+    `${student.name} ${student.email} ${student.courses}`
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
   // ================= PROGRESS BAR =================
 
-  const ProgressBar = ({
-    value,
-  }) => (
-    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-      <div
-        className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
-        style={{
-          width: `${value}%`,
-        }}
-      />
-    </div>
-  );
+  // const ProgressBar = ({
+  //   value,
+  // }) => (
+  //   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+  //     <div
+  //       className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
+  //       style={{
+  //         width: `${value}%`,
+  //       }}
+  //     />
+  //   </div>
+  // );
+  // console.log(students);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-[#f8fafc] via-[#f9fafb] to-[#eef2ff] p-3 sm:p-5 lg:p-6">
@@ -322,15 +370,18 @@ const ManageStudents = () => {
               
               <tr>
                 
-                <th className="w-[18%] px-4 py-4 text-left text-sm font-semibold">
+                <th className="w-[15%] px-4 py-4 text-left text-sm font-semibold">
                   Student
                 </th>
-
-                <th className="w-[20%] px-4 py-4 text-left text-sm font-semibold">
-                  Course
+                <th className="w-[8%] px-4 py-4 text-left text-sm font-semibold">
+                  Phone
                 </th>
 
-                <th className="w-[10%] px-4 py-4 text-left text-sm font-semibold">
+                <th className="w-[18%] px-4 py-4 text-left text-sm font-semibold">
+                  Courses
+                </th>
+
+                <th className="w-[8%] px-4 py-4 text-left text-sm font-semibold">
                   Batch
                 </th>
 
@@ -338,9 +389,9 @@ const ManageStudents = () => {
                   Status
                 </th>
 
-                <th className="w-[10%] px-4 py-4 text-left text-sm font-semibold">
+                {/* <th className="w-[8%] px-4 py-4 text-left text-sm font-semibold">
                   Progress
-                </th>
+                </th> */}
 
                 <th className="w-[10%] px-4 py-4 text-center text-sm font-semibold">
                   Actions
@@ -354,10 +405,10 @@ const ManageStudents = () => {
               
               {filteredStudents.map(
                 (student) => {
-                  const overallProgress =
-                    calculateOverallProgress(
-                      student
-                    );
+                  // const overallProgress =
+                  //   calculateOverallProgress(
+                  //     student
+                  //   );
 
                   return (
                     <tr
@@ -390,13 +441,20 @@ const ManageStudents = () => {
                         </div>
 
                       </td>
+                      {/* PHONE */}
+
+                    <td className="px-4 py-5">
+                      <p className="text-sm text-slate-700">
+                        {student.phone || "N/A"}
+                      </p>
+                    </td>
 
                       {/* COURSE */}
 
                       <td className="px-4 py-5">
                         
                         <p className="text-sm font-medium text-slate-700 truncate">
-                          {student.course}
+                          {student.courses}
                         </p>
 
                       </td>
@@ -412,12 +470,13 @@ const ManageStudents = () => {
                           </span>
 
                           <span className="w-fit px-2 py-1 rounded-full text-[10px] font-semibold bg-red-100 text-red-600">
-                            {student.batchType}
+                            {student.batch_type}
                           </span>
 
                         </div>
 
                       </td>
+
 
                       {/* STATUS */}
 
@@ -438,7 +497,7 @@ const ManageStudents = () => {
 
                       {/* PROGRESS */}
 
-                      <td className="px-4 py-5">
+                      {/* <td className="px-4 py-5">
                         
                         <div className="flex items-center gap-2">
                           
@@ -457,7 +516,7 @@ const ManageStudents = () => {
 
                         </div>
 
-                      </td>
+                      </td> */}
 
                       {/* ACTIONS */}
 
@@ -478,7 +537,7 @@ const ManageStudents = () => {
 
                           <button
                             onClick={() =>
-                              openProgressModal(
+                              openStudentModal(
                                 student
                               )
                             }
@@ -559,7 +618,7 @@ const ManageStudents = () => {
                         </h3>
 
                         <p className="text-sm text-red-100 truncate">
-                          {student.course}
+                          {student.courses}
                         </p>
 
                       </div>
@@ -600,7 +659,7 @@ const ManageStudents = () => {
                         </div>
 
                         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600">
-                          {student.batchType}
+                          {student.batch_type}
                         </span>
 
                       </div>
@@ -627,7 +686,7 @@ const ManageStudents = () => {
                     </div>
 
                     {/* PROGRESS */}
-
+{/* 
                     <div className="mt-5">
                       
                       <div className="flex items-center justify-between mb-2">
@@ -651,7 +710,7 @@ const ManageStudents = () => {
                         }
                       />
 
-                    </div>
+                    </div> */}
 
                     {/* ACTIONS */}
 
@@ -674,20 +733,12 @@ const ManageStudents = () => {
                       </button>
 
                       <button
-                        onClick={() =>
-                          openProgressModal(
-                            student
-                          )
-                        }
-                        className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-sky-100 text-sky-600"
-                      >
-                        <Eye size={16} />
-
-                        <span className="text-xs font-medium">
-                          Progress
-                        </span>
-
-                      </button>
+  onClick={() => openStudentModal(student)}
+  className="flex flex-col items-center justify-center gap-1 py-3 rounded-2xl bg-sky-100 text-sky-600"
+>
+  <Eye size={16} />
+  <span className="text-xs font-medium">View</span>
+</button>
 
                       <button
                         onClick={() =>
@@ -725,6 +776,7 @@ const ManageStudents = () => {
           No students found.
         </div>
       )}
+      
 
       {/* ================= ADD / EDIT MODAL ================= */}
 
@@ -781,8 +833,14 @@ const ManageStudents = () => {
                   "email",
                 ],
                 [
-                  "course",
-                  "Course",
+                  "phone",
+                  "Phone Number",
+                  "text",
+                ],
+
+                [
+                  "courses",
+                  "Courses",
                   "text",
                 ],
                 [
@@ -823,9 +881,9 @@ const ManageStudents = () => {
               )}
 
               <select
-                name="batchType"
+                name="batch_type"
                 value={
-                  formData.batchType
+                  formData.batch_type
                 }
                 onChange={
                   handleChange
@@ -890,9 +948,67 @@ const ManageStudents = () => {
           </motion.div>
 
         </div>
+        
       )}
+      
+  <div>
+
+    {/* Student Details Modal */}
+    {showStudentModal && selectedStudent && (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+        <div className="bg-white rounded-3xl p-8 w-[500px] relative">
+
+          <button
+            onClick={() => setShowStudentModal(false)}
+            className="absolute top-4 right-4 text-red-600 text-xl"
+          >
+            ✕
+          </button>
+
+          <h2 className="text-2xl font-bold mb-6">
+            Student Details
+          </h2>
+
+          <div className="space-y-3">
+
+            <p><strong>Name:</strong> {selectedStudent.name}</p>
+
+            <p><strong>Email:</strong> {selectedStudent.email}</p>
+
+            <p><strong>Phone:</strong> {selectedStudent.phone || "N/A"}</p>
+
+            <p><strong>Courses:</strong> {selectedStudent.courses}</p>
+
+            <p><strong>Year:</strong> {selectedStudent.year}</p>
+
+            <p><strong>Batch:</strong> {selectedStudent.batch_type}</p>
+
+            <p><strong>Status:</strong> {selectedStudent.status}</p>
+
+            <p><strong>Attendance:</strong> {selectedStudent.attendance}%</p>
+
+            <p><strong>Assignments Completed:</strong> {selectedStudent.assignment_completed}</p>
+
+            <p><strong>Tests Completed:</strong> {selectedStudent.tests_completed}</p>
+
+            <p><strong>Location:</strong> {selectedStudent.location || "N/A"}</p>
+
+          </div>
+
+        </div>
+
+      </div>
+    )}
+
+  </div>
+
+      
     </div>
+    
+    
   );
 };
+
 
 export default ManageStudents;

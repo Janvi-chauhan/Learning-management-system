@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 import {
   FolderKanban,
   Clock3,
@@ -7,71 +9,231 @@ import {
   Users,
 } from "lucide-react";
 
-const projectsData = [
-  {
-    id: 1,
-
-    title: "AI Powered LMS",
-
-    description:
-      "A scalable learning management system with AI integrations.",
-
-    tech:
-      "React • Node.js • MongoDB • Tailwind",
-
-    status: "In Progress",
-
-    deadline: "28 Aug 2025",
-
-    team: 4,
-
-    progress: 72,
-  },
-
-  {
-    id: 2,
-
-    title: "Smart Attendance System",
-
-    description:
-      "Face recognition based smart attendance tracking platform.",
-
-    tech:
-      "Python • OpenCV • Firebase",
-
-    status: "Completed",
-
-    deadline: "15 Jul 2025",
-
-    team: 3,
-
-    progress: 100,
-  },
-
-  {
-    id: 3,
-
-    title: "Blockchain Voting App",
-
-    description:
-      "Secure online voting system using blockchain concepts.",
-
-    tech:
-      "Solidity • React • Express",
-
-    status: "Pending",
-
-    deadline: "12 Sep 2025",
-
-    team: 5,
-
-    progress: 35,
-  },
-];
 
 export default function Projects({
   role = "student",
 }) {
+  
+  const [showProjectModal, setShowProjectModal] =
+  useState(false);
+  const [projects, setProjects] =
+  useState([]);
+
+  const [loading, setLoading] =
+  useState(true);
+
+  const [selectedProject, setSelectedProject] =
+  useState(null);
+
+  const [showViewModal, setShowViewModal] =
+  useState(false);
+
+  const [projectStats, setProjectStats] = useState({
+  totalProjects: 0,
+  completedProjects: 0,
+  pendingProjects: 0,
+  activeTeams: 0,
+  });
+
+  const [projectForm, setProjectForm] =
+  useState({
+    title: "",
+    description: "",
+    tech_stack: "",
+    deadline: "",
+    team_size: "",
+  });
+
+  const [showReviewModal, setShowReviewModal] =
+  useState(false);
+
+  const [reviewForm, setReviewForm] =
+  useState({
+    progress: "",
+    status: "",
+    remarks: "",
+  });
+
+  const fetchProjects = async () => {
+  try {
+
+    const response =
+      await api.get("/student/projects");
+
+    console.log(
+      "Projects API Response:",
+      response.data
+    );
+
+    const projectsData =
+      response.data.data || [];
+
+    setProjects(
+      projectsData.map(
+        (project) => ({
+          id: project.id,
+
+          title: project.title,
+
+          description:
+            project.description ||
+            "No Description",
+
+          tech:
+            project.tech_stack ||
+            "N/A",
+
+          status:
+            project.status ||
+            "Pending",
+
+          deadline:
+            project.deadline ||
+            "Not Assigned",
+
+          team:
+            project.team_size || 0,
+
+          progress:
+            project.progress || 0,
+        })
+      )
+    );
+
+    // Project Stats
+
+    setProjectStats({
+      totalProjects:
+        projectsData.length,
+
+      completedProjects:
+        projectsData.filter(
+          (project) =>
+            project.status ===
+            "Completed"
+        ).length,
+
+      pendingProjects:
+        projectsData.filter(
+          (project) =>
+            project.status ===
+            "Pending"
+        ).length,
+
+      activeTeams:
+        projectsData.reduce(
+          (total, project) =>
+            total +
+            (project.team_size || 0),
+          0
+        ),
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Error fetching projects:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
+
+useEffect(() => {
+  fetchProjects();
+}, []);
+  const viewProject = (project) => {
+  setSelectedProject(project);
+
+  setShowViewModal(true);
+};
+
+  const saveProject = async () => {
+  try {
+await api.post(
+"/student/projects",
+projectForm
+);
+
+    alert(
+      "Project Added Successfully"
+    );
+
+    setShowProjectModal(false);
+
+    fetchProjects();
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Failed to Add Project");
+  }
+};
+
+const createReview = async () => {
+
+  try {
+
+    await api.put(
+      `/teacher/projects/${selectedProject?.id}`,
+      {
+        progress:
+          Number(reviewForm.progress),
+
+        status:
+          reviewForm.status,
+
+        remarks:
+          reviewForm.remarks,
+      }
+    );
+
+    alert(
+      "Review Saved Successfully"
+    );
+
+    fetchProjects();
+
+    setShowReviewModal(false);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
+const saveReview = async () => {
+  try {
+
+    await api.put(
+      `/teacher/projects/${selectedProject.id}`,
+      {
+        progress: Number(reviewForm.progress),
+        status: reviewForm.status,
+        remarks: reviewForm.remarks,
+      }
+    );
+
+    alert("Review Saved Successfully");
+
+    fetchProjects();
+
+    setShowReviewModal(false);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+
   return (
     <div className="w-full min-h-screen bg-slate-100">
       
@@ -93,22 +255,23 @@ export default function Projects({
           </p>
         </div>
 
-        <button
-          className="
-            px-5
-            py-3
-            rounded-2xl
-            bg-slate-900
-            hover:bg-slate-800
-            text-white
-            font-semibold
-            transition-all
-          "
-        >
-          {role === "student"
-            ? "Add Project"
-            : "Create Review"}
-        </button>
+        {role === "student" && (
+  <button
+    onClick={() => setShowProjectModal(true)}
+    className="
+      px-5
+      py-3
+      rounded-2xl
+      bg-slate-900
+      hover:bg-slate-800
+      text-white
+      font-semibold
+      transition-all
+    "
+  >
+    Add Project
+  </button>
+)}
       </div>
 
       {/* Stats */}
@@ -126,7 +289,7 @@ export default function Projects({
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                12
+                {projectStats.totalProjects}
               </h2>
             </div>
 
@@ -147,7 +310,7 @@ export default function Projects({
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                07
+                {projectStats.completedProjects}
               </h2>
             </div>
 
@@ -168,7 +331,7 @@ export default function Projects({
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                03
+                {projectStats.pendingProjects}
               </h2>
             </div>
 
@@ -189,7 +352,7 @@ export default function Projects({
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                09
+                {projectStats.activeTeams}
               </h2>
             </div>
 
@@ -203,7 +366,7 @@ export default function Projects({
       {/* Project Cards */}
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {projectsData.map((project) => (
+        {projects.map((project) => (
           <div
             key={project.id}
             className="
@@ -244,7 +407,7 @@ export default function Projects({
                   ${
                     project.status ===
                     "Completed"
-                      ? "bg-red-100 text-red-600"
+                      ? "bg-green-100 text-green-600"
                       : project.status ===
                         "Pending"
                       ? "bg-red-100 text-red-600"
@@ -363,30 +526,312 @@ export default function Projects({
              
 
               <button
-                className="
-                  flex-1
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                  py-3
-                  rounded-2xl
-                  border
-                  border-slate-300
-                  hover:bg-slate-100
-                  font-semibold
-                  transition-all
-                "
-              >
-                <ExternalLink size={18} />
+  onClick={() => {
 
-                {role === "student"
-                  ? "View Project"
-                  : "Review"}
-              </button>
+    if (role === "student") {
+
+      viewProject(project);
+
+    } else {
+
+      setSelectedProject(project);
+
+      setReviewForm({
+        progress:
+          project.progress || "",
+
+        status:
+          project.status || "",
+
+        remarks:
+          project.remarks || "",
+      });
+
+      setShowReviewModal(true);
+
+    }
+
+  }}
+  className="
+    flex-1
+    flex
+    items-center
+    justify-center
+    gap-2
+    py-3
+    rounded-2xl
+    border
+    border-slate-300
+    hover:bg-slate-100
+    font-semibold
+    transition-all
+  "
+>
+  <ExternalLink size={18} />
+
+  {role === "student"
+    ? "View Project"
+    : "Review"}
+</button>
             </div>
           </div>
         ))}
+        {
+  showProjectModal && (
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+      <div className="bg-white p-6 rounded-xl w-[500px]">
+
+        <h2 className="text-xl font-bold mb-4">
+          Add Project
+        </h2>
+
+        <input
+          type="text"
+          placeholder="Project Title"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              title: e.target.value,
+            })
+          }
+        />
+
+        {/* <input
+          type="number"
+          placeholder="Progress"
+          className="border p-2 w-full mb-3"
+          min="0"
+          max="100"
+          value={projectForm.progress}
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              progress: e.target.value,
+            })
+          }
+        /> */}
+
+        <textarea
+          placeholder="Description"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              description: e.target.value,
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Tech Stack"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              tech_stack: e.target.value,
+            })
+          }
+        />
+
+        <input
+          type="date"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              deadline: e.target.value,
+            })
+          }
+        />
+
+        <input
+          type="number"
+          placeholder="Team Size"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setProjectForm({
+              ...projectForm,
+              team_size: e.target.value,
+            })
+          }
+        />
+
+        <div className="flex gap-3">
+
+          <button
+            onClick={saveProject}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Save
+          </button>
+
+          <button
+            onClick={() =>
+              setShowProjectModal(false)
+            }
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
+
+{
+  showViewModal &&
+  selectedProject && (
+
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+      <div className="bg-white p-6 rounded-xl w-[600px]">
+
+        <h2 className="text-2xl font-bold mb-4">
+
+          {selectedProject.title}
+
+        </h2>
+
+        <p>
+
+          {selectedProject.description}
+
+        </p>
+
+        <p className="mt-3">
+
+          Tech Stack :
+          {selectedProject.tech}
+
+        </p>
+
+        <p>
+
+          Status :
+          {selectedProject.status}
+
+        </p>
+
+        <p>
+
+          Deadline :
+          {selectedProject.deadline}
+
+        </p>
+
+        <button
+
+          onClick={() =>
+            setShowViewModal(false)
+          }
+
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+
+        >
+          Close
+
+        </button>
+
+      </div>
+
+    </div>
+  )
+}
+
+{showReviewModal && role === "teacher" && (
+
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+
+    <div className="bg-white p-6 rounded-lg w-[500px]">
+
+      <h2 className="text-2xl font-bold mb-4">
+        Create Review
+      </h2>
+
+      <input
+        type="number"
+        placeholder="Progress %"
+        className="border p-2 w-full mb-3"
+        value={reviewForm.progress}
+        onChange={(e) =>
+          setReviewForm({
+            ...reviewForm,
+            progress: e.target.value,
+          })
+        }
+      />
+
+      <select
+        className="border p-2 w-full mb-3"
+        value={reviewForm.status}
+        onChange={(e) =>
+          setReviewForm({
+            ...reviewForm,
+            status: e.target.value,
+          })
+        }
+      >
+        <option value="">
+          Select Status
+        </option>
+
+        <option value="Pending">
+          Pending
+        </option>
+
+        <option value="In Progress">
+          In Progress
+        </option>
+
+        <option value="Completed">
+          Completed
+        </option>
+      </select>
+
+      <textarea
+        placeholder="Remarks"
+        className="border p-2 w-full mb-3"
+        value={reviewForm.remarks}
+        onChange={(e) =>
+          setReviewForm({
+            ...reviewForm,
+            remarks: e.target.value,
+          })
+        }
+      />
+
+      <div className="flex gap-3">
+
+        <button
+          onClick={createReview}
+          className="bg-green-600 text-white px-4 py-2 rounded"
+        >
+          Save
+        </button>
+
+        <button
+          onClick={() =>
+            setShowReviewModal(false)
+          }
+          className="bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
       </div>
     </div>
   );
