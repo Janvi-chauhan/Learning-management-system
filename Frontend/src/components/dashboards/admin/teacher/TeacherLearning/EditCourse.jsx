@@ -56,7 +56,7 @@ export default function EditCourse() {
 
       alert("Course updated.");
 
-      navigate(`/teacher/courses/${courseId}`);
+      navigate(`/teacher/course/${courseId}`);
 
     } catch (err) {
 

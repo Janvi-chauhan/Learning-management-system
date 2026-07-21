@@ -73,6 +73,7 @@ element={<Certificate/>}
     path="/teacher/course/:courseId/edit"
     element={<EditCourse />}
 />
+
 {/* <Route
     path="/live/:roomName"
     element={<LiveMeeting />}

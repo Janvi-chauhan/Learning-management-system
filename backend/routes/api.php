@@ -665,10 +665,15 @@ Route::get(
 '/courses/{courseId}/live',
 [TeacherCourseController::class,'startLiveClass']
 );
+Route::put(
+'/courses/{courseId}',
+[TeacherCourseController::class,'update']
+);
 Route::delete(
 '/lesson/{lessonId}',
 [TeacherCourseController::class,'deleteLesson']
 );
+
     /*
     |--------------------------------------------------------------------------
     | Assignments
@@ -684,6 +689,7 @@ Route::delete(
         '/assignments',
         [TeacherAssignmentController::class, 'store']
     );
+
 
     /*
     |--------------------------------------------------------------------------

@@ -69,13 +69,47 @@ class TeacherCourseController extends Controller
     }
 
     // Upload recorded lecture
- public function uploadVideo(Request $request, $courseId)
-{
-    dd(
-        $request->all(),
-        $request->file('video')
-    );
-}
+   public function uploadVideo(Request $request, $courseId)
+    {
+        Course::findOrFail($courseId);
+
+        $request->validate([
+            'module_id' => 'required|exists:course_modules,id',
+            'title' => 'required|string|max:255',
+            'duration' => 'nullable|string',
+            'description' => 'nullable|string',
+            'video' => 'required|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm|max:512000',
+        ]);
+
+        $module = CourseModule::findOrFail($request->module_id);
+
+        if ((int) $module->course_id !== (int) $courseId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Module does not belong to this course.',
+            ], 422);
+        }
+
+        $path = $request->file('video')->store('course-videos', 'public');
+        $videoUrl = asset('storage/' . $path);
+
+        $position = (CourseLesson::where('module_id', $request->module_id)->max('position') ?? 0) + 1;
+
+        $lesson = CourseLesson::create([
+            'module_id' => $request->module_id,
+            'title' => $request->title,
+            'duration' => $request->duration,
+            'description' => $request->description,
+            'video' => $videoUrl,
+            'position' => $position,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Video uploaded successfully.',
+            'data' => $lesson,
+        ]);
+    }
 
 public function deleteLesson($lessonId)
 {
