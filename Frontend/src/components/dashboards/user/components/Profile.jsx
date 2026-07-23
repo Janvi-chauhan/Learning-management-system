@@ -101,26 +101,26 @@ const fetchUser = async () => {
   const coursesRes = await api.get("/teacher/courses");
   const queriesRes = await api.get("/teacher/queries");
 
-  userData.stats = [
-    {
-      title: "Courses",
-      value: coursesRes.data?.data?.length || 0,
-      icon: BookOpen,
-      color: "bg-orange-100 text-orange-600",
-    },
-    {
-      title: "Queries",
-      value: queriesRes.data?.data?.length || 0,
-      icon: Award,
-      color: "bg-purple-100 text-purple-600",
-    },
-    {
-      title: "Live Classes",
-      value: userData.live_classes || 0,
-      icon: Calendar,
-      color: "bg-pink-100 text-pink-600",
-    },
-  ];
+  // userData.stats = [
+  //   {
+  //     title: "Courses",
+  //     value: coursesRes.data?.data?.length || 0,
+  //     icon: BookOpen,
+  //     color: "bg-orange-100 text-orange-600",
+  //   },
+  //   {
+  //     title: "Queries",
+  //     value: queriesRes.data?.data?.length || 0,
+  //     icon: Award,
+  //     color: "bg-purple-100 text-purple-600",
+  //   },
+  //   {
+  //     title: "Live Classes",
+  //     value: userData.live_classes || 0,
+  //     icon: Calendar,
+  //     color: "bg-pink-100 text-pink-600",
+  //   },
+  // ];
 }
 
     setLoggedInUser(userData);
@@ -697,14 +697,16 @@ useEffect(() => {
         {/* ================= HEADER ================= */}
 
         <div
-          className="
-            mb-8
-
-            flex
-            items-center
-            justify-between
-          "
-        >
+  className="
+  mb-8
+    flex
+    flex-col
+    sm:flex-row
+    sm:items-center
+    sm:justify-between
+    gap-4
+  "
+>
           <div>
             {/* Label */}
 
@@ -783,47 +785,52 @@ useEffect(() => {
           {/* Edit */}
 
           <motion.button
-            whileHover={{
-              scale: 1.02,
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
-             onClick={() => {
-                setEditForm({
-                  name: displayUser.name || "",
-                  email: displayUser.email || "",
-                  image: displayUser.image || null,
-                  phone: displayUser.phone || "",
-                  location: displayUser.location || "",
-                  subject: displayUser.subject || "",
-                  experience: displayUser.experience || "",
+  whileHover={{
+    scale: 1.02,
+  }}
+  whileTap={{
+    scale: 0.97,
+  }}
+  onClick={() => {
+    setEditForm({
+      name: displayUser.name || "",
+      email: displayUser.email || "",
+      image: displayUser.image || null,
+      phone: displayUser.phone || "",
+      location: displayUser.location || "",
+      subject: displayUser.subject || "",
+      experience: displayUser.experience || "",
     });
-              setShowEditModal(true)
-             }}
-            className="
-              flex
-              items-center
-              gap-2
+    setShowEditModal(true);
+  }}
+  className="
+    w-full
+    sm:w-auto
 
-              px-5
-              py-3
+    flex
+    items-center
+    justify-center
+    gap-2
 
-              rounded-2xl
+    px-5
+    py-3
 
-              bg-slate-900
-              hover:bg-black
+    rounded-2xl
 
-              text-white
-              font-medium
+    bg-slate-900
+    hover:bg-black
 
-              transition-all
-            "
-          >
-            <Pencil size={18} />
+    text-white
+    font-medium
 
-            Edit Profile
-          </motion.button>
+    whitespace-nowrap
+
+    transition-all
+  "
+>
+  <Pencil size={18} />
+  Edit Profile
+</motion.button>
         </div>
 
         {/* ================= LAYOUT ================= */}
@@ -1033,8 +1040,11 @@ useEffect(() => {
 
                           <h3
                             className="
-                              font-medium
-                              text-slate-800
+                               font-medium
+                               text-slate-800
+                               break-all
+                               sm:break-normal
+                               max-w-full
                             "
                           >
                             {
@@ -1070,14 +1080,17 @@ useEffect(() => {
               "
             >
               <div
-                className="
-                  flex
-                  items-center
-                  gap-3
+  className="
+    flex
+    flex-col
+    sm:flex-row
+    sm:items-center
 
-                  mb-6
-                "
-              >
+    gap-3
+
+    mb-6
+  "
+>
                 <div
                   className="
                     w-12
@@ -1098,13 +1111,17 @@ useEffect(() => {
 
                 <div>
                   <h2
-                    className="
-                      text-2xl
-                      font-bold
+  className="
+    text-xl
+    sm:text-2xl
 
-                      text-slate-800
-                    "
-                  >
+    font-bold
+
+    text-slate-800
+
+    break-words
+  "
+>
                     Notifications
                   </h2>
 
@@ -1130,45 +1147,51 @@ useEffect(() => {
                         x: 3,
                       }}
                       className="
-                        flex
-                        items-start
-                        gap-4
+  flex
+  flex-col
+  sm:flex-row
+  items-start
 
-                        p-4
+  gap-4
 
-                        rounded-2xl
+  p-4
 
-                        bg-slate-50/80
-                      "
+  rounded-2xl
+
+  bg-slate-50/80
+"
                     >
                       <div
-                        className={`
-                          w-10
-                          h-10
+  className={`
+    w-10
+    h-10
 
-                          rounded-xl
+    flex-shrink-0
 
-                          flex
-                          items-center
-                          justify-center
+    rounded-xl
 
-                          ${getNotificationStyle(
-                            notification.type
-                          )}
-                        `}
-                      >
+    flex
+    items-center
+    justify-center
+
+    ${getNotificationStyle(notification.type)}
+  `}
+>
+                      
                         {getNotificationIcon(
                           notification.type
                         )}
                       </div>
 
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <h3
-                          className="
-                            font-medium
-                            text-slate-800
-                          "
-                        >
+  className="
+    font-medium
+    text-slate-800
+
+    break-words
+  "
+>
                           {
                             notification.title
                           }
@@ -1195,10 +1218,10 @@ useEffect(() => {
 
           {/* ================= RIGHT ================= */}
 
-          <div className="xl:col-span-2 space-y-6">
+          <div className="xl:col-span-2 space-y-10">
             {/* Stats */}
 
-            <div
+            {/* <div
               className="
                 grid
                 grid-cols-1
@@ -1290,7 +1313,7 @@ useEffect(() => {
                   );
                 }
               )}
-            </div>
+            </div> */}
 
             {/* About */}
 
@@ -1361,9 +1384,11 @@ useEffect(() => {
               <div
                 className="
                   flex
-                  items-center
-                  justify-between
-
+                  flex-col
+                  sm:flex-row
+                  sm:items-center
+                  sm:justify-between
+                  gap-4
                   mb-6
                 "
               >

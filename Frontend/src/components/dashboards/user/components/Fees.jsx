@@ -374,61 +374,70 @@ const handlePayment = (payment) => {
           {/* HEADER */}
 
           <div
-            className="
-              flex
-              items-center
-              justify-between
+  className="
+    flex
+    flex-col
+    sm:flex-row
+    sm:items-center
+    sm:justify-between
+    gap-4
 
-              px-6
-              py-5
+    px-4
+    sm:px-6
+    py-5
 
-              border-b
-              border-slate-100
-            "
-          >
-            <div>
-              <h2
-                className="
-                  text-2xl
-                  font-bold
+    border-b
+    border-slate-100
+  "
+>
+  <div className="min-w-0">
+    <h2
+      className="
+        text-xl
+        sm:text-2xl
+        font-bold
+        text-slate-800
+      "
+    >
+      Cohort Payment History
+    </h2>
 
-                  text-slate-800
-                "
-              >
-                Cohort Payment History
-              </h2>
+    <p
+      className="
+        text-sm
+        sm:text-base
+        text-slate-500
+        mt-1
+      "
+    >
+      Live class batches and subscription details
+    </p>
+  </div>
 
-              <p
-                className="
-                  text-slate-500
-                  mt-1
-                "
-              >
-                Live class batches and
-                subscription details
-              </p>
-            </div>
+  <button
+    className="
+      w-full
+      sm:w-auto
 
-            <button
-              className="
-                px-5
-                py-2.5
+      px-5
+      py-2.5
 
-                rounded-2xl
+      rounded-2xl
 
-                bg-slate-900
-                hover:bg-black
+      bg-slate-900
+      hover:bg-black
 
-                text-white
-                text-sm
-                font-semibold
+      text-white
+      text-sm
+      font-semibold
 
-                transition-all
-              "
-            >
-              Payment Receipts
-            </button>
-          </div>
+      transition-all
+      whitespace-nowrap
+    "
+  >
+    Payment Receipts
+  </button>
+</div>
 
           {/* TABLE HEADER */}
 

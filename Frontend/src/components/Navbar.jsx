@@ -88,30 +88,30 @@ export default function Navbar() {
     <>
       {/* NAVBAR */}
       <header className="sticky top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 h-[85px] flex items-center justify-between">
-          
+<div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 xl:px-16 h-[80px] xl:h-[85px] flex items-center justify-between gap-4 "
+>          
           {/* LOGO */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <img
               src={logo}
               alt="Logo"
-              className="w-18 h-20 sm:w-16 sm:h-16 object-contain"
+              className=" w-14 h-14 sm:w-16 sm:h-16 xl:w-20 xl:h-20 object-contain "
             />
 
-            <div className="leading-tight">
-              <h1 className="text-[18px] sm:text-[24px] font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text">
+            <div className="leading-tight min-w-0">
+              <h1 className="truncate font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text text-basesm:text-lgmd:text-xlxl:text-2xl leading-tight">
                CREATIVE PROGRAMMING CLASSES
               </h1>
 
-              <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium">
+              <p className=" text-gray-500 font-medium text-[11px sm:text-x md:text-s xl:text-[15px] leading-tigh ">
                 Building Careers, Not Just Coders
               </p>
             </div>
           </div>
 
           {/* DESKTOP MENU */}
-          <div className="hidden lg:flex items-center gap-10">
-            <ul className="flex items-center gap-10">
+          <div className="hidden xl:flex items-center gap-8">
+            <ul className="flex items-center gap-6">
               {navLinks.map((item) => (
                 <li key={item.name}>
                   <NavLink
@@ -149,7 +149,7 @@ export default function Navbar() {
                   onClick={() =>
                     setProfileOpen(!profileOpen)
                   }
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-gray-200 hover:border-red-200 hover:shadow-md transition"
+                  className=" flex items-center gap-2 px-3 py-2 rounded-2xl border border-gray-200 hover:border-red-200 hover:shadow-md transition "
                 >
                   <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                     <User
@@ -224,7 +224,7 @@ export default function Navbar() {
             onClick={() =>
               setMobileOpen(true)
             }
-            className="lg:hidden w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center"
+            className="xl:hidden w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center"
           >
             <Menu size={24} />
           </button>
@@ -233,7 +233,7 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       <div
-        className={`fixed inset-0 z-[60] lg:hidden transition-all duration-300 ${
+        className={`fixed inset-0 z-[60] xl:hidden transition-all duration-300 ${
           mobileOpen
             ? "visible bg-black/40"
             : "invisible bg-black/0"

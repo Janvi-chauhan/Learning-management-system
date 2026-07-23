@@ -463,6 +463,15 @@ Route::delete(
     '/courses/{id}',
     [StudentCourseController::class, 'destroy']
 );
+Route::post(
+    '/lesson/progress',
+    [LessonProgressController::class, 'saveProgress']
+);
+
+Route::get(
+    '/course/{course}/continue',
+    [LessonProgressController::class, 'continueLearning']
+);
     /*
     |--------------------------------------------------------------------------
     | Assignments

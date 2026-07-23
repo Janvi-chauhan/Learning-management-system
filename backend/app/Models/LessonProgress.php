@@ -11,12 +11,16 @@ class LessonProgress extends Model
     protected $fillable = [
 
         'student_id',
+        'course_id',
 
         'lesson_id',
 
         'completed',
 
-        'completed_at'
+        'completed_at',
+        'last_position',
+
+    'last_accessed_at',
 
     ];
 

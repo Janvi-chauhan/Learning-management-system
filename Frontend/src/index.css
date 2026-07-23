@@ -53,8 +53,15 @@ body {
 }
 
 .animate-marquee-rtl {
+  display:flex;
+  width: max-content;
   animation: marquee-rtl 35s linear infinite;
+  will-change: transform;
 }
+
+/* .animate-marquee-rtl:hover {
+  animation-play-state: paused;
+} */
 
 /* scrollbar hide */
 .no-scrollbar::-webkit-scrollbar {

@@ -25,12 +25,17 @@ useEffect(() => {
 }, []);
   const items =
   placements.length > 0
-    ? [...placements, ...placements, ...placements]
+    ? [
+        ...placements,
+        ...placements,
+        ...placements,
+        ...placements,
+      ]
     : [];
 
   return (
     <section className="bg-white py-24 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-full px-6">
 
         {/* TITLE */}
         <div className="text-center mb-14">
@@ -43,38 +48,53 @@ useEffect(() => {
         </div>
 
         {/* MARQUEE */}
-        <div className="overflow-hidden">
-          <div className="flex gap-2 w-max animate-marquee-rtl">
 
-            {items.map((p, i) => (
-              <div
-                key={i}
-                className="w-[300px] h-[420px] relative overflow-hidden shadow-2xl"
-              >
-                <img
-                  src={p.image}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-red-900/90 via-black/70 to-transparent" />
-                <div className="absolute bottom-0 p-5 text-white">
-                  <h3 className="font-extrabold">{p.name}</h3>
-                 <p className="text-sm">
-  {p.domain}
-</p>
+<div className="relative w-full overflow-hidden">
+  <div className="flex w-max gap-2 animate-marquee-rtl">
 
-<p className="text-xs text-red-300 mt-1">
-  {p.company}
-</p>
+    {items.map((p, i) => (
+      <div
+        key={i}
+        className="
+  flex-none
+  w-[280px]
+  sm:w-[300px]
+  h-[420px]
+  relative
+  overflow-hidden
+  shadow-2xl
+"
+      >
+        <img
+          src={p.image}
+          alt={p.name}
+          className="w-full h-full object-cover"
+        />
 
-<p className="text-xs mt-1">
-  Batch {p.batch}
-</p>
-                </div>
-              </div>
-            ))}
+        <div className="absolute inset-0 bg-gradient-to-t from-red-900/90 via-black/70 to-transparent" />
 
-          </div>
+        <div className="absolute bottom-0 p-5 text-white">
+          <h3 className="font-bold text-lg">
+            {p.name}
+          </h3>
+
+          <p className="text-sm">
+            {p.domain}
+          </p>
+
+          <p className="text-red-300 text-sm mt-1">
+            {p.company}
+          </p>
+
+          <p className="text-xs mt-1">
+            Batch {p.batch}
+          </p>
         </div>
+      </div>
+    ))}
+
+  </div>
+</div>
 
       </div>
     </section>

@@ -14,11 +14,11 @@ import RecordedSessions from "./RecordedSessions";
 
 export default function CourseLearning() {
   const { courseId } = useParams();
+  const [searchParams] = useSearchParams();
   console.log(courseId);
-
+  
   const [courseData, setCourseData] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
-  const [searchParams] = useSearchParams();
 
 const lessonId = searchParams.get("lesson");
 
@@ -33,9 +33,10 @@ const lessonId = searchParams.get("lesson");
 }, [courseId]);
 
   const fetchCourse = async () => {
+    console.log("Fetching course...");
     try {
       const res = await api.get(`/student/courses/${courseId}/learning`);
-
+      
       setCourseData(res.data.data);
 
      const course = res.data.data;
@@ -168,27 +169,38 @@ const joinLiveClass = async () => {
     <div className="bg-gray-100 min-h-screen">
       <CourseHeader course={courseData} />
 
-      <div className="grid grid-cols-12 gap-5 p-6">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 p-3 sm:p-5 lg:p-6">
         {/* Sidebar */}
-        <div className="col-span-3">
+       <div className="xl:col-span-3 order-2 xl:order-1">
           <CourseSidebar
             modules={courseData.modules}
             currentLesson={currentLesson}
             setCurrentLesson={setCurrentLesson}
           />
 
-          <div className="mt-5">
+          <div className="mt-6">
             <ProgressCard course={courseData} />
           </div>
           
         </div>
 
         {/* Right Content */}
-        <div className="col-span-9 space-y-5">
+        <div className="xl:col-span-9 order-1 xl:order-2 space-y-5">
           <VideoPlayer lesson={currentLesson} />
           <button
     onClick={joinLiveClass}
-    className="bg-green-600 text-white px-4 py-2 rounded-lg"
+className="
+w-full
+sm:w-auto
+bg-green-600
+hover:bg-green-700
+text-white
+px-6
+py-3
+rounded-xl
+font-medium
+transition
+"
 >
     Join Live Class
 </button>

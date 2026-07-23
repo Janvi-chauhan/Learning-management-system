@@ -17,14 +17,7 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
-              Best IT Training Institute in Patna <br />
-              3rd Floor, Jagdamba Tower, Sahdeo Mahto Marg, <br />
-              Boring Road, Patna – Bihar (800001)
-            </p>
-
-            <p className="mt-4 text-sm text-gray-300">
-              📞 7488435045 <br />
-              ✉ progclasses@gmail.com
+              Jehanabad Bihar
             </p>
           </div>
 

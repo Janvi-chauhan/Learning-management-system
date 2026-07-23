@@ -457,10 +457,6 @@ console.log(adminMenu.desktopMain);
         {/* Spacer */}
 
         {/* <div className="flex-1" /> */}
-
-        {/* ================= ADMIN PROFILE ================= */}
-
-        
       </motion.aside>
     </>
   );

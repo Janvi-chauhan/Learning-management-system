@@ -67,14 +67,15 @@ const handleSubmit = async (e) => {
 
           {/* MAP */}
           <div className="w-full h-[360px] md:h-[420px] lg:h-full shadow-xl overflow-hidden border-r border-gray-200">
-            <iframe
-              title="Programming Classes Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3597.732242908026!2d85.11744519999999!3d25.613812199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x140d7e8af0303eb9%3A0x9713e2706e6d5c70!2sProgramming%20Classes!5e0!3m2!1sen!2sin!4v1767953258655!5m2!1sen!2sin"
-              className="w-full h-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
+  <iframe
+    title="Jehanabad Location"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28877.99086752321!2d84.98956904999999!3d25.211690549999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f2b579d16d21cd%3A0xa38f8ace26806cfa!2sJehanabad%2C%20Bihar!5e0!3m2!1sen!2sin!4v1784710881527!5m2!1sen!2sin"
+    className="w-full h-full border-0"
+    loading="lazy"
+    allowFullScreen
+    referrerPolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>
 
           {/* FORM */}
           <div className="bg-white p-8 md:p-10 shadow-xl h-full border-l border-gray-200">

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function CourseHeader({ course }) {
   const navigate = useNavigate();
+  
   return (
     <div className="bg-white shadow-sm border-b">
 
@@ -34,28 +35,47 @@ export default function CourseHeader({ course }) {
 
           {/* Right */}
 
-       <button
-    onClick={() => {
+      <button
+  onClick={() => {
+    const lessons = course.modules.flatMap(
+      (module) => module.lessons
+    );
 
-    const firstLesson = course.modules
-        ?.flatMap(module => module.lessons)[0];
+    // 1. Resume lesson (student watched but not finished)
+    let continueLesson = lessons.find(
+      (lesson) =>
+        (lesson.watched_seconds || 0) > 0 &&
+        !lesson.completed
+    );
 
-    if(firstLesson){
-
-        navigate(
-
-            `/student/course/${course.id}?lesson=${firstLesson.id}`
-
-        );
-
+    // 2. If no partially watched lesson, open first incomplete lesson
+    if (!continueLesson) {
+      continueLesson = lessons.find(
+        (lesson) => !lesson.completed
+      );
     }
 
-}}
-    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition"
+    // 3. If everything completed, open first lesson
+    if (!continueLesson) {
+      continueLesson = lessons[0];
+    }
+
+    navigate(
+      `/student/course/${course.id}?lesson=${continueLesson.id}`
+    );
+
+    setTimeout(() => {
+      document
+        .getElementById("video-player")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 100);
+  }}
+  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition"
 >
-
-    Continue Learning
-
+  Continue Learning
 </button>
         </div>
 

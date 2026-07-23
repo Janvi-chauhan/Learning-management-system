@@ -568,22 +568,26 @@ const rejectSubmission = async (submissionId) => {
 
           {/* Title */}
 
-          <h1
-            className="
-              mt-5
+         <h1
+  className="
+    mt-5
 
-              text-5xl
-              font-bold
-              tracking-tight
+    text-3xl
+    sm:text-4xl
+    lg:text-5xl
 
-              text-slate-800
-            "
-          >
-            {role === "student"
-              ? "Assignments"
-              : "Assignment Management"}
-          </h1>
+    font-bold
+    tracking-tight
 
+    text-slate-800
+
+    break-words
+  "
+>
+  {role === "student"
+    ? "Assignments"
+    : "Assignment Management"}
+</h1>
           {/* Subtitle */}
 
           <p
@@ -737,19 +741,22 @@ const rejectSubmission = async (submissionId) => {
           {/* Header */}
 
           <div
-            className="
-              flex
-              items-center
-              justify-between
+  className="
+    flex
+    flex-col
+    sm:flex-row
+    sm:items-center
+    sm:justify-between
+    gap-4
 
-              px-6
-              py-5
+    px-4
+    sm:px-6
+    py-5
 
-              border-b
-              border-slate-100
-            "
-          >
-            <div>
+    border-b
+    border-slate-100
+  "
+> <div>
               <h2
                 className="
                   text-2xl
@@ -772,28 +779,36 @@ const rejectSubmission = async (submissionId) => {
                 courses
               </p>
             </div>
+{role === "teacher" && (
+  <button
+    onClick={() => setShowModal(true)}
+    className="
+      w-full
+      sm:w-auto
 
-            {role === "teacher" && (
+      flex
+      items-center
+      justify-center
 
-<button
-  onClick={() =>
-    setShowModal(true)
-  }
+      px-5
+      py-2.5
 
-  className="
-    px-5
-    py-2.5
-    rounded-2xl
-    bg-slate-900
-    hover:bg-black
-    text-white
-    text-sm
-    font-semibold
-  "
->
-  Create Assignment
-</button>
+      rounded-2xl
 
+      bg-slate-900
+      hover:bg-black
+
+      text-white
+      text-sm
+      font-semibold
+
+      whitespace-nowrap
+
+      transition-all
+    "
+  >
+    Create Assignment
+  </button>
 )}
           </div>
 

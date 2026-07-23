@@ -24,7 +24,14 @@ modules.length ? [modules[0].id] : []
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md h-[80vh] overflow-hidden">
+    <div className="
+bg-white
+rounded-xl
+shadow-md
+h-auto
+xl:h-[80vh]
+overflow-hidden
+">
 
       {/* Header */}
 
@@ -42,7 +49,14 @@ modules.length ? [modules[0].id] : []
 
       {/* Curriculum */}
 
-      <div className="overflow-y-auto h-full pb-10">
+      <div
+className="
+overflow-y-auto
+max-h-[450px]
+xl:max-h-full
+pb-6
+"
+>
 
         {modules.map((module) => (
           <div
@@ -53,8 +67,17 @@ modules.length ? [modules[0].id] : []
 
             <button
               onClick={() => toggleModule(module.id)}
-              className="w-full flex justify-between items-center px-5 py-4 hover:bg-gray-50 transition"
-            >
+              className="
+w-full
+flex
+justify-between
+items-center
+px-4
+sm:px-5
+py-4
+hover:bg-gray-50
+transition
+">
               <div className="text-left">
 
                 <h3 className="font-semibold text-gray-700">
@@ -92,7 +115,7 @@ modules.length ? [modules[0].id] : []
                     onClick={() =>
                       setCurrentLesson(lesson)
                     }
-                    className={`w-full flex items-center gap-3 px-6 py-3 text-left transition
+                    className={`w-full flex items-start gap-3 px-4 sm:px-6 py-3 text-left transition
 
                     ${
                       isCurrent
@@ -135,7 +158,7 @@ modules.length ? [modules[0].id] : []
                     <div className="flex-1">
 
                       <h4
-                        className={`text-sm font-medium
+                        className={`text-sm font-medium leading-5 break-words
 
                         ${
                           isCurrent

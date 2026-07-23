@@ -358,7 +358,7 @@ const Sidebar = ({
 
       {/* PROFILE */}
 
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <motion.div
           whileHover={{
             scale: 1.08,
@@ -384,7 +384,7 @@ const Sidebar = ({
             "
           />
         </motion.div>
-      </div>
+      </div> */}
     </motion.aside>
   );
 };

@@ -382,10 +382,10 @@ const saveReview = async () => {
             
             {/* Top */}
 
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
               
               <div>
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-800 break-words">
                   {project.title}
                 </h2>
 
@@ -397,24 +397,29 @@ const saveReview = async () => {
               {/* Status */}
 
               <span
-                className={`
-                  px-4
-                  py-2
-                  rounded-full
-                  text-sm
-                  font-semibold
+  className={`
+    self-start
+    sm:self-auto
 
-                  ${
-                    project.status ===
-                    "Completed"
-                      ? "bg-green-100 text-green-600"
-                      : project.status ===
-                        "Pending"
-                      ? "bg-red-100 text-red-600"
-                      : "bg-yellow-100 text-yellow-700"
-                  }
-                `}
-              >
+    px-4
+    py-2
+
+    rounded-full
+
+    text-sm
+    font-semibold
+
+    whitespace-nowrap
+
+    ${
+      project.status === "Completed"
+        ? "bg-green-100 text-green-600"
+        : project.status === "Pending"
+        ? "bg-red-100 text-red-600"
+        : "bg-yellow-100 text-yellow-700"
+    }
+  `}
+>
                 {project.status}
               </span>
             </div>
@@ -433,7 +438,7 @@ const saveReview = async () => {
 
             {/* Meta Info */}
 
-            <div className="grid grid-cols-2 gap-5 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6">
               
               {/* Deadline */}
 
@@ -553,19 +558,27 @@ const saveReview = async () => {
 
   }}
   className="
-    flex-1
-    flex
-    items-center
-    justify-center
-    gap-2
-    py-3
-    rounded-2xl
-    border
-    border-slate-300
-    hover:bg-slate-100
-    font-semibold
-    transition-all
-  "
+w-full
+sm:flex-1
+
+flex
+items-center
+justify-center
+gap-2
+
+py-3
+
+rounded-2xl
+
+border
+border-slate-300
+
+hover:bg-slate-100
+
+font-semibold
+
+transition-all
+"
 >
   <ExternalLink size={18} />
 
@@ -580,7 +593,7 @@ const saveReview = async () => {
   showProjectModal && (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
-      <div className="bg-white p-6 rounded-xl w-[500px]">
+      <div className="bg-white p-6 rounded-xlw-[95%] sm:w-[500px] max-h-[90vh] overflow-y-auto">
 
         <h2 className="text-xl font-bold mb-4">
           Add Project
@@ -691,7 +704,7 @@ const saveReview = async () => {
 
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
-      <div className="bg-white p-6 rounded-xl w-[600px]">
+      <div className="bg-white p-6 rounded-xl w-[95%] sm:w-[600px] max-h-[90vh] overflow-y-auto">
 
         <h2 className="text-2xl font-bold mb-4">
 
@@ -807,7 +820,7 @@ const saveReview = async () => {
         }
       />
 
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
 
         <button
           onClick={createReview}

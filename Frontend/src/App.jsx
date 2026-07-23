@@ -93,9 +93,9 @@ element={<Certificate/>}
 
 
        </Routes>
-  {/* {location.pathname !== "/adminDashboard" && (
+  {location.pathname !== "/adminDashboard" && (
     <Footer />
-  )} */}
+  )}
       
     </>
   );
