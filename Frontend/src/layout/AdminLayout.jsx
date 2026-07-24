@@ -36,7 +36,7 @@ const AdminLayout = () => {
     DashboardHome;
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] lg:flex">
+    <div className="flex min-h-screen bg-[#F9FAFB]">
 
       {/* SIDEBAR */}
 
@@ -47,7 +47,7 @@ const AdminLayout = () => {
 
       {/* RIGHT SIDE */}
 
-      <div className="flex flex-col flex-1 w-full min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0">
 
         {/* HEADER */}
 
@@ -55,7 +55,7 @@ const AdminLayout = () => {
 
         {/* PAGE CONTENT */}
 
-        <main className="flex-1 w-full px-4 py-4 sm:px-6 lg:px-8 overflow-x-hidden">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <ActiveComponent />
         </main>
 

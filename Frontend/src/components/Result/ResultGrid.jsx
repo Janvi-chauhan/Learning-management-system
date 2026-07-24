@@ -28,8 +28,8 @@ export default function ResultGrid() {
       sm:grid-cols-2
       md:grid-cols-3
       lg:grid-cols-4
-      gap-x-[5px]
-      gap-y-[20px]
+      gap-8
+      
     "
     >
       {resultsData.map((item) => (

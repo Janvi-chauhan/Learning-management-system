@@ -56,7 +56,8 @@ const AdminHeader = ({ setActiveSection }) => {
 
   return (
     <header className="bg-white border-b shadow-sm px-4 sm:px-6 lg:px-8 py-4">
-<div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
         {/* Left */}
         <div className="min-w-0">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight">
@@ -71,7 +72,8 @@ const AdminHeader = ({ setActiveSection }) => {
         {/* Right */}
 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:justify-end w-full lg:w-auto">
           {/* Search */}
-<div className="relative flex-1 min-w-0">
+          <div className="relative w-full sm:flex-1 lg:w-80 lg:flex-none">
+
             <Search
               size={18}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -123,7 +125,7 @@ const AdminHeader = ({ setActiveSection }) => {
             </button>
 
             {open && (
-              <div className="absolute right-0 mt-2 w-56 sm:w-60 bg-white rounded-xl border shadow-xl z-50">
+              <div className="absolute right-0 mt-2 w-60 bg-white rounded-xl border shadow-xl z-50">
 
                 <button
                   onClick={() => {

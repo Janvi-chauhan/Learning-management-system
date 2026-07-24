@@ -8,7 +8,7 @@ export default function ResultCard({ data }) {
     ">
 
       {/* IMAGE */}
-      <div className="w-full h-[200px] overflow-hidden">
+      <div className="w-full h-[200px] overflow-hidden ">
         <img
           src={data.image}
           alt={data.name}
@@ -25,12 +25,12 @@ export default function ResultCard({ data }) {
         </h3>
 
         {/* COMPANY LOGO OR TEXT */}
-        <div className="mt-2 flex justify-center">
+        <div className="mt-2  flex justify-center">
           {data.logo ? (
             <img
               src={data.logo}
               alt="logo"
-              className="h-8 object-contain"
+              className="h-8  object-contain"
             />
           ) : (
             <p className="font-bold text-gray-800">
