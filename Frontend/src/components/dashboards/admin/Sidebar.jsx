@@ -8,6 +8,7 @@ import {
   CreditCard,
   BarChart3,
   MessageSquare,
+  Star,
   Bell,
   Settings,
   LogOut,
@@ -60,6 +61,11 @@ const adminMenu = {
       icon: Briefcase,
       key: "placements",
     },
+    {
+      name: "Testimonials",
+      icon: Star,     
+      key: "testimonials",
+     },
 
     {
       name: "Contact Us",
@@ -221,8 +227,8 @@ function NavItem({ item, activeSection, setActiveSection, collapsed }) {
 export default function Sidebar({ activeSection, setActiveSection }) {
   const [collapsed, setCollapsed] = useState(false);
 
-console.log("Sidebar Loaded");
-console.log(adminMenu.desktopMain);
+// console.log("Sidebar Loaded");
+// console.log(adminMenu.desktopMain);
 
   return (
     <>

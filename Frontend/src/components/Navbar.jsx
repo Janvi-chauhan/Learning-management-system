@@ -91,7 +91,7 @@ export default function Navbar() {
 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 xl:px-16 h-[80px] xl:h-[85px] flex items-center justify-between gap-4 "
 >          
           {/* LOGO */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
             <img
               src={logo}
               alt="Logo"
@@ -99,7 +99,7 @@ export default function Navbar() {
             />
 
             <div className="leading-tight min-w-0">
-              <h1 className="truncate font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text text-basesm:text-lgmd:text-xlxl:text-2xl leading-tight">
+              <h1 className="truncate font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text text text-basesm:text-lgmd:text-xlxl:text-2xl leading-tight">
                CREATIVE PROGRAMMING CLASSES
               </h1>
 

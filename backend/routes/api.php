@@ -34,6 +34,22 @@ use App\Http\Controllers\Teacher\TeacherProfileController;
 use App\Http\Controllers\Teacher\TeacherAssignmentController;
 use App\Http\Controllers\Teacher\TeacherProjectController;
 use App\Http\Controllers\Teacher\TeacherQueryController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\Admin\AdminTestimonialController;
+
+Route::prefix('admin')->group(function () {
+
+    Route::get('/testimonials',[AdminTestimonialController::class,'index']);
+
+    Route::post('/testimonials',[AdminTestimonialController::class,'store']);
+
+    Route::put('/testimonials/{id}',[AdminTestimonialController::class,'update']);
+
+    Route::delete('/testimonials/{id}',[AdminTestimonialController::class,'destroy']);
+
+});
+Route::get('/testimonials',[TestimonialController::class,'index']);
+
 // Route::get('/cloudinary-test', function () {
 //     return [
 //         'cloud_url' => config('cloudinary.cloud_url'),

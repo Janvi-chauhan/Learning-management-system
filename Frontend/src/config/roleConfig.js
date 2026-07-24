@@ -13,6 +13,7 @@ import PaymentsManager from "../components/dashboards/admin/PaymentsManager";
 import Placements from "../components/dashboards/admin/Placements";
 import ContactUs from "../components/dashboards/admin/ContactUs";
 import ContactQueries from "../components/dashboards/admin/ContactQueries";
+import Testimonials from "../components/dashboards/admin/Testimonials";
 
 
 
@@ -81,6 +82,7 @@ export const roleConfig = {
     "courses",
     "payments",
     "placements",
+    "testimonials",
     "contactUs",
   ],
 
@@ -91,6 +93,7 @@ export const roleConfig = {
     courses: CourseManager,
     payments: PaymentsManager,
     placements: Placements,
+    testimonials: Testimonials,
     contactUs: ContactUs,
 
   },

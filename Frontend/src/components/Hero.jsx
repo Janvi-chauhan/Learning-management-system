@@ -61,15 +61,16 @@ export default function Hero() {
   src={logo}
   alt="Banner"
   className="
-  absolute
-  bottom-0
-  right-[0]
-  h-[112%]
-  w-auto
-  object-contain
-  drop-shadow-2xl
-  pointer-events-none
-"
+    absolute
+    top-8
+    right-0
+    w-[88%]
+    max-w-[760px]
+    h-auto
+    object-contain
+    drop-shadow-2xl
+    pointer-events-none
+  "
 />
 </div>
 
@@ -77,16 +78,16 @@ export default function Hero() {
         <div className="relative z-10 h-full">
           <div className="max-w-[1200px] mx-auto px-1 h-full flex items-start pt-28">
            <div className="max-w-xl ">
-              <h1 className="text-[56px] font-bold leading-tight text-black">
+              <h1 className="text-5xl xl:text-6xl font-bold leading-tight text-black">
                 Not Just Learning, <br />
                 Building Skills
               </h1>
 
-              <p className="mt-4 text-[20px] font-bold text-red-600">
+              <p className="mt-4 text-lg xl:text-xl font-bold text-red-600">
                 Most Trusted Coding Institute
               </p>
 
-              <p className="mt-2 text-[22px] font-semibold text-black min-h-[32px]">
+              <p className="mt-2 text-xl xl:text-2xl font-semibold text-black min-h-[32px]">
                 {text}
                 <span className="text-red-600">|</span>
               </p>
@@ -99,58 +100,35 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ================= MOBILE & TABLET ================= */}
-      <div className="md:hidden w-full">
+      {/* ================= MOBILE ONLY ================= */}
+<div className="block md:hidden">
+  <div className="max-w-xl mx-auto px-6 pt-8 pb-12 text-center">
 
-        {/* HERO BANNER */}
-        <div className="relative w-full h-[440px] overflow-hidden">
+    <h1 className="text-4xl font-extrabold leading-tight text-black">
+      Not Just Learning,
+      <br />
+      Building Skills
+    </h1>
 
-          {/* RED VECTOR – FULL STRETCH */}
-          {/* <img
-            src={vector}
-            alt="vector"
-            className="absolute inset-0 w-full h-full object-cover"
-          /> */}
+    <p className="mt-5 text-lg font-bold text-red-600">
+      Most Trusted Coding Institute
+    </p>
 
-          {/* BANNER IMAGE – BOTTOM RIGHT */}
-          <img
-            src={logo}
-            alt="Banner"
-            className="
-              absolute bottom-0 right-0
-              h-[85%] w-auto
-              object-contain
-              drop-shadow-2xl
-            "
-          />
-        </div>
+    <p className="mt-4 text-lg font-semibold text-gray-800 min-h-[55px]">
+      {text}
+      <span className="text-red-600">|</span>
+    </p>
 
-        {/* TEXT CONTENT */}
-        <div className="px-5 text-center mt-8">
-         <h1 className="-mt-1 text-[28px] sm:text-[34px] font-bold leading-tight text-black">
-            Not Just Learning, <br />
-            Building Skills
-          </h1>
+    <button className="mt-8 px-8 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold shadow-lg hover:scale-105 transition">
+      Join New Batch
+    </button>
 
-          <p className="mt-3 text-[15px] sm:text-[17px] font-bold text-red-600">
-            Most Trusted Coding Institute
-          </p>
-
-          <p className="mt-2 text-[17px] font-semibold text-black">
-            {text}
-            <span className="text-red-600">|</span>
-          </p>
-
-          <button className="mt-6 px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white text-lg font-bold shadow-xl shadow-red-400">
-            Join New Batch
-          </button>
-        </div>
-      </div>
+  </div>
+</div>
       {/* ================= TABLET ONLY (md → lg) ================= */}
       <div className="hidden md:block lg:hidden w-full bg-white">
 
-        <div className="grid grid-cols-2 items-center min-h-[420px]">
-
+        <div className="grid grid-cols-2 items-center min-h-[500px] px-6">
           {/* LEFT – TEXT */}
           <div className="px-8">
             <h1 className="-mt-2 text-[34px] font-bold leading-tight text-black">
@@ -184,15 +162,19 @@ export default function Hero() {
 
             {/* BANNER IMAGE*/}
             <img
-              src={logo}
-              alt="Banner"
-              className="
-                absolute bottom-0 right-0
-                h-[85%] w-auto
-                object-contain
-                drop-shadow-2xl
-              "
-            />
+  src={logo}
+  alt="Banner"
+  className="
+  absolute
+  top-6
+  right-0
+  w-[90%]
+  h-auto
+  object-contain
+  drop-shadow-2xl
+"
+/>
+            
           </div>
 
         </div>

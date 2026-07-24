@@ -16,7 +16,6 @@ const AdminHeader = ({ setActiveSection }) => {
 
   const [admin, setAdmin] = useState({});
   const [open, setOpen] = useState(false);
-
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -56,120 +55,120 @@ const AdminHeader = ({ setActiveSection }) => {
   };
 
   return (
-    <div className="bg-white border-b px-8 py-4 flex items-center justify-between shadow-sm">
+    <header className="bg-white border-b shadow-sm px-4 sm:px-6 lg:px-8 py-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-      {/* Left */}
-      <div>
-        <h1 className="text-4xl font-bold text-slate-800">
-          Welcome back, Admin
-        </h1>
+        {/* Left */}
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight">
+            Welcome back, Admin
+          </h1>
 
-        <p className="text-slate-500 mt-2">
-          Here's what's happening with your LMS today.
-        </p>
-      </div>
-
-      {/* Right */}
-      <div className="flex items-center gap-4">
-
-        {/* Search */}
-        <div className="relative">
-          <Search
-            className="absolute left-4 top-3 text-gray-400"
-            size={18}
-          />
-
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="pl-12 pr-5 py-3 w-[320px] rounded-2xl border outline-none focus:ring-2 focus:ring-red-500"
-          />
+          <p className="text-gray-500 text-sm sm:text-base mt-1">
+            Here's what's happening with your LMS today.
+          </p>
         </div>
 
-        {/* Notifications */}
-        <button className="relative p-4 rounded-2xl border bg-white hover:bg-gray-50 transition">
+        {/* Right */}
+        <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3">
 
-          <Bell size={22} />
+          {/* Search */}
+          <div className="relative w-full sm:flex-1 lg:w-80 lg:flex-none">
 
-          {notifications.length > 0 && (
-            <span className="absolute top-3 right-3 h-3 w-3 rounded-full bg-red-500"></span>
-          )}
-
-        </button>
-
-        {/* Profile */}
-        <div className="relative">
-
-          <button
-            onClick={() => setOpen(!open)}
-            className="flex items-center gap-3 border rounded-2xl px-4 py-3 hover:bg-gray-50 transition"
-          >
-            <div className="h-12 w-12 rounded-full bg-[#1e293b] text-white flex items-center justify-center font-bold text-lg">
-              {admin?.name?.charAt(0)?.toUpperCase()}
-            </div>
-
-            <div className="text-left">
-              <h4 className="font-semibold">
-                {admin?.name}
-              </h4>
-
-              <p className="text-sm text-gray-500">
-                {admin?.email}
-              </p>
-            </div>
-
-            <ChevronDown
-              className={`transition-transform ${
-                open ? "rotate-180" : ""
-              }`}
+            <Search
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
             />
+
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-11 pr-4 py-3 rounded-xl border focus:ring-2 focus:ring-red-500 outline-none"
+            />
+          </div>
+
+          {/* Notification */}
+          <button className="relative p-3 rounded-xl border hover:bg-gray-50">
+
+            <Bell size={20} />
+
+            {notifications.length > 0 && (
+              <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-red-500"></span>
+            )}
+
           </button>
 
-          {/* Dropdown */}
-          {open && (
-            <div className="absolute right-0 top-20 w-64 bg-white rounded-2xl shadow-xl border p-3 z-50">
+          {/* Profile */}
+          <div className="relative">
 
-              {/* Dashboard */}
-              <button
-                onClick={() => {
-                  setActiveSection("dashboard");
-                  setOpen(false);
-                }}
-                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 transition"
-              >
-                <LayoutDashboard size={20} />
-                Dashboard
-              </button>
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-3 border rounded-xl px-3 py-2 hover:bg-gray-50"
+            >
+              <div className="h-10 w-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold">
+                {admin?.name?.charAt(0)?.toUpperCase()}
+              </div>
 
-              
-              <button
-                onClick={() => {
-                  setActiveSection("settings");
-                  setOpen(false);
-                }}
-                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 transition"
-              >
-                <Settings size={20} />
-                Settings
-              </button>
+              <div className="hidden sm:block text-left">
+                <h4 className="font-semibold text-sm">
+                  {admin?.name}
+                </h4>
 
-              <hr className="my-2" />
+                <p className="text-xs text-gray-500 truncate max-w-[160px]">
+                  {admin?.email}
+                </p>
+              </div>
 
-              {/* Logout */}
-              <button
-                onClick={logout}
-                className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition"
-              >
-                <LogOut size={20} />
-                Logout
-              </button>
+              <ChevronDown
+                size={18}
+                className={`${open ? "rotate-180" : ""} transition`}
+              />
+            </button>
 
-            </div>
-          )}
+            {open && (
+              <div className="absolute right-0 mt-2 w-60 bg-white rounded-xl border shadow-xl z-50">
+
+                <button
+                  onClick={() => {
+                    setActiveSection("dashboard");
+                    setOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+                >
+                  <LayoutDashboard size={18} />
+                  Dashboard
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveSection("settings");
+                    setOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+                >
+                  <Settings size={18} />
+                  Settings
+                </button>
+
+                <hr />
+
+                <button
+                  onClick={logout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </button>
+
+              </div>
+            )}
+
+          </div>
+
         </div>
 
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -6,7 +6,7 @@ export default function Testimonials() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await api.get("/testimonials");
+      const response = await api.get("admin/testimonials");
       setTestimonials(response.data.data);
     } catch (error) {
       console.log(error);
@@ -39,9 +39,9 @@ export default function Testimonials() {
         <div className="overflow-hidden">
           <div className="flex gap-3 w-max animate-testimonial-marquee">
 
-            {items.map((t) => (
-              <div
-                key={t.id}
+            {items.map((t, index) => (
+  <div
+    key={`${t.id}-${index}`}
                 className="w-[280px] sm:w-[320px] lg:w-[360px] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.18)] hover:-translate-y-2 transition"
               >
                 <div className="flex items-center gap-4">

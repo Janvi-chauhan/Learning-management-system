@@ -12,6 +12,7 @@ import ContactUs from "../components/dashboards/admin/ContactUs";
 import Settings from "../components/dashboards/admin/Settings";
 
 import AdminHeader from "../components/dashboards/admin/AdminHeader";
+import Testimonials from "../components/dashboards/admin/Testimonials";
 
 const componentMap = {
   dashboard: DashboardHome,
@@ -21,6 +22,7 @@ const componentMap = {
   payments: PaymentsManager,
   charts: Charts,
   placements: Placement,
+  testimonials: Testimonials,
   contactUs: ContactUs,
   settings: Settings,
 };
@@ -34,7 +36,7 @@ const AdminLayout = () => {
     DashboardHome;
 
   return (
-    <div className="flex min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-[#F9FAFB] lg:flex">
 
       {/* SIDEBAR */}
 
@@ -45,7 +47,7 @@ const AdminLayout = () => {
 
       {/* RIGHT SIDE */}
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex flex-col flex-1 w-full min-w-0 overflow-hidden">
 
         {/* HEADER */}
 
@@ -53,7 +55,7 @@ const AdminLayout = () => {
 
         {/* PAGE CONTENT */}
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 w-full px-4 py-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ActiveComponent />
         </main>
 

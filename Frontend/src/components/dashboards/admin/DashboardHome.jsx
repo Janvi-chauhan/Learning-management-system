@@ -15,6 +15,7 @@ import Charts from "../admin/Charts";
 import api from "../../../services/api";
 
 import AdminHeader from "../../../components/dashboards/admin/AdminHeader";
+import Testimonials from "../../Testimonials";
 const componentMap = {
   // dashboard: DashboardHome,
   students: StudentManager,
@@ -23,6 +24,7 @@ const componentMap = {
   payments: PaymentsManager,
   charts: Charts,
   placements: Placement,
+  testimonials: Testimonials,
   contactUs: ContactUs,
 };
 const DashboardHome = () => {

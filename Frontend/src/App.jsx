@@ -22,6 +22,7 @@ import Certificate from "./components/dashboards/admin/student/Certificate";
 import TeacherCourseLearning from "./components/dashboards/admin/teacher/TeacherLearning/TeacherCourseLearning";
 import UploadRecordedVideo from "./components/dashboards/admin/teacher/TeacherLearning/UploadRecordVideo";
 import EditCourse from "./components/dashboards/admin/teacher/TeacherLearning/EditCourse";
+import Testimonials from "./components/dashboards/admin/Testimonials";
 //import LiveMeeting from "./components/dashboards/admin/student/Learning/LiveMeeting";
 //import LessonNavigation from "./components/dashboards/admin/student/Learning/LessonNavigation";
 export default function App() {
@@ -72,6 +73,10 @@ element={<Certificate/>}
 <Route
     path="/teacher/course/:courseId/edit"
     element={<EditCourse />}
+/>
+<Route
+    path="/admin/testimonials"
+    element={<Testimonials />}
 />
 
 {/* <Route
