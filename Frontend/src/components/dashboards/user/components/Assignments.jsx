@@ -1225,7 +1225,7 @@ const rejectSubmission = async (submissionId) => {
                     <td className="border p-3">
 
                       <a
-                        href={`http://127.0.0.1:8000/storage/${submission.file}`}
+                        href={`${import.meta.env.VITE_API_URL.replace('/api', '')}/storage/${file}`}
                         target="_blank"
                         rel="noreferrer"
                         className="text-blue-600 underline"
