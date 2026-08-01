@@ -23,11 +23,11 @@ export default function Testimonials() {
       : [];
 
   return (
-    <section className="bg-[#f9fafb] py-24 overflow-hidden">
+    <section id="testimonials" className="bg-[#f9fafb] py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
 
         <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-extrabold">
+          <h2 className="text-3xl md:text-4xl font-extrabold font-sans">
             What Our <span className="text-red-600">Students Say</span>
           </h2>
 

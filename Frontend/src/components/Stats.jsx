@@ -39,14 +39,29 @@ export default function Stats() {
 
       {/* TEXT */}
       <div className="text-center pt-20 pb-14 px-6">
-        <h2 className="text-3xl md:text-4xl font-extrabold">
-          India’s Most Trusted{" "}
-          <span className="text-red-600">Coding Institute</span>
-        </h2>
+        <h2 className="
+      text-3xl
+      md:text-4xl
+      font-extrabold
+      font-sans
+      tracking-tight
+      leading-tight
+      text-gray-900
+  ">
+      India's Most Trusted{" "}
+      <span className="text-red-600">
+          Coding Institute
+      </span>
+  </h2>
 
-        <p className="text-gray-600 mt-3">
-          Learn from industry experts and build your future with us
-        </p>
+  <p className="
+      mt-4
+      text-[16px]
+      text-gray-500
+      font-normal
+  ">
+      Learn from industry experts and build your future with us
+  </p>
       </div>
 
       {/* FULL WIDTH CARDS */}
@@ -76,7 +91,7 @@ export default function Stats() {
                   clipPath: "polygon(0 0, 92% 0, 100% 18%, 100% 100%, 0 100%)",
                 }}
               >
-                <h3 className="text-3xl font-extrabold text-red-600">
+                <h3 className="text-3xl font-extrabold font-sans text-red-600">
                   {count.toLocaleString()}
                   {item.suffix}
                 </h3>

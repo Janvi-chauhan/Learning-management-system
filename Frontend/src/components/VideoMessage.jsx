@@ -9,7 +9,7 @@ export default function VideoMessage() {
 
           {/* ✅ LEFT CONTENT */}
           <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">
+            <h2 className="text-3xl md:text-4xl font-extrabold font-sans leading-tight">
               Students – Ready to{" "}
               <span className="text-red-600">future-proof</span> your career?
             </h2>
@@ -32,7 +32,7 @@ export default function VideoMessage() {
               <button
                 className="
                   mt-8 px-8 py-4 rounded-xl
-                  bg-red-600 text-white font-bold text-lg
+                  bg-red-600 text-white font-bold font-sans text-lg
                   shadow-lg shadow-red-300
                   hover:bg-red-700 hover:scale-105 transition-all
                 "

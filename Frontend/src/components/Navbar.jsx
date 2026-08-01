@@ -17,6 +17,7 @@ export default function Navbar() {
   
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [quickLinksOpen, setQuickLinksOpen] = useState(false);
 
   const navigate = useNavigate();
   const profileRef = useRef();
@@ -58,10 +59,6 @@ export default function Navbar() {
       name: "Our Results",
       path: "/results",
     },
-    {
-      name: "Quick Links",
-      path: "/quick-links",
-    },
   ];
 
   const handleLogout = async () => {
@@ -95,13 +92,15 @@ export default function Navbar() {
             <img
               src={logo}
               alt="Logo"
-              className=" w-14 h-14 sm:w-16 sm:h-16 xl:w-20 xl:h-20 object-contain "
+              className=" w-8 h-8 sm:w-16 sm:h-16 xl:w-15 xl:h-15 object-contain "
             />
 
             <div className="leading-tight min-w-0">
-              <h1 className="truncate font-black tracking-wide bg-gradient-to-r from-red-600 to-red-400 text-transparent bg-clip-text text text-basesm:text-lgmd:text-xlxl:text-2xl leading-tight">
-               CREATIVE PROGRAMMING CLASSES
-              </h1>
+             <h1
+  className=" truncate text-[15px] sm:text-[18px] md:text-[20px] xl:text-[22px] font-extrabold tracking-[0.5px] leading-tight bg-gradient-to-r from-red-800 via-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_1px_2px_rgba(220,38,38,0.25)]
+  ">
+  CREATIVE PROGRAMMING CLASSES
+</h1>
 
               <p className=" text-gray-500 font-medium text-[11px sm:text-x md:text-s xl:text-[15px] leading-tigh ">
                 Building Careers, Not Just Coders
@@ -112,24 +111,124 @@ export default function Navbar() {
           {/* DESKTOP MENU */}
           <div className="hidden xl:flex items-center gap-8">
             <ul className="flex items-center gap-6">
-              {navLinks.map((item) => (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.path}
-                    end={item.path === "/"}
-                    className={({ isActive }) =>
-                      `text-[16px] font-semibold transition ${
-                        isActive
-                          ? "text-red-600"
-                          : "text-black hover:text-red-600"
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
+
+  <li>
+    <NavLink
+      to="/"
+      end
+      className={({ isActive }) =>
+        `text-[16px] font-semibold transition ${
+          isActive
+            ? "text-red-600"
+            : "text-black hover:text-red-600"
+        }`
+      }
+    >
+      Home
+    </NavLink>
+  </li>
+
+  <li>
+    <NavLink
+      to="/courses"
+      className={({ isActive }) =>
+        `text-[16px] font-semibold transition ${
+          isActive
+            ? "text-red-600"
+            : "text-black hover:text-red-600"
+        }`
+      }
+    >
+      Courses
+    </NavLink>
+  </li>
+
+  <li>
+    <NavLink
+      to="/results"
+      className={({ isActive }) =>
+        `text-[16px] font-semibold transition ${
+          isActive
+            ? "text-red-600"
+            : "text-black hover:text-red-600"
+        }`
+      }
+    >
+      Our Results
+    </NavLink>
+  </li>
+
+  {/* QUICK LINKS DROPDOWN */}
+  <li
+    className="relative">
+    <button 
+     onClick={() => setQuickLinksOpen(!quickLinksOpen)}
+     className="flex items-center gap-1 text-[16px] font-semibold hover:text-red-600 transition">
+      Quick Links
+      <ChevronDown
+        size={16}
+        className={`transition ${
+          quickLinksOpen ? "rotate-180" : ""
+        }`}
+      />
+    </button>
+
+    {quickLinksOpen && (
+      <div className="absolute top-10 left-0 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
+
+        <NavLink
+          to="/#home"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Home
+        </NavLink>
+
+        {/* <NavLink
+          to="/#about"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          About Us
+        </NavLink> */}
+
+        <NavLink
+          to="/#placements"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Placements
+        </NavLink>
+
+        <NavLink
+          to="/#courses"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Courses
+        </NavLink>
+
+        <NavLink
+          to="/#testimonials"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Testimonials
+        </NavLink>
+
+        <NavLink
+          to="/#contact"
+          onClick={() => setQuickLinksOpen(false)}
+          className="block px-5 py-3 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Contact Us
+        </NavLink>
+
+      </div>
+    )}
+  </li>
+
+</ul>
 
             {/* PROFILE / LOGIN */}
             {!isLoggedIn ? (
@@ -279,7 +378,7 @@ export default function Navbar() {
           </div>
 
           {/* NAVIGATION */}
-          <div className="px-4 py-5 flex flex-col gap-2">
+          <div className="px-4 py-4 flex flex-col">
             {navLinks.map((item) => (
               <NavLink
                 key={item.name}
@@ -289,7 +388,7 @@ export default function Navbar() {
                   setMobileOpen(false)
                 }
                 className={({ isActive }) =>
-                  `px-4 py-4 rounded-xl font-semibold transition ${
+                  `px-4 py-4 rounded-xl font-sans font-semibold transition ${
                     isActive
                       ? "bg-red-600 text-white"
                       : "text-black hover:bg-gray-100"

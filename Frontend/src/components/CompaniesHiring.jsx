@@ -43,7 +43,7 @@ export default function CompaniesHiring() {
 
           {/* ✅ RIGHT: CONTENT */}
           <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">
+            <h2 className="text-3xl md:text-4xl font-extrabold font-sans leading-tight">
               Top <span className="text-red-600">Companies Hiring</span> <br />
               Our Students
             </h2>
@@ -65,7 +65,7 @@ export default function CompaniesHiring() {
               className="
                 mt-8 px-9 py-4
                 bg-gradient-to-r from-red-600 to-red-700
-                text-white font-bold rounded-xl
+                text-white font-bold font-sans rounded-xl
                 shadow-xl shadow-red-300
                 hover:scale-105 transition
               "

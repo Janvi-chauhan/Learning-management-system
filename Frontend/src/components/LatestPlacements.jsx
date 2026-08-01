@@ -34,12 +34,12 @@ useEffect(() => {
     : [];
 
   return (
-    <section className="bg-white py-24 overflow-hidden">
+    <section id="placements" className="bg-white py-24 overflow-hidden">
       <div className="max-w-full px-6">
 
         {/* TITLE */}
         <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-extrabold">
+          <h2 className="text-3xl md:text-4xl font-extrabold font-sans">
             Latest <span className="text-red-600">Placements</span>
           </h2>
           <p className="text-gray-600 mt-3">

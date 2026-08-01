@@ -14,6 +14,7 @@ import {
   LogOut,
   ChevronRight,
   Briefcase,
+  Mail,
   
 } from "lucide-react";
 
@@ -72,6 +73,12 @@ const adminMenu = {
       icon: MessageSquare,
       key: "contactUs",
     },
+    {
+      name: "Subscribe",
+      icon: Mail,
+      key: "subscribe",
+    },
+    
   ],
 
   desktopPages: [

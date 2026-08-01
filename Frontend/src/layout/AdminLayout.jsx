@@ -13,6 +13,7 @@ import Settings from "../components/dashboards/admin/Settings";
 
 import AdminHeader from "../components/dashboards/admin/AdminHeader";
 import Testimonials from "../components/dashboards/admin/Testimonials";
+import Subscribe from "../components/dashboards/admin/Subscribe";
 
 const componentMap = {
   dashboard: DashboardHome,
@@ -24,6 +25,7 @@ const componentMap = {
   placements: Placement,
   testimonials: Testimonials,
   contactUs: ContactUs,
+  subscribe: Subscribe,
   settings: Settings,
 };
 

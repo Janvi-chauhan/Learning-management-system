@@ -14,6 +14,7 @@ import Placements from "../components/dashboards/admin/Placements";
 import ContactUs from "../components/dashboards/admin/ContactUs";
 import ContactQueries from "../components/dashboards/admin/ContactQueries";
 import Testimonials from "../components/dashboards/admin/Testimonials";
+import Subscribe from "../components/dashboards/admin/Subscribe";
 
 
 
@@ -84,6 +85,7 @@ export const roleConfig = {
     "placements",
     "testimonials",
     "contactUs",
+    "subscribe",
   ],
 
   componentMap: {
@@ -95,6 +97,7 @@ export const roleConfig = {
     placements: Placements,
     testimonials: Testimonials,
     contactUs: ContactUs,
+    subscribe: Subscribe,
 
   },
 },

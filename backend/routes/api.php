@@ -35,7 +35,10 @@ use App\Http\Controllers\Teacher\TeacherAssignmentController;
 use App\Http\Controllers\Teacher\TeacherProjectController;
 use App\Http\Controllers\Teacher\TeacherQueryController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
+
 
 Route::prefix('admin')->group(function () {
 
@@ -50,6 +53,8 @@ Route::prefix('admin')->group(function () {
 });
 Route::get('/testimonials',[TestimonialController::class,'index']);
 
+Route::post('/chat', [ChatBotController::class, 'chat']);
+
 // Route::get('/cloudinary-test', function () {
 //     return [
 //         'cloud_url' => config('cloudinary.cloud_url'),
@@ -63,6 +68,7 @@ Route::prefix('teacher')->group(function () {
 
 
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +102,27 @@ Route::middleware('admin.token')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::get('/admin/notifications',
     [DashboardController::class,'notifications']);
-});  
+}); 
+/*
+|--------------------------------------------------------------------------
+| Newsletter Subscribe
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/subscribe',
+    [SubscriberController::class, 'subscribe']
+);
+
+Route::get(
+    '/subscribers',
+    [SubscriberController::class, 'index']
+);
+
+Route::delete(
+    '/subscribers/{id}',
+    [SubscriberController::class, 'destroy']
+); 
 
 /*
 |--------------------------------------------------------------------------

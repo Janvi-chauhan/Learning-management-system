@@ -42,7 +42,7 @@ export default function Hero() {
   }, [text, isDeleting, courseIndex]);
 
   return (
-    <section className="relative w-full bg-white pt-[90px] overflow-hidden">
+    <section id="home" className="relative w-full bg-white pt-[90px] overflow-hidden">
 
       {/* ================= DESKTOP / LAPTOP ================= */}
       <div className="hidden lg:block relative h-[calc(100vh-90px)]">
@@ -78,18 +78,18 @@ export default function Hero() {
         <div className="relative z-10 h-full">
           <div className="max-w-[1200px] mx-auto px-1 h-full flex items-start pt-28">
            <div className="max-w-xl ">
-              <h1 className="text-5xl xl:text-6xl font-bold leading-tight text-black">
+              <h1 className="text-5xl xl:text-6xl font-bold font-sans leading-tight text-black">
                 Not Just Learning, <br />
                 Building Skills
               </h1>
 
-              <p className="mt-4 text-lg xl:text-xl font-bold text-red-600">
+              <p className="mt-4 text-lg xl:text-xl font-bold  text-red-600">
                 Most Trusted Coding Institute
               </p>
 
               <p className="mt-2 text-xl xl:text-2xl font-semibold text-black min-h-[32px]">
                 {text}
-                <span className="text-red-600">|</span>
+                <span className="text-red-600 font-bold font-sans" >|</span>
               </p>
 
               <button className="mt-8 px-10 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white text-lg font-bold shadow-xl shadow-red-400 hover:scale-105 transition-all">

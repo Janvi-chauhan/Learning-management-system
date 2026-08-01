@@ -49,12 +49,12 @@ const handleSubmit = async (e) => {
 };
 
   return (
-    <section className="bg-[#fdfdfd] py-20">
+    <section id="contact"className="bg-[#fdfdfd] py-20">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
 
         {/* TITLE */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold">
+          <h2 className="text-3xl md:text-4xl font-extrabold font-sans">
             Contact <span className="text-red-600">Us</span>
           </h2>
           <p className="text-gray-600 mt-3">
@@ -80,7 +80,7 @@ const handleSubmit = async (e) => {
           {/* FORM */}
           <div className="bg-white p-8 md:p-10 shadow-xl h-full border-l border-gray-200">
 
-            <h3 className="text-2xl font-bold mb-6">
+            <h3 className="text-2xl font-bold font-sans mb-6">
               Send Us a Message
             </h3>
 
@@ -138,7 +138,7 @@ const handleSubmit = async (e) => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold hover:scale-105 transition"
+                className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold font-sans hover:scale-105 transition"
               >
                 Send Message
               </button>
